@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>시네마 룰렛 · Lo-fi</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#f3f2ee, #161616);
+  --paper: light-dark(#fffefa, #222222);
+  --surface: light-dark(#f7f6f2, #292929);
+  --ink: light-dark(#171717, #f5f5f5);
+  --muted: light-dark(#77756f, #b0b0b0);
+  --line: light-dark(#d8d6cf, #4b4b4b);
+  --line-strong: light-dark(#8d8a82, #777777);
+  --accent: light-dark(#cf352d, #ff756c);
+  --dark: light-dark(#111111, #eeeeee);
+  --dark-text: light-dark(#ffffff, #171717);
+  --soft-red: light-dark(#fff0ee, #3e2625);
+  --green: light-dark(#2c6650, #8dd1b2);
+  --shadow: 0 20px 60px rgba(0,0,0,.08);
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: Inter, Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif; line-height: 1.5; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+#app { width: 100%; min-height: 100vh; background: var(--bg); border-radius: 0; }
+.topbar { max-width: 1240px; margin: 0 auto; padding: 24px 28px 16px; display:flex; justify-content:space-between; align-items:center; gap:16px; border-bottom:1px solid var(--line); }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-mark { width:42px; height:42px; display:grid; place-items:center; background:var(--dark); color:var(--dark-text); font-size:23px; border-radius:50%; }
+.brand small { display:block; color:var(--muted); font-size:10px; letter-spacing:.2em; font-weight:800; }
+.brand h1 { margin:0; font-size:19px; line-height:1.25; letter-spacing:-.04em; }
+.top-actions { display:flex; gap:8px; align-items:center; }
+.text-button { border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:999px; padding:9px 14px; font-size:12px; font-weight:700; }
+.text-button:hover { background:var(--surface); }
+.hero { max-width:1240px; margin:0 auto; padding:24px 28px 18px; display:flex; justify-content:space-between; align-items:end; gap:20px; }
+.kicker { color:var(--accent); font-size:10px; font-weight:900; letter-spacing:.17em; text-transform:uppercase; }
+.hero h2 { font-size:clamp(24px,3.6vw,42px); letter-spacing:-.065em; margin:6px 0 8px; line-height:1.08; }
+.hero p { color:var(--muted); max-width:600px; margin:0; font-size:13px; }
+.hero-meta { display:flex; gap:18px; flex-wrap:wrap; color:var(--muted); font-size:11px; white-space:nowrap; }
+.hero-meta strong { color:var(--ink); }
+.shell { max-width:1240px; margin:0 auto; padding:0 28px 32px; display:grid; grid-template-columns:218px minmax(0,1fr); gap:20px; align-items:start; }
+.sidebar { position:sticky; top:14px; border:1px solid var(--line); background:var(--paper); padding:16px 12px 12px; }
+.side-label { margin:0 10px 12px; color:var(--muted); font-size:10px; letter-spacing:.15em; font-weight:900; }
+.step-link { width:100%; display:flex; gap:11px; align-items:center; border:1px solid transparent; background:transparent; color:var(--ink); text-align:left; padding:11px 10px; border-radius:9px; margin:3px 0; }
+.step-link .num { width:25px; height:25px; border:1px solid var(--line-strong); border-radius:50%; display:grid; place-items:center; font-size:11px; flex:none; }
+.step-link b { display:block; font-size:12px; }
+.step-link small { display:block; color:var(--muted); font-size:10px; margin-top:1px; }
+.step-link.active { background:var(--dark); color:var(--dark-text); }
+.step-link.active .num { border-color:currentColor; }
+.step-link.done:not(.active) .num { border-color:var(--green); color:var(--green); }
+.sidebar-note { border-top:1px solid var(--line); margin-top:14px; padding:14px 10px 3px; font-size:11px; color:var(--muted); }
+.sidebar-note strong { color:var(--ink); display:block; margin-bottom:3px; }
+.main { min-width:0; }
+.workspace { border:1px solid var(--line); background:var(--paper); box-shadow:var(--shadow); min-height:600px; }
+.workspace-head { padding:21px 24px 17px; border-bottom:1px solid var(--line); display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
+.eyebrow { color:var(--accent); font-size:10px; font-weight:900; letter-spacing:.16em; }
+.workspace-head h3 { margin:4px 0 5px; font-size:23px; letter-spacing:-.05em; line-height:1.2; }
+.workspace-head p { margin:0; color:var(--muted); font-size:12px; }
+.status-pill { flex:none; border:1px solid var(--line); border-radius:99px; padding:7px 10px; font-size:10px; color:var(--muted); font-weight:700; }
+.content { padding:24px; }
+.section-row { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 12px; }
+.section-row h4 { font-size:13px; margin:0; }
+.section-row span { color:var(--muted); font-size:11px; }
+.mood-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.mood-card { min-height:117px; border:1px solid var(--line); border-radius:12px; background:var(--paper); padding:14px; text-align:left; color:var(--ink); transition:.15s ease; position:relative; }
+.mood-card:hover { border-color:var(--line-strong); transform:translateY(-1px); }
+.mood-card.selected { border:1.5px solid var(--ink); box-shadow:inset 0 0 0 1px var(--ink); background:var(--surface); }
+.mood-icon { width:35px; height:35px; display:grid; place-items:center; background:var(--surface); border:1px solid var(--line); border-radius:10px; font-size:18px; margin-bottom:10px; }
+.mood-card strong { font-size:13px; display:block; }
+.mood-card small { display:block; font-size:10px; color:var(--muted); margin-top:2px; }
+.checkmark { display:none; position:absolute; right:11px; top:11px; background:var(--ink); color:var(--paper); width:18px; height:18px; border-radius:50%; font-size:11px; place-items:center; }
+.mood-card.selected .checkmark { display:grid; }
+.selection-summary { display:flex; flex-wrap:wrap; gap:7px; padding:12px 0 0; }
+.chip { display:inline-flex; align-items:center; gap:5px; background:var(--surface); border:1px solid var(--line); padding:6px 9px; border-radius:999px; font-size:10px; color:var(--ink); }
+.chip em { font-style:normal; color:var(--muted); }
+.divider { height:1px; background:var(--line); margin:22px 0; }
+.actions { display:flex; gap:9px; justify-content:flex-end; flex-wrap:wrap; margin-top:24px; }
+.btn { min-height:43px; padding:11px 18px; border:1px solid var(--line-strong); background:transparent; color:var(--ink); border-radius:8px; font-size:12px; font-weight:800; }
+.btn:hover { background:var(--surface); }
+.btn.primary { background:var(--dark); color:var(--dark-text); border-color:var(--dark); }
+.btn.primary:hover { opacity:.85; }
+.btn.full { width:100%; }
+.btn:disabled { cursor:not-allowed; opacity:.35; }
+.btn.danger { border-color:var(--accent); color:var(--accent); }
+.callout { margin-top:18px; border:1px dashed var(--line-strong); padding:12px 14px; color:var(--muted); font-size:11px; border-radius:8px; }
+.callout strong { color:var(--ink); }
+.duration-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.option-card { min-height:112px; border:1px solid var(--line); background:var(--paper); border-radius:12px; color:var(--ink); padding:16px; text-align:left; }
+.option-card.selected { background:var(--dark); color:var(--dark-text); border-color:var(--dark); }
+.option-card .option-num { font-size:10px; opacity:.65; letter-spacing:.12em; }
+.option-card strong { display:block; font-size:18px; letter-spacing:-.04em; margin:10px 0 2px; }
+.option-card small { display:block; font-size:10px; opacity:.7; }
+.wheel-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,.9fr); gap:24px; align-items:center; }
+.wheel-wrap { position:relative; display:grid; place-items:center; padding:12px; }
+.wheel-pointer { position:absolute; z-index:2; top:1px; left:50%; transform:translateX(-50%); width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:19px solid var(--accent); }
+.wheel { width:min(100%,300px); aspect-ratio:1; border:2px solid var(--ink); border-radius:50%; position:relative; overflow:hidden; background:conic-gradient(from -30deg, var(--paper) 0deg 60deg, var(--surface) 60deg 120deg, var(--paper) 120deg 180deg, var(--surface) 180deg 240deg, var(--paper) 240deg 300deg, var(--surface) 300deg 360deg); transition:transform 3s cubic-bezier(.12,.7,.1,1); box-shadow:inset 0 0 0 6px var(--paper); }
+.wheel::before,.wheel::after { content:""; position:absolute; background:var(--line-strong); }
+.wheel::before { top:0; bottom:0; left:50%; width:1px; }
+.wheel::after { left:0; right:0; top:50%; height:1px; }
+.wheel-label { position:absolute; width:33%; text-align:center; font-size:11px; font-weight:800; left:33.5%; top:12%; transform:rotate(0deg); }
+.wheel-label.l2 { top:28%;left:57%; transform:rotate(60deg); }
+.wheel-label.l3 { top:59%;left:54%; transform:rotate(120deg); }
+.wheel-label.l4 { top:72%;left:31%; transform:rotate(180deg); }
+.wheel-label.l5 { top:52%;left:7%; transform:rotate(240deg); }
+.wheel-label.l6 { top:23%;left:7%; transform:rotate(300deg); }
+.wheel-center { position:absolute; left:50%;top:50%;transform:translate(-50%,-50%); border-radius:50%; width:32px;height:32px;background:var(--paper);border:1px solid var(--ink);display:grid;place-items:center;font-size:14px; }
+.wheel-panel { border:1px solid var(--line); background:var(--surface); border-radius:12px; padding:20px; }
+.wheel-panel h4 { margin:0 0 6px; font-size:16px; }
+.wheel-panel p { margin:0; color:var(--muted); font-size:12px; }
+.condition-list { display:grid; gap:9px; margin:19px 0; }
+.condition-line { display:flex; justify-content:space-between; padding-bottom:9px; border-bottom:1px solid var(--line); font-size:11px; }
+.condition-line span:first-child { color:var(--muted); }
+.candidate-count { font-size:36px; font-weight:900; letter-spacing:-.06em; line-height:1; margin:5px 0; }
+.candidate-count small { font-size:11px; color:var(--muted); letter-spacing:0; }
+.spin-note { min-height:22px; margin-top:12px; font-size:11px; color:var(--accent); }
+.result-layout { display:grid; grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr); gap:24px; }
+.poster { min-height:300px; border:1px solid var(--line-strong); background:var(--surface); border-radius:10px; overflow:hidden; position:relative; padding:20px; display:flex; flex-direction:column; justify-content:space-between; }
+.poster::before { content:""; position:absolute; width:220px;height:220px;border-radius:50%;border:1px solid var(--line-strong);top:38px;right:-85px; }
+.poster::after { content:""; position:absolute; width:150px;height:150px;border-radius:50%;border:1px dashed var(--line-strong);top:72px;right:-50px; }
+.poster-kicker,.poster-title,.poster-foot { position:relative; z-index:1; }
+.poster-kicker { font-size:9px; letter-spacing:.2em; font-weight:900; color:var(--accent); }
+.poster-title { font-weight:900; font-size:28px; letter-spacing:-.07em; line-height:1.1; max-width:210px; overflow-wrap:anywhere; }
+.poster-foot { font-size:10px; color:var(--muted); }
+.result-info h4 { font-size:26px; line-height:1.1; letter-spacing:-.06em; margin:0 0 9px; }
+.result-info .subline { color:var(--muted); font-size:11px; margin:0 0 14px; }
+.tags { display:flex; gap:6px; flex-wrap:wrap; margin:12px 0 16px; }
+.tag { font-size:10px; border:1px solid var(--line); border-radius:4px; padding:5px 7px; }
+.overview { font-size:12px; color:var(--muted); margin:14px 0 20px; line-height:1.8; }
+.timer-box { display:flex; justify-content:space-between; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin:15px 0; }
+.timer-box span { color:var(--muted); font-size:11px; }
+.timer { font-size:20px; font-variant-numeric:tabular-nums; font-weight:900; letter-spacing:-.03em; }
+.timer-track { height:4px; background:var(--line); border-radius:10px; overflow:hidden; margin-top:6px; }
+.timer-progress { height:100%; width:100%; background:var(--accent); transition:width .25s linear; }
+.confirm-banner { border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:20px; display:flex; align-items:center; gap:16px; margin-bottom:20px; }
+.confirm-icon { width:64px;height:82px; background:var(--paper);border:1px solid var(--line-strong);display:grid;place-items:center;font-size:25px;flex:none; }
+.confirm-banner h4 { margin:0 0 5px;font-size:19px;letter-spacing:-.04em; }
+.confirm-banner p { margin:0;color:var(--muted);font-size:11px; }
+.stamp-head { display:flex; align-items:center; justify-content:space-between; margin:24px 0 12px; }
+.stamp-head h4 { margin:0; font-size:14px; }
+.stamp-head span { color:var(--muted);font-size:11px; }
+.stamp-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+.stamp { min-height:88px; border:1px dashed var(--line-strong); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px; text-align:center; color:var(--muted); }
+.stamp.filled { border:1px solid var(--line-strong); background:var(--surface); color:var(--ink); }
+.stamp-mark { width:30px;height:30px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;margin-bottom:5px;font-size:13px; }
+.stamp.filled .stamp-mark { background:var(--dark);color:var(--dark-text);border-color:var(--dark); }
+.stamp strong { font-size:9px;line-height:1.3; max-width:100%;overflow-wrap:anywhere; }
+.stamp small { font-size:8px;color:var(--muted);margin-top:3px; }
+.empty-stamps { border:1px dashed var(--line);border-radius:8px;padding:22px;text-align:center;color:var(--muted);font-size:12px;grid-column:1/-1; }
+.recovery-list { display:grid; gap:12px; }
+.recovery { border:1px dashed var(--line-strong); border-radius:10px; padding:16px; display:grid; grid-template-columns:42px minmax(0,1fr); gap:12px; align-items:start; }
+.recovery-icon { width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);font-size:17px; }
+.recovery h4 { margin:0 0 4px;font-size:13px; }
+.recovery p { color:var(--muted);margin:0 0 12px;font-size:11px; }
+.recovery .btn { min-height:35px;padding:8px 12px;font-size:10px; }
+.toast { position:fixed; z-index:20; bottom:22px; left:50%; transform:translate(-50%,20px); opacity:0; pointer-events:none; background:var(--dark);color:var(--dark-text);border-radius:999px;padding:12px 18px;font-size:12px;font-weight:700;box-shadow:var(--shadow);transition:.2s; max-width:calc(100vw - 30px); text-align:center; }
+.toast.show { opacity:1;transform:translate(-50%,0); }
+.footer { max-width:1240px;margin:0 auto;padding:0 28px 22px;display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-size:10px; }
+.footer strong { color:var(--ink); }
+.modal-backdrop { position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30;display:grid;place-items:center;padding:20px; }
+.modal { width:min(430px,100%);background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:var(--shadow); }
+.modal h3 { margin:0 0 6px;font-size:21px;letter-spacing:-.04em; }
+.modal p { color:var(--muted);font-size:12px;margin:0 0 18px; }
+.service-list { display:grid;grid-template-columns:1fr 1fr;gap:8px; }
+.service-list button { border:1px solid var(--line);background:var(--surface);padding:12px;border-radius:8px;color:var(--ink);font-weight:800;font-size:12px; }
+.modal-actions { display:flex;justify-content:flex-end;margin-top:17px; }
+@media (max-width:850px) {
+  .topbar,.hero { padding-left:18px;padding-right:18px; }
+  .shell { padding:0 18px 24px;grid-template-columns:1fr;gap:12px; }
+  .sidebar { position:static;padding:10px;overflow-x:auto; }
+  .side-label,.sidebar-note { display:none; }
+  .steps-nav { display:flex;min-width:max-content;gap:4px; }
+  .step-link { width:auto;min-width:100px;margin:0;padding:8px; }
+  .step-link small { display:none; }
+  .hero { display:block; }
+  .hero-meta { margin-top:13px; }
+}
+@media (max-width:600px) {
+  .topbar { padding-top:15px;padding-bottom:13px; }
+  .brand h1 { font-size:16px; }
+  .brand-mark { width:36px;height:36px;font-size:19px; }
+  .top-actions .text-button:first-child { display:none; }
+  .hero { padding-top:21px;padding-bottom:14px; }
+  .hero h2 { font-size:28px; }
+  .hero p { font-size:12px; }
+  .hero-meta { gap:9px;font-size:10px; }
+  .shell { padding:0 10px 20px; }
+  .workspace { min-height:550px; }
+  .workspace-head { padding:17px 15px 14px; }
+  .workspace-head h3 { font-size:21px; }
+  .workspace-head p { max-width:250px; }
+  .content { padding:16px; }
+  .mood-grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:8px; }
+  .mood-card { min-height:105px;padding:12px; }
+  .duration-options { grid-template-columns:1fr; }
+  .option-card { min-height:82px;padding:12px; }
+  .option-card strong { margin:4px 0 0; }
+  .wheel-layout,.result-layout { grid-template-columns:1fr;gap:15px; }
+  .wheel { width:min(78vw,275px); }
+  .wheel-panel { padding:15px; }
+  .poster { min-height:250px; }
+  .result-info h4 { font-size:23px; }
+  .confirm-banner { align-items:flex-start;padding:14px; }
+  .confirm-icon { width:48px;height:64px; }
+  .stamp-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .actions { margin-top:19px; }
+  .actions .btn { flex:1; }
+  .footer { padding:0 12px 18px;display:block;line-height:1.8; }
+}
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { transition:none!important; scroll-behavior:auto!important; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">◉</div><div><small>CINEMA ROULETTE CLUB</small><h1>오늘의 영화, 룰렛에 맡겨봐.</h1></div></div>
+    <div class="top-actions"><button class="text-button" id="headerRecords">내 도장판 보기 ↗</button><button class="text-button" id="resetApp">처음부터</button></div>
+  </header>
+  <section class="hero">
+    <div><div class="kicker">YOUR MOOD, ONE MOVIE</div><h2>고민은 짧게, 감상은 길게.</h2><p>지금의 기분과 남은 시간만 고르면, 오늘 밤 볼 영화 한 편을 골라드려요.</p></div>
+    <div class="hero-meta"><span><strong>01</strong> 기분 선택</span><span><strong>02</strong> 시간 설정</span><span><strong>03</strong> 룰렛 추천</span></div>
+  </section>
+  <div class="shell">
+    <aside class="sidebar">
+      <p class="side-label">YOUR MOVIE FLOW</p>
+      <nav class="steps-nav" aria-label="앱 화면 단계">
+        <button class="step-link active" data-step="1"><span class="num">1</span><span><b>기분 선택</b><small>지금 어떤 기분인가요?</small></span></button>
+        <button class="step-link" data-step="2"><span class="num">2</span><span><b>시간 설정</b><small>얼마나 볼 수 있어요?</small></span></button>
+        <button class="step-link" data-step="3"><span class="num">3</span><span><b>룰렛 돌리기</b><small>후보 중 한 편 추천</small></span></button>
+        <button class="step-link" data-step="4"><span class="num">4</span><span><b>추천 결과</b><small>10초 안에 결정</small></span></button>
+        <button class="step-link" data-step="5"><span class="num">5</span><span><b>확정 · 기록</b><small>도장으로 남기기</small></span></button>
+        <button class="step-link" data-step="6"><span class="num">6</span><span><b>예외 상황</b><small>막히면 여기서 해결</small></span></button>
+      </nav>
+      <div class="sidebar-note"><strong>ONE NIGHT, ONE MOVIE</strong>선택 피로를 줄이는 작은 영화 의식. 정답보다 지금의 기분을 먼저 생각해요.</div>
+    </aside>
+    <main class="main"><section class="workspace" id="workspace" aria-live="polite"></section></main>
+  </div>
+  <footer class="footer"><span><strong>LO-FI PROTOTYPE</strong> · 영화 정보는 화면 테스트용 예시 데이터입니다.</span><span>선택 내용과 도장 기록은 이 브라우저에 저장됩니다.</span></footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<div id="modalRoot"></div>
+<script>
+(() => {
+  const movies = [
+    {id:1,title:'리틀 포레스트',en:'LITTLE FOREST',year:2018,runtime:103,genre:'드라마',moods:['지침','우울한','센치한'],food:'🍙 따뜻한 집밥',tone:'쉼이 필요한 밤',overview:'도시 생활에 지쳐 고향으로 돌아온 혜원이 사계절의 음식과 일상을 통해 자신만의 속도를 찾아가는 이야기예요.',poster:'🍃'},
+    {id:2,title:'싱 스트리트',en:'SING STREET',year:2016,runtime:106,genre:'음악 · 로맨스',moods:['신나는','설레는','심심한'],food:'🍕 피자와 탄산',tone:'기분 전환이 필요한 밤',overview:'음악으로 첫사랑과 꿈을 향해 나아가는 소년의 이야기. 경쾌한 리듬과 청춘의 에너지가 가득해요.',poster:'♫'},
+    {id:3,title:'비긴 어게인',en:'BEGIN AGAIN',year:2013,runtime:104,genre:'음악 · 로맨스',moods:['센치한','설레는','지침'],food:'🍷 치즈 플레이트',tone:'잔잔한 여운이 필요한 밤',overview:'뉴욕의 거리에서 음악으로 다시 시작하는 두 사람. 편안하게 흐르는 음악과 따뜻한 위로를 만나보세요.',poster:'♪'},
+    {id:4,title:'극한직업',en:'EXTREME JOB',year:2019,runtime:111,genre:'코미디 · 액션',moods:['신나는','심심한'],food:'🍗 치킨과 맥주',tone:'아무 생각 없이 웃고 싶은 밤',overview:'잠복 수사를 위해 치킨집을 운영하게 된 형사들. 빠른 템포와 엉뚱한 상황이 이어지는 코미디예요.',poster:'!'},
+    {id:5,title:'인사이드 아웃',en:'INSIDE OUT',year:2015,runtime:95,genre:'애니메이션',moods:['우울한','센치한','신나는'],food:'🍿 팝콘',tone:'내 마음을 들여다보고 싶은 밤',overview:'마음속 감정들의 모험을 따라가며 기쁨과 슬픔이 모두 필요한 이유를 돌아보게 하는 애니메이션이에요.',poster:'☻'},
+    {id:6,title:'트루먼 쇼',en:'THE TRUMAN SHOW',year:1998,runtime:103,genre:'드라마 · SF',moods:['심심한','센치한','우울한'],food:'🥨 짭짤한 스낵',tone:'생각할 거리가 필요한 밤',overview:'평범하다고 믿었던 일상이 거대한 세트라면? 익숙한 세계를 새롭게 바라보게 만드는 영화예요.',poster:'◉'},
+    {id:7,title:'프란시스 하',en:'FRANCES HA',year:2012,runtime:86,genre:'코미디 · 드라마',moods:['지침','센치한','우울한'],food:'☕ 커피와 쿠키',tone:'내 페이스를 찾고 싶은 밤',overview:'불안정한 스물일곱의 일상 속에서도 자기만의 리듬을 찾아가는 프란시스의 흑백 성장담이에요.',poster:'F'},
+    {id:8,title:'원스',en:'ONCE',year:2007,runtime:86,genre:'음악 · 로맨스',moods:['센치한','설레는','지침'],food:'🥐 가벼운 야식',tone:'조용히 음악을 듣고 싶은 밤',overview:'더블린의 거리에서 만난 두 사람이 음악을 통해 서로의 마음을 나누는 소박하고 아름다운 이야기예요.',poster:'♪'},
+    {id:9,title:'월터의 상상은 현실이 된다',en:'THE SECRET LIFE OF WALTER MITTY',year:2013,runtime:114,genre:'모험 · 코미디',moods:['신나는','설레는','지침'],food:'🍔 버거와 감자튀김',tone:'일상에서 탈출하고 싶은 밤',overview:'상상 속에서만 모험하던 월터가 진짜 세상으로 나서는 여정. 풍경과 음악이 시원한 용기를 전해줘요.',poster:'↗'},
+    {id:10,title:'코코',en:'COCO',year:2017,runtime:105,genre:'애니메이션 · 판타지',moods:['센치한','설레는','우울한'],food:'🌮 멕시칸 스낵',tone:'마음 따뜻해지고 싶은 밤',overview:'음악을 사랑하는 미겔이 기억과 가족의 의미를 찾아 떠나는 모험. 다 보고 나면 마음에 여운이 남아요.',poster:'✦'},
+    {id:11,title:'엑시트',en:'EXIT',year:2019,runtime:103,genre:'액션 · 코미디',moods:['신나는','심심한'],food:'🍜 매콤한 야식',tone:'속도감 있는 재미가 필요한 밤',overview:'도심에 퍼진 유독가스 속에서 탈출해야 하는 두 사람. 긴장감과 유머가 이어지는 재난 액션이에요.',poster:'↑'},
+    {id:12,title:'비포 선셋',en:'BEFORE SUNSET',year:2004,runtime:80,genre:'로맨스 · 드라마',moods:['센치한','설레는','지침'],food:'🍷 와인 한 잔',tone:'대화와 여운이 필요한 밤',overview:'오랜 시간이 흐른 뒤 파리에서 다시 만난 두 사람이 걷고 대화하며 지나온 마음을 마주하는 작품이에요.',poster:'♡'},
+    {id:13,title:'패딩턴',en:'PADDINGTON',year:2014,runtime:95,genre:'가족 · 코미디',moods:['우울한','심심한','설레는'],food:'🥪 샌드위치',tone:'포근한 위로가 필요한 밤',overview:'런던에 도착한 작은 곰 패딩턴이 새로운 가족과 이웃을 만나며 벌어지는 따뜻한 소동이에요.',poster:'♧'},
+    {id:14,title:'소울',en:'SOUL',year:2020,runtime:100,genre:'애니메이션 · 판타지',moods:['지침','우울한','센치한'],food:'🍵 따뜻한 차',tone:'삶의 작은 순간을 느끼고 싶은 밤',overview:'꿈과 목적에 대해 고민하던 음악 선생님이 삶을 이루는 사소한 순간의 소중함을 발견해요.',poster:'✧'},
+    {id:15,title:'스파이더맨: 뉴 유니버스',en:'SPIDER-MAN: INTO THE SPIDER-VERSE',year:2018,runtime:117,genre:'애니메이션 · 액션',moods:['신나는','심심한'],food:'🍕 피자와 맥주',tone:'에너지를 충전하고 싶은 밤',overview:'새로운 스파이더맨 마일스가 여러 차원의 히어로들과 만나며 자기만의 길을 찾아가요.',poster:'⚡'},
+    {id:16,title:'마담 프루스트의 비밀정원',en:'ATTILA MARCEL',year:2013,runtime:106,genre:'코미디 · 드라마',moods:['센치한','지침','우울한'],food:'🍰 디저트',tone:'몽글몽글한 기분이 필요한 밤',overview:'말없이 살아온 남자가 이웃의 특별한 정원에서 기억과 감정을 마주하는 동화 같은 이야기예요.',poster:'❀'}
+  ];
+  const moodOptions = [
+    {name:'신나는',icon:'⚡',desc:'에너지를 끌어올리고 싶을 때'},
+    {name:'지침',icon:'☁',desc:'편하게 쉬어가고 싶을 때'},
+    {name:'센치한',icon:'☾',desc:'감정과 여운에 잠기고 싶을 때'},
+    {name:'설레는',icon:'♡',desc:'두근거리는 이야기가 필요할 때'},
+    {name:'우울한',icon:'☂',desc:'마음을 다독이고 싶을 때'},
+    {name:'심심한',icon:'✳',desc:'재미있게 기분 전환하고 싶을 때'}
+  ];
+  const durationOptions = [
+    {key:90,title:'90분 이내',note:'짧고 알차게'},
+    {key:120,title:'120분 이내',note:'영화 한 편 제대로'},
+    {key:0,title:'상관없음',note:'시간 제한 없이'}
+  ];
+  const defaultState = {step:1,mood:null,maxRuntime:120,movie:null,candidates:[],lastMovieId:null,remaining:10,timerStarted:false,timerFinished:false,stamps:[],sessionSaved:false,spinning:false,spinCount:0};
+  let state = {...defaultState, stamps:loadStamps()};
+  let timerInterval = null;
+  let toastTimeout = null;
+  const $ = sel => document.querySelector(sel);
+  const workspace = $('#workspace');
+  function loadStamps(){ try { const raw=localStorage.getItem('cinemaRouletteStamps'); return raw?JSON.parse(raw):[]; } catch(e){ return []; } }
+  function saveStamps(){ try { localStorage.setItem('cinemaRouletteStamps', JSON.stringify(state.stamps)); return true; } catch(e){ return false; } }
+  function showToast(message){ const el=$('#toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('show'),2400); }
+  function filteredMovies(){ return movies.filter(m => (!state.mood || m.moods.includes(state.mood)) && (!state.maxRuntime || m.runtime<=state.maxRuntime)); }
+  function setStep(step){
+    if(step===2 && !state.mood){showToast('먼저 지금의 기분을 선택해 주세요.');state.step=1;render();return;}
+    if(step===3 && !state.mood){showToast('기분을 선택한 뒤 룰렛을 돌릴 수 있어요.');state.step=1;render();return;}
+    if(step===4 && !state.movie){showToast('먼저 룰렛으로 영화를 추천받아 주세요.');state.step=3;render();return;}
+    if(step===5 && !state.movie){showToast('확정할 영화가 아직 없어요.');state.step=3;render();return;}
+    clearInterval(timerInterval); timerInterval=null;
+    state.step=step; if(step!==4) state.timerStarted=false;
+    render();
+    if(step===4) startTimer();
+  }
+  function header(step,title,description,status){
+    return `<div class="workspace-head"><div><div class="eyebrow">STEP 0${step} / CINEMA CLUB</div><h3>${title}</h3><p>${description}</p></div><span class="status-pill">${status}</span></div>`;
+  }
+  function chip(label,value){return `<span class="chip"><em>${label}</em> ${value}</span>`;}
+  function renderMood(){
+    workspace.innerHTML=header(1,'지금 기분은?','지금의 기분과 가장 가까운 하나를 골라주세요.','선택 1개')+`<div class="content"><div class="section-row"><h4>오늘 밤의 무드</h4><span>MOOD FILTER · 단일 선택</span></div><div class="mood-grid">${moodOptions.map(m=>`<button class="mood-card ${state.mood===m.name?'selected':''}" data-mood="${m.name}" aria-pressed="${state.mood===m.name}"><span class="checkmark">✓</span><span class="mood-icon">${m.icon}</span><strong>${m.name}</strong><small>${m.desc}</small></button>`).join('')}</div><div class="selection-summary">${state.mood?chip('선택한 기분',state.mood):'<span class="chip">아직 선택하지 않았어요</span>'}</div><div class="callout"><strong>작은 팁</strong> · 정확한 감정을 고르기 어려우면, 지금 보고 싶은 분위기에 가까운 것을 골라도 좋아요.</div><div class="actions"><button class="btn primary" id="toDuration" ${state.mood?'':'disabled'}>시간 선택하기 <span aria-hidden="true">→</span></button></div></div>`;
+    workspace.querySelectorAll('[data-mood]').forEach(b=>b.addEventListener('click',()=>{state.mood=b.dataset.mood;state.movie=null;state.candidates=[];state.lastMovieId=null;renderMood();updateNavigation();}));
+    $('#toDuration').addEventListener('click',()=>setStep(2));
+  }
+  function renderDuration(){
+    const count=filteredMovies().length;
+    workspace.innerHTML=header(2,'얼마나 볼 수 있어요?','남은 시간에 맞춰 후보를 좁혀볼게요.','조건 설정')+`<div class="content"><div class="section-row"><h4>선택한 조건</h4><span>MOOD FILTER</span></div><div class="selection-summary">${chip('기분',state.mood||'미선택')}${chip('후보',count+'편')}</div><div class="divider"></div><div class="section-row"><h4>영화 러닝타임</h4><span>MAX RUNTIME</span></div><div class="duration-options">${durationOptions.map((d,i)=>`<button class="option-card ${state.maxRuntime===d.key?'selected':''}" data-runtime="${d.key}" aria-pressed="${state.maxRuntime===d.key}"><span class="option-num">OPTION 0${i+1}</span><strong>${d.title}</strong><small>${d.note}</small></button>`).join('')}</div><div class="callout"><strong>선택 기준</strong> · 러닝타임은 영화 전체 길이 기준이에요. 예고편이나 엔딩 크레딧 시간은 별도로 계산하지 않아요.</div><div class="actions"><button class="btn" id="backMood">← 기분 다시 선택</button><button class="btn primary" id="toWheel" ${count?'':'disabled'}>조건으로 룰렛 만들기 →</button></div></div>`;
+    workspace.querySelectorAll('[data-runtime]').forEach(b=>b.addEventListener('click',()=>{state.maxRuntime=Number(b.dataset.runtime);state.movie=null;renderDuration();updateNavigation();}));
+    $('#backMood').addEventListener('click',()=>setStep(1));
+    $('#toWheel').addEventListener('click',()=>{state.candidates=filteredMovies();setStep(3);});
+  }
+  function renderWheel(){
+    const candidates=filteredMovies(); state.candidates=candidates;
+    if(!candidates.length){state.step=6;renderRecovery('noCandidates');return;}
+    workspace.innerHTML=header(3,'운명에 맡겨볼까요?','조건에 맞는 영화 중 하나를 무작위로 추천해요.','후보 '+candidates.length+'편')+`<div class="content"><div class="wheel-layout"><div class="wheel-wrap"><div class="wheel-pointer"></div><div class="wheel" id="wheel"><span class="wheel-label">기대감</span><span class="wheel-label l2">새로움</span><span class="wheel-label l3">몰입</span><span class="wheel-label l4">휴식</span><span class="wheel-label l5">여운</span><span class="wheel-label l6">웃음</span><span class="wheel-center">✦</span></div></div><div class="wheel-panel"><div class="eyebrow">YOUR CONDITIONS</div><h4>이번 밤의 후보</h4><p>선택한 조건에 맞는 영화만 룰렛에 들어 있어요.</p><div class="condition-list"><div class="condition-line"><span>현재 기분</span><strong>${state.mood}</strong></div><div class="condition-line"><span>러닝타임</span><strong>${state.maxRuntime?state.maxRuntime+'분 이내':'제한 없음'}</strong></div><div class="condition-line"><span>추천 후보</span><strong>${candidates.length}편</strong></div></div><div class="candidate-count">${candidates.length}<small> MOVIES IN THE HAT</small></div><p>결과는 후보 중 무작위로 한 편을 골라요.</p><div class="spin-note" id="spinNote"></div><button class="btn primary full" id="spinButton">룰렛 돌리기 ↻</button><button class="btn full" id="editConditions" style="margin-top:8px">조건 수정하기</button></div></div></div>`;
+    $('#spinButton').addEventListener('click',spinRoulette);
+    $('#editConditions').addEventListener('click',()=>setStep(2));
+  }
+  function spinRoulette(){
+    if(state.spinning)return;
+    const candidates=filteredMovies();
+    if(!candidates.length){setStep(6);renderRecovery('noCandidates');return;}
+    let pool=candidates.filter(m=>m.id!==state.lastMovieId); if(!pool.length)pool=candidates;
+    const pick=pool[Math.floor(Math.random()*pool.length)];
+    state.spinning=true; const wheel=$('#wheel'); const button=$('#spinButton'); const note=$('#spinNote');
+    button.disabled=true;button.textContent='룰렛이 돌아가는 중…';note.textContent='후보 중 한 편을 고르고 있어요.';
+    const degrees=1440+Math.floor(Math.random()*720)+Math.floor(Math.random()*60);
+    wheel.style.transform=`rotate(${degrees}deg)`;
+    setTimeout(()=>{state.spinning=false;state.movie=pick;state.lastMovieId=pick.id;state.remaining=10;state.timerStarted=false;state.timerFinished=false;state.sessionSaved=false;setStep(4);},3000);
+  }
+  function startTimer(){
+    clearInterval(timerInterval);timerInterval=null;
+    if(state.step!==4 || !state.movie)return;
+    if(state.timerFinished){updateTimerUI();return;}
+    state.timerStarted=true;
+    timerInterval=setInterval(()=>{
+      if(state.step!==4){clearInterval(timerInterval);timerInterval=null;return;}
+      state.remaining=Math.max(0,state.remaining-1);
+      if(state.remaining===0){state.timerFinished=true;clearInterval(timerInterval);timerInterval=null;showToast('10초가 지났어요. 다시 추천하거나 그대로 확정하세요.');}
+      updateTimerUI();
+    },1000);
+  }
+  function updateTimerUI(){
+    const timer=$('#timerValue'),progress=$('#timerProgress'),stateLabel=$('#timerState');
+    if(timer)timer.textContent='00:'+String(state.remaining).padStart(2,'0');
+    if(progress)progress.style.width=(state.remaining/10*100)+'%';
+    if(stateLabel)stateLabel.textContent=state.timerFinished?'선택 시간이 끝났어요': '고민은 10초면 충분해요';
+  }
+  function posterMarkup(movie){ return `<div class="poster"><span class="poster-kicker">TONIGHT'S PICK · ${movie.year}</span><span class="poster-title">${movie.title}</span><span class="poster-foot">${movie.en}<br>${movie.poster} &nbsp; A CINEMA ROULETTE PICK</span></div>`; }
+  function renderResult(){
+    const m=state.movie;
+    if(!m){state.step=3;renderWheel();return;}
+    workspace.innerHTML=header(4,'오늘의 추천 영화','마음에 들면 바로 확정하고, 아니면 다시 뽑아도 괜찮아요.','10초 결정 타이머')+`<div class="content"><div class="result-layout"><div>${posterMarkup(m)}</div><div class="result-info"><div class="eyebrow">WE PICKED FOR YOU</div><h4>${m.title}</h4><p class="subline">${m.year} · ${m.genre} · ${m.runtime}분</p><div class="tags"><span class="tag">${m.moods.includes(state.mood)?state.mood: m.moods[0]}</span><span class="tag">${m.tone}</span><span class="tag">${m.food}</span></div><p class="overview">${m.overview}</p><div class="timer-box"><div><span id="timerState">고민은 10초면 충분해요</span><div class="timer-track"><div class="timer-progress" id="timerProgress"></div></div></div><strong class="timer" id="timerValue">00:10</strong></div><div class="actions" style="justify-content:stretch"><button class="btn" id="tryAgain">다시 추천 ↻</button><button class="btn primary" id="confirmMovie">이 영화로 확정 ✓</button></div><div class="callout">타이머가 끝나도 자동 확정되지 않아요. 지금의 마음대로 선택하면 돼요.</div></div></div></div>`;
+    $('#tryAgain').addEventListener('click',()=>{clearInterval(timerInterval);timerInterval=null;state.step=3;state.timerStarted=false;render();setTimeout(spinRoulette,20);});
+    $('#confirmMovie').addEventListener('click',()=>{clearInterval(timerInterval);timerInterval=null;state.step=5;render();});
+    updateNavigation();
+  }
+  function renderStamps(){
+    const stamps=state.stamps.slice().reverse();
+    if(!stamps.length)return '<div class="empty-stamps">아직 모은 도장이 없어요.<br>오늘의 영화를 감상하고 첫 기록을 남겨보세요.</div>';
+    return stamps.slice(0,10).map((s,i)=>`<div class="stamp filled"><span class="stamp-mark">✦</span><strong>${s.title}</strong><small>${s.date}</small></div>`).join('')+(stamps.length<5?Array.from({length:5-stamps.length},()=>'<div class="stamp"><span class="stamp-mark">＋</span><strong>다음 영화</strong><small>비어 있음</small></div>').join(''):'');
+  }
+  function renderConfirmed(){
+    const m=state.movie;
+    if(!m){state.step=3;renderWheel();return;}
+    workspace.innerHTML=header(5,'선택 완료. 이제 감상할 시간!','확정한 영화를 확인하고, 오늘 밤의 기록을 남겨보세요.','영화 확정')+`<div class="content"><div class="confirm-banner"><div class="confirm-icon">${m.poster}</div><div><div class="eyebrow">TONIGHT'S MOVIE</div><h4>${m.title}</h4><p>${m.year} · ${m.genre} · ${m.runtime}분 · ${m.food}</p></div></div><div class="actions" style="justify-content:stretch;margin-top:0"><button class="btn primary" id="watchMovie">감상 서비스 선택 ↗</button><button class="btn" id="saveStamp" ${state.sessionSaved?'disabled':''}>${state.sessionSaved?'도장 저장 완료 ✓':'도장 남기기 ✦'}</button></div><div class="callout"><strong>감상 준비</strong> · OTT 서비스 연결은 데모 단계예요. 아래 버튼에서 사용할 서비스를 선택하면 서비스 페이지로 이동할 수 있어요.</div><div class="stamp-head"><h4>내 도장판</h4><span>${state.stamps.length}개 모음</span></div><div class="stamp-grid">${renderStamps()}</div><div class="actions"><button class="btn" id="moreMovie">새 영화 추천하기 →</button><button class="btn danger" id="clearRecords">기록 지우기</button></div></div>`;
+    $('#watchMovie').addEventListener('click',openWatchModal);
+    $('#saveStamp').addEventListener('click',()=>{
+      if(state.sessionSaved){showToast('이번 영화는 이미 기록했어요.');return;}
+      const today=new Date();const date=`${today.getFullYear()}.${String(today.getMonth()+1).padStart(2,'0')}.${String(today.getDate()).padStart(2,'0')}`;
+      const already=state.stamps.some(s=>s.id===m.id&&s.date===date);
+      if(already){state.sessionSaved=true;showToast('오늘 같은 영화는 이미 도장판에 있어요.');renderConfirmed();return;}
+      state.stamps.push({id:m.id,title:m.title,date,year:m.year,runtime:m.runtime});
+      if(!saveStamps()){state.stamps.pop();showToast('기록 저장에 실패했어요. 브라우저 저장 설정을 확인해 주세요.');return;}
+      state.sessionSaved=true;showToast('도장판에 기록했어요!');renderConfirmed();
+    });
+    $('#moreMovie').addEventListener('click',()=>{state.movie=null;state.sessionSaved=false;state.step=1;state.lastMovieId=null;render();});
+    $('#clearRecords').addEventListener('click',()=>{if(confirm('저장된 도장 기록을 모두 지울까요?')){state.stamps=[];saveStamps();state.sessionSaved=false;renderConfirmed();showToast('도장 기록을 지웠어요.');}});
+  }
+  function openWatchModal(){
+    const root=$('#modalRoot');
+    root.innerHTML=`<div class="modal-backdrop" id="backdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="eyebrow">READY TO WATCH</div><h3 id="modalTitle">어디에서 감상할까요?</h3><p>현재 프로토타입은 OTT 보유 여부를 조회하지 않아요. 서비스 선택 후 공식 사이트로 이동합니다.</p><div class="service-list"><button data-url="https://www.netflix.com/">Netflix ↗</button><button data-url="https://watcha.com/">WATCHA ↗</button><button data-url="https://www.wavve.com/">Wavve ↗</button><button data-url="https://www.tving.com/">TVING ↗</button></div><div class="modal-actions"><button class="btn" id="closeModal">닫기</button></div></div></div>`;
+    $('#closeModal').addEventListener('click',()=>root.innerHTML='');
+    $('#backdrop').addEventListener('click',e=>{if(e.target.id==='backdrop')root.innerHTML='';});
+    root.querySelectorAll('[data-url]').forEach(b=>b.addEventListener('click',()=>{const url=b.dataset.url;root.innerHTML='';showToast('영화 제목을 검색해서 이용 가능 여부를 확인해 주세요.');window.open(url,'_blank','noopener,noreferrer');}));
+  }
+  function renderRecovery(type='all'){
+    const entries=[
+      {id:'noCandidates',icon:'⌕',title:'조건에 맞는 영화가 없어요',desc:'시간 조건을 ‘상관없음’으로 바꾸거나 다른 기분을 선택해보세요.',button:'조건 다시 설정',action:()=>setStep(2)},
+      {id:'timer',icon:'◷',title:'시간이 끝났어요',desc:'타이머가 끝나도 자동 확정되지는 않아요. 다시 추천하거나 후보를 그대로 확정할 수 있어요.',button:'추천 화면으로 돌아가기',action:()=>setStep(state.movie?4:3)},
+      {id:'ott',icon:'↗',title:'감상 서비스를 찾지 못했어요',desc:'서비스 앱에서 영화 제목을 직접 검색해보세요. 이 프로토타입은 OTT별 제공 여부를 조회하지 않아요.',button:'감상 서비스 선택',action:()=>state.movie?openWatchModal():showToast('먼저 영화를 추천받아 주세요.')},
+      {id:'storage',icon:'▣',title:'기록을 저장하지 못했어요',desc:'브라우저 저장이 제한되어 있을 수 있어요. 이 경우에도 추천 흐름은 계속 이용할 수 있어요.',button:'다시 저장 안내 보기',action:()=>showToast('브라우저의 사이트 데이터 저장 설정을 확인해 주세요.')}
+    ].filter(e=>type==='all'||e.id===type);
+    workspace.innerHTML=header(6,'막히는 순간에도, 다음 선택은 있어요.','예상 가능한 예외 상황에서 바로 복구할 수 있도록 준비했어요.','HELP / RECOVERY')+`<div class="content"><div class="recovery-list">${entries.map(e=>`<article class="recovery"><div class="recovery-icon">${e.icon}</div><div><h4>${e.title}</h4><p>${e.desc}</p><button class="btn" data-recovery="${e.id}">${e.button} →</button></div></article>`).join('')}</div><div class="actions"><button class="btn" id="backToApp">← 앱으로 돌아가기</button></div></div>`;
+    workspace.querySelectorAll('[data-recovery]').forEach(b=>b.addEventListener('click',()=>{const e=entries.find(x=>x.id===b.dataset.recovery);if(e)e.action();}));
+    $('#backToApp').addEventListener('click',()=>setStep(state.movie?4:(state.mood?2:1)));
+  }
+  function render(){
+    updateNavigation();
+    if(state.step===1)renderMood();
+    else if(state.step===2)renderDuration();
+    else if(state.step===3)renderWheel();
+    else if(state.step===4)renderResult();
+    else if(state.step===5)renderConfirmed();
+    else renderRecovery('all');
+  }
+  function updateNavigation(){
+    document.querySelectorAll('.step-link').forEach(b=>{
+      const s=Number(b.dataset.step);b.classList.toggle('active',s===state.step);b.classList.toggle('done',(s<state.step&&s<6));
+      if(s===state.step)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');
+    });
+  }
+  document.querySelectorAll('.step-link').forEach(b=>b.addEventListener('click',()=>setStep(Number(b.dataset.step))));
+  $('#headerRecords').addEventListener('click',()=>{if(state.movie)setStep(5);else{state.step=5;state.movie=state.movie||null;if(!state.movie){workspace.innerHTML=header(5,'내 도장판','지금까지 기록한 영화를 확인해보세요.','MY STAMPS')+`<div class="content"><div class="stamp-grid">${renderStamps()}</div><div class="actions"><button class="btn primary" id="startAgain">영화 추천받기 →</button></div></div>`;$('#startAgain').addEventListener('click',()=>setStep(1));updateNavigation();}}});
+  $('#resetApp').addEventListener('click',()=>{clearInterval(timerInterval);timerInterval=null;state={...defaultState,stamps:loadStamps()};render();showToast('새로운 영화 선택을 시작해요.');});
+  render();
+})();
+</script>
+</body>
+</html>
