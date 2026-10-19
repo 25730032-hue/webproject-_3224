@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#161616">
+<title>시네픽 · CinePick</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#f2f2f6, #141414);
+  --paper: light-dark(#ffffff, #222222);
+  --surface: light-dark(#f8f8fa, #2a2a2a);
+  --ink: light-dark(#111111, #f5f5f5);
+  --muted: light-dark(#777777, #aaaaaa);
+  --line: light-dark(#e0e0e5, #444444);
+  --line-strong: light-dark(#888888, #777777);
+  --accent: light-dark(#d9383a, #ff6b6d);
+  --dark: light-dark(#111111, #f5f5f5);
+  --dark-text: light-dark(#ffffff, #111111);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sat: env(safe-area-inset-top, 0px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Noto Sans KR", sans-serif; min-height: 100vh; display: flex; justify-content: center; }
+
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; touch-action: manipulation; }
+button:active { transform: scale(0.97); opacity: 0.9; }
+
+#app {
+  width: 100%;
+  max-width: 420px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 30px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+/* 상단 헤더 */
+.topbar {
+  padding: calc(12px + var(--sat)) 16px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-mark { width: 32px; height: 32px; background: var(--dark); color: var(--dark-text); font-size: 16px; border-radius: 50%; display: grid; place-items: center; font-weight: bold; }
+.brand h1 { font-size: 17px; font-weight: 800; letter-spacing: -.03em; }
+.brand small { display: block; font-size: 9px; color: var(--muted); font-weight: 600; letter-spacing: 0.1em; }
+.text-button { border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; font-size: 11px; font-weight: 700; background: var(--surface); }
+
+/* 스텝 진행 바 */
+.step-bar {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 12px;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.step-bar::-webkit-scrollbar { display: none; }
+.step-item {
+  flex: 1;
+  min-width: 52px;
+  text-align: center;
+  font-size: 10.5px;
+  color: var(--muted);
+  padding: 6px 4px;
+  border-radius: 6px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.step-item.active { background: var(--dark); color: var(--dark-text); }
+.step-item.done:not(.active) { color: var(--ink); border-color: var(--line); }
+
+/* 스크린 영역 */
+.screen {
+  flex: 1;
+  padding: 20px 18px calc(20px + var(--sab));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.screen-header { margin-bottom: 16px; }
+.screen-header .step-tag { font-size: 9.5px; font-weight: 900; color: var(--accent); letter-spacing: .15em; margin-bottom: 2px; }
+.screen-header h2 { font-size: 20px; font-weight: 800; letter-spacing: -.03em; line-height: 1.25; }
+.screen-header p { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+/* 선택 버튼 그리드 */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grid-1 { display: grid; grid-template-columns: 1fr; gap: 8px; }
+
+.option-btn {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 14px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.option-btn * { pointer-events: none; } /* 자식 요소를 터치해도 버튼 전체가 이벤트 받도록 방지 */
+.option-btn small { font-size: 10px; font-weight: 400; color: var(--muted); }
+.option-btn.selected {
+  background: var(--dark);
+  color: var(--dark-text);
+  border-color: var(--dark);
+}
+.option-btn.selected small { color: var(--dark-text); opacity: 0.8; }
+
+.summary-pill {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.summary-pill strong { color: var(--ink); margin-left: 4px; }
+
+.cta-btn {
+  width: 100%;
+  min-height: 46px;
+  background: var(--dark);
+  color: var(--dark-text);
+  font-size: 13.5px;
+  font-weight: 800;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: auto;
+  cursor: pointer;
+}
+.cta-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.cta-btn.secondary { background: var(--paper); color: var(--ink); border: 1px solid var(--line-strong); }
+
+/* 룰렛 디자인 */
+.wheel-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 10px auto 20px;
+  display: grid;
+  place-items: center;
+}
+.wheel-pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 16px solid var(--accent);
+  z-index: 5;
+}
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: conic-gradient(from -30deg, var(--paper) 0deg 60deg, var(--surface) 60deg 120deg, var(--paper) 120deg 180deg, var(--surface) 180deg 240deg, var(--paper) 240deg 300deg, var(--surface) 300deg 360deg);
+  transition: transform 3s cubic-bezier(.12,.7,.1,1);
+  position: relative;
+  overflow: hidden;
+}
+.wheel-center {
+  position: absolute;
+  width: 32px; height: 32px;
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid; place-items: center; font-size: 12px;
+  z-index: 2;
+}
+
+/* 결과 포스터 */
+.poster-card {
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 16px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.timer-badge {
+  background: var(--paper);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.tag-list { display: flex; gap: 4px; flex-wrap: wrap; margin: 8px 0; }
+.tag { font-size: 10px; border: 1px solid var(--line); background: var(--paper); padding: 3px 6px; border-radius: 4px; }
+.overview-text { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* 도장판 */
+.stamp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 10px 0 16px; }
+.stamp-slot {
+  aspect-ratio: 1;
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  font-size: 9px; color: var(--muted);
+  padding: 2px; text-align: center;
+}
+.stamp-slot.filled {
+  border: 1px solid var(--dark);
+  background: var(--dark);
+  color: var(--dark-text);
+  font-weight: bold;
+}
+
+.ticket-stub {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 10px;
+  padding: 12px;
+  background: var(--surface);
+  margin-bottom: 12px;
+}
+
+/* 모달 및 토스트 */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 50;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.modal {
+  width: 100%; max-width: 420px;
+  background: var(--paper);
+  border-radius: 18px 18px 0 0;
+  padding: 20px 18px calc(20px + var(--sab));
+}
+.toast {
+  position: fixed; bottom: calc(20px + var(--sab)); left: 50%;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  background: var(--dark); color: var(--dark-text);
+  padding: 8px 16px; border-radius: 999px; font-size: 11.5px; font-weight: 700;
+  transition: 0.2s ease; z-index: 60; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">🎬</div>
+      <div>
+        <h1>시네픽</h1>
+        <small>CINEPICK ROULETTE</small>
+      </div>
+    </div>
+    <button class="text-button" id="btn-ticketbook">티켓북 ↗</button>
+  </header>
+
+  <!-- 단계 선택 바 -->
+  <nav class="step-bar">
+    <div class="step-item active" id="sbar-1">1. 기분</div>
+    <div class="step-item" id="sbar-2">2. 시간</div>
+    <div class="step-item" id="sbar-3">3. 룰렛</div>
+    <div class="step-item" id="sbar-4">4. 결과</div>
+    <div class="step-item" id="sbar-5">5. 확정</div>
+    <div class="step-item" id="sbar-6">6. 티켓북</div>
+  </nav>
+
+  <!-- STEP 1: 기분 선택 -->
+  <section class="screen" id="screen-1">
+    <div>
+      <div class="screen-header">
+        <div class="step-tag">STEP 01</div>
+        <h2>지금 기분은 어떠신가요?</h2>
+        <p>오늘 밤 느끼고 싶은 감정 하나를 고르면 영화를 맞춰드려요.</p>
+      </div>
+      <div class="grid-2" id="mood-grid">
+        <button class="option-btn" data-mood="신나는"><span>⚡ 신나는</span><small>에너지 충전</small></button>
+        <button class="option-btn" data-mood="지침"><span>☁ 지침</span><small>쉬어가고 싶을 때</small></button>
+        <button class="option-btn" data-mood="센치한"><span>☾ 센치한</span><small>감정에 잠길 때</small></button>
+        <button class="option-btn" data-mood="설레는"><span>♡ 설레는</span><small>두근거릴 때</small></button>
+        <button class="option-btn" data-mood="우울한"><span>☂ 우울한</span><small>마음 다독일 때</small></button>
+        <button class="option-btn" data-mood="심심한"><span>✳ 심심한</span><small>기분 전환</small></button>
+      </div>
+    </div>
+    <button class="cta-btn" id="btn-to-step2" disabled>다음 단계로 →</button>
+  </section>
+
+  <!-- STEP 2: 시간 선택 -->
+  <section class="screen" id="screen-2" style="display:none;">
+    <div>
+      <div class="screen-header">
+        <div class="step-tag">STEP 02</div>
+        <h2>얼마나 볼 수 있나요?</h2>
+        <p>남은 시간에 맞춰 영화 후보를 필터링해 볼게요.</p>
+      </div>
+      <div class="summary-pill">선택한 기분:<strong id="summary-mood">미선택</strong></div>
+      <div class="grid-1" id="time-grid">
+        <button class="option-btn" data-time="90"><span>90분 이내</span><small>짧고 알차게 즐기기</small></button>
+        <button class="option-btn" data-time="120"><span>120분 이내</span><small>영화 한 편 제대로</small></button>
+        <button class="option-btn" data-time="0"><span>상관없음</span><small>시간 제한 없이 몰입</small></button>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="cta-btn secondary" id="btn-back-to-1" style="flex:1;">← 기분 재선택</button>
+      <button class="cta-btn" id="btn-to-step3" disabled style="flex:1.5;">룰렛 만들기 →</button>
+    </div>
+  </section>
+
+  <!-- STEP 3: 룰렛 -->
+  <section class="screen" id="screen-3" style="display:none;">
+    <div>
+      <div class="screen-header">
+        <div class="step-tag">STEP 03</div>
+        <h2>운명에 맡겨볼까요?</h2>
+        <p id="candidate-count-text">조건에 맞는 후보를 찾는 중...</p>
+      </div>
+      <div class="summary-pill" id="summary-conditions">기분: - | 시간: -</div>
+      <div class="wheel-container">
+        <div class="wheel-pointer"></div>
+        <div class="wheel" id="wheel-disc"></div>
+        <div class="wheel-center">✦</div>
+      </div>
+    </div>
+    <button class="cta-btn" id="btn-spin-wheel">룰렛 돌리기 ↻</button>
+  </section>
+
+  <!-- STEP 4: 결과 -->
+  <section class="screen" id="screen-4" style="display:none;">
+    <div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <div class="screen-header" style="margin-bottom:0;">
+          <div class="step-tag">STEP 04 · TONIGHT'S PICK</div>
+          <h2 id="res-title">영화 제목</h2>
+        </div>
+        <span class="timer-badge" id="timer-badge">00:10</span>
+      </div>
+      <div class="poster-card">
+        <div>
+          <span style="font-size:10px; color:var(--muted); font-weight:800;" id="res-sub">2026 · 장르</span>
+          <div class="tag-list" id="res-tags"></div>
+        </div>
+        <p class="overview-text" id="res-overview">영화 줄거리 정보입니다.</p>
+      </div>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="cta-btn secondary" id="btn-respin" disabled style="flex:1;">다시 추천 (10초)</button>
+      <button class="cta-btn" id="btn-confirm-movie" style="flex:1.2;">이 영화로 확정 ✓</button>
+    </div>
+  </section>
+
+  <!-- STEP 5: 확정 및 티켓 발권 -->
+  <section class="screen" id="screen-5" style="display:none;">
+    <div>
+      <div class="screen-header">
+        <div class="step-tag">STEP 05 · CONFIRMED</div>
+        <h2>선택 완료! 감상할 시간</h2>
+        <p>오늘 밤 영화가 확정되었습니다. 매칭 티켓을 발권해 보세요.</p>
+      </div>
+
+      <div class="ticket-stub" id="ticket-stub-view" style="display:none;">
+        <div style="font-size:9px; color:var(--accent); font-weight:900; letter-spacing:.1em;">CINEPICK TICKET</div>
+        <div style="font-size:18px; font-weight:900;" id="stub-title">영화 제목</div>
+        <div style="font-size:10px; color:var(--muted); display:flex; justify-content:space-between; margin-top:4px;">
+          <span id="stub-date">2026.10.12</span>
+          <span id="stub-id">No. TICKET</span>
+        </div>
+      </div>
+
+      <button class="cta-btn" id="btn-issue-ticket" style="margin-bottom:10px;">매칭 티켓 발권하기 ✦</button>
+      <button class="cta-btn secondary" id="btn-open-ott" style="margin-bottom:16px;">바로 감상하기 (OTT) ↗</button>
+
+      <div style="font-size:12px; font-weight:800;">우유부단 탈출 도장판</div>
+      <div class="stamp-grid" id="stamp-board"></div>
+    </div>
+    <button class="cta-btn secondary" id="btn-restart">처음부터 다시하기 ↻</button>
+  </section>
+
+  <!-- STEP 6: 티켓북 -->
+  <section class="screen" id="screen-6" style="display:none;">
+    <div>
+      <div class="screen-header">
+        <div class="step-tag">STEP 06 · MY RECORDS</div>
+        <h2>내 시네픽 티켓북</h2>
+        <p>발권한 티켓들과 적립된 도장을 확인해보세요.</p>
+      </div>
+      <div class="stamp-grid" id="tb-stamp-board"></div>
+      <div id="ticket-list-container" style="display:grid; gap:8px; max-height:240px; overflow-y:auto;"></div>
+    </div>
+    <button class="cta-btn" id="btn-tb-back">← 추천 화면으로 돌아가기</button>
+  </section>
+
+  <!-- EMPTY: 예외 처리 -->
+  <section class="screen" id="screen-empty" style="display:none; justify-content:center; text-align:center;">
+    <div style="margin: auto 0;">
+      <h2 style="font-size:18px; margin-bottom:6px;">조건에 맞는 영화가 없어요 😢</h2>
+      <p style="font-size:11.5px; color:var(--muted); margin-bottom:20px;">러닝타임 조건을 '상관없음'으로 풀어보세요.</p>
+      <button class="cta-btn" id="btn-reset-time">상관없음으로 변경하기</button>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="modal-root"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const MOVIES = [
+    {id:'mov_001',title:'리틀 포레스트',year:2018,runtime:103,genre:'드라마',moods:['지침','우울한','센치한'],food:'🍙 따뜻한 집밥',overview:'도시 생활에 지쳐 고향으로 돌아온 혜원이 사계절의 음식과 일상을 통해 자신만의 속도를 찾아가는 이야기.'},
+    {id:'mov_002',title:'싱 스트리트',year:2016,runtime:106,genre:'음악 · 로맨스',moods:['신나는','설레는','심심한'],food:'🍕 피자와 탄산',overview:'음악으로 첫사랑과 꿈을 향해 나아가는 소년의 이야기. 경쾌한 리듬과 청춘의 에너지가 가득해요.'},
+    {id:'mov_003',title:'비긴 어게인',year:2013,runtime:104,genre:'음악 · 로맨스',moods:['센치한','설레는','지침'],food:'🍷 치즈 플레이트',overview:'뉴욕의 거리에서 음악으로 다시 시작하는 두 사람. 편안하게 흐르는 음악과 따뜻한 위로를 만나보세요.'},
+    {id:'mov_004',title:'극한직업',year:2019,runtime:111,genre:'코미디 · 액션',moods:['신나는','심심한'],food:'🍗 치킨과 맥주',overview:'잠복 수사를 위해 치킨집을 운영하게 된 형사들. 빠른 템포와 엉뚱한 상황이 이어지는 코미디예요.'},
+    {id:'mov_005',title:'인사이드 아웃',year:2015,runtime:95,genre:'애니메이션',moods:['우울한','센치한','신나는'],food:'🍿 팝콘',overview:'마음속 감정들의 모험을 따라가며 기쁨과 슬픔이 모두 필요한 이유를 돌아보게 하는 애니메이션.'},
+    {id:'mov_006',title:'프란시스 하',year:2012,runtime:86,genre:'코미디 · 드라마',moods:['지침','센치한','우울한'],food:'☕ 커피와 쿠키',overview:'불안정한 스물일곱의 일상 속에서도 자기만의 리듬을 찾아가는 프란시스의 흑백 성장담.'}
+  ];
+
+  let state = {
+    step: 1,
+    mood: null,
+    maxRuntime: null,
+    candidates: [],
+    selectedMovie: null,
+    timer: 10,
+    timerInterval: null,
+    spinning: false
+  };
+
+  const $ = sel => document.querySelector(sel);   const $$ = sel => document.querySelectorAll(sel);
+
+  function getTickets(){ try { return JSON.parse(localStorage.getItem('cinepick_tickets')) || []; } catch(e){ return []; } }
+  function saveTickets(data){ try { localStorage.setItem('cinepick_tickets', JSON.stringify(data)); } catch(e){} }
+
+  function showToast(msg){
+    const t = $('#toast');     if(!t) return;     t.textContent = msg; t.classList.add('show');     setTimeout(() => t.classList.remove('show'), 2200);   }    function setStep(stepNum){     if((stepNum === 2 \vert{}\vert{} stepNum === 3) && !state.mood){       showToast('먼저 기분을 선택해 주세요!');       stepNum = 1;     }     if((stepNum === 4 \vert{}\vert{} stepNum === 5) && !state.selectedMovie){       showToast('먼저 룰렛으로 영화를 추천받아 주세요.');       stepNum = state.mood ? 3 : 1;     }      state.step = stepNum;     $$('.screen').forEach(s => s.style.display = 'none');$('#screen-empty').style.display = 'none';
+
+    const target = $(`#screen-${stepNum}`);
+    if(target) target.style.display = 'flex';
+
+    for(let i=1; i<=6; i++){
+      const bar = $(`#sbar-${i}`);
+      if(bar){
+        bar.classList.toggle('active', i === stepNum);
+        bar.classList.toggle('done', i < stepNum);
+      }
+    }
+
+    if(stepNum === 4) startTimer();
+    if(stepNum === 5 || stepNum === 6) renderStamps();
+    window.scrollTo(0, 0);
+  }
+
+  /* 상단 스텝 바 터치 클릭 이벤트 */
+  $$('.step-item').forEach((item, idx) => {     item.addEventListener('click', () => setStep(idx + 1));   });    /* 이벤트 위임을 통한 버튼 터치 처리 */   document.addEventListener('click', (e) => {     // 기분 카드 클릭     const moodBtn = e.target.closest('#mood-grid .option-btn');     if(moodBtn){       $$
+('#mood-grid .option-btn').forEach(b => b.classList.remove('selected'));
+      moodBtn.classList.add('selected');
+      state.mood = moodBtn.dataset.mood;
+      $('#btn-to-step2').disabled = false;       return;     }      // 시간 옵션 클릭     const timeBtn = e.target.closest('#time-grid .option-btn');     if(timeBtn){       $$('#time-grid .option-btn').forEach(b => b.classList.remove('selected'));
+      timeBtn.classList.add('selected');
+      state.maxRuntime = Number(timeBtn.dataset.time);
+      $('#btn-to-step3').disabled = false;
+      return;
+    }
+  });
+
+  /* 버튼 액션 연동 */
+  $('#btn-to-step2').addEventListener('click', () => {
+    $('#summary-mood').textContent = state.mood;
+    setStep(2);
+  });
+
+  $('#btn-back-to-1').addEventListener('click', () => setStep(1));
+
+  $('#btn-to-step3').addEventListener('click', () => {     state.candidates = MOVIES.filter(m => {       const moodOk = !state.mood \vert{}\vert{} m.moods.includes(state.mood);       const timeOk = !state.maxRuntime \vert{}\vert{} m.runtime <= state.maxRuntime;       return moodOk && timeOk;     });      if(state.candidates.length === 0){       $$('.screen').forEach(s => s.style.display = 'none');$('#screen-empty').style.display = 'flex';
+      return;
+    }
+
+    $('#summary-conditions').textContent = `기분: ${state.mood} | 시간: ${state.maxRuntime ? state.maxRuntime + '분 이내' : '상관없음'}`;
+    $('#candidate-count-text').textContent = `조건에 맞는 후보 영화 ${state.candidates.length}편이 준비되었어요.`;
+    setStep(3);
+  });
+
+  $('#btn-spin-wheel').addEventListener('click', () => {
+    if(state.spinning) return;
+    state.spinning = true;
+    $('#btn-spin-wheel').disabled = true;
+
+    const disc = $('#wheel-disc');
+    const deg = 1440 + Math.floor(Math.random() * 360);
+    disc.style.transform = `rotate(${deg}deg)`;
+
+    const pick = state.candidates[Math.floor(Math.random() * state.candidates.length)];
+    state.selectedMovie = pick;
+
+    setTimeout(() => {
+      state.spinning = false;
+      disc.style.transform = 'rotate(0deg)';
+      $('#btn-spin-wheel').disabled = false;
+      renderResult();
+      setStep(4);
+    }, 3200);
+  });
+
+  function renderResult(){
+    const m = state.selectedMovie;
+    if(!m) return;
+    $('#res-title').textContent = m.title;
+    $('#res-sub').textContent = `${m.year} · ${m.genre} · ${m.runtime}분`;
+    $('#res-overview').textContent = m.overview;
+    $('#res-tags').innerHTML = `<span class="tag">${state.mood}</span><span class="tag">${m.food}</span>`;
+  }
+
+  function startTimer(){
+    clearInterval(state.timerInterval);
+    state.timer = 10;
+    const badge = $('#timer-badge');
+    const respinBtn = $('#btn-respin');
+
+    respinBtn.disabled = true;
+    respinBtn.textContent = "다시 추천 (10초)";
+    badge.textContent = "00:10";
+
+    state.timerInterval = setInterval(() => {
+      state.timer--;
+      badge.textContent = `00:${state.timer < 10 ? '0' : ''}${state.timer}`;
+      respinBtn.textContent = `다시 추천 (${state.timer}초)`;
+
+      if(state.timer <= 0){
+        clearInterval(state.timerInterval);
+        badge.textContent = "00:00";
+        respinBtn.disabled = false;
+        respinBtn.textContent = "다시 추천 ↻";
+      }
+    }, 1000);
+  }
+
+  $('#btn-respin').addEventListener('click', () => setStep(3));
+  $('#btn-confirm-movie').addEventListener('click', () => {
+    clearInterval(state.timerInterval);
+    setStep(5);
+  });
+
+  $('#btn-issue-ticket').addEventListener('click', () => {
+    const list = getTickets();
+    const m = state.selectedMovie;
+    if(!m) return;
+    const today = new Date().toISOString().slice(0,10).replace(/-/g,'.');
+    const ticketId = 't_' + Date.now().toString(36);
+
+    const ticket = { ticketId, movieId: m.id, title: m.title, date: today };
+    saveTickets([ticket, ...list]);
+
+    showToast('매칭 티켓이 발권되었습니다!');
+    $('#stub-title').textContent = m.title;
+    $('#stub-date').textContent = today;
+    $('#stub-id').textContent = `No. ${ticketId}`;
+    $('#ticket-stub-view').style.display = 'block';
+    $('#btn-issue-ticket').disabled = true;
+    renderStamps();
+  });
+
+  function renderStamps(){
+    const list = getTickets();
+    const boards = [$('#stamp-board'), $('#tb-stamp-board')];
+
+    boards.forEach(board => {
+      if(!board) return;
+      board.innerHTML = '';
+      for(let i=0; i<10; i++){
+        const slot = document.createElement('div');
+        slot.className = `stamp-slot ${i < list.length ? 'filled' : ''}`;
+        slot.textContent = i < list.length ? '✦' : (i + 1);
+        board.appendChild(slot);
+      }
+    });
+
+    const container = $('#ticket-list-container');
+    if(container){
+      container.innerHTML = list.length ? list.map(t => `
+        <div style="border:1px solid var(--line); border-radius:8px; padding:10px; font-size:11.5px; background:var(--surface);">
+          <strong style="display:block;">${t.title}</strong>
+          <span style="font-size:9.5px; color:var(--muted);">${t.date} · ${t.ticketId}</span>
+        </div>
+      `).join('') : '<p style="font-size:11px; color:var(--muted); text-align:center;">발권된 티켓이 없습니다.</p>';
+    }
+  }
+
+  $('#btn-open-ott').addEventListener('click', () => {
+    const root = $('#modal-root');
+    root.innerHTML = `
+      <div class="modal-backdrop" id="modal-bg">
+        <div class="modal">
+          <h3 style="font-size:16px; margin-bottom:4px;">어디에서 시청하시겠어요?</h3>
+          <p style="font-size:11px; color:var(--muted); margin-bottom:14px;">플랫폼 사이트로 이동 후 검색창에 제목을 입력해 주세요.</p>
+          <div class="grid-2">
+            <button class="option-btn" onclick="window.open('https://www.netflix.com')">Netflix ↗</button>
+            <button class="option-btn" onclick="window.open('https://watcha.com')">Watcha ↗</button>
+            <button class="option-btn" onclick="window.open('https://www.wavve.com')">Wavve ↗</button>
+            <button class="option-btn" onclick="window.open('https://www.tving.com')">TVING ↗</button>
+          </div>
+          <button class="cta-btn secondary" id="btn-close-modal" style="margin-top:12px;">닫기</button>
+        </div>
+      </div>
+    `;
+    $('#btn-close-modal').addEventListener('click', () => root.innerHTML = '');
+    $('#modal-bg').addEventListener('click', e => { if(e.target.id === 'modal-bg') root.innerHTML = ''; });
+  });
+
+  $('#btn-ticketbook').addEventListener('click', () => setStep(6));
+  $('#btn-tb-back').addEventListener('click', () => setStep(1));
+  $('#btn-restart').addEventListener('click', () => {
+    state.mood = null;
+    state.maxRuntime = null;
+    state.selectedMovie = null;
+    $('#btn-issue-ticket').disabled = false;
+    $('#btn-to-step2').disabled = true;
+    $('#btn-to-step3').disabled = true;
+    $('#ticket-stub-view').style.display = 'none';     $$('.option-btn').forEach(b => b.classList.remove('selected'));
+    setStep(1);
+  });
+
+  $('#btn-reset-time').addEventListener('click', () => {
+    state.maxRuntime = 0;
+    $('#btn-to-step3').click();
+  });
+
+  setStep(1);
+});
+</script>
+</body>
+</html>
