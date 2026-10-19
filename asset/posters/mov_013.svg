@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 420" width="300" height="420" role="img" aria-label="패딩턴 포스터">
+<rect width="300" height="420" fill="#e8efe2"/>
+<circle cx="230" cy="130" r="112" fill="none" stroke="#2c6650" stroke-opacity=".35" stroke-width="1.5"/>
+<circle cx="230" cy="130" r="74" fill="none" stroke="#2c6650" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="4 5"/>
+<circle cx="230" cy="130" r="30" fill="#2c6650"/>
+<text x="24" y="40" font-size="11" font-weight="700" letter-spacing="3" fill="#2c6650" font-family="'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif">CINEPICK · 2014</text>
+<text x="24" y="366" font-size="28" font-weight="900" fill="#171717" font-family="'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif">패딩턴</text>
+<text x="24" y="398" font-size="9" letter-spacing="1" fill="#555" font-family="'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',sans-serif">PADDINGTON</text>
+</svg>

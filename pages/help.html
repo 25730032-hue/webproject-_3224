@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>도움말 · 시네픽</title>
+<link rel="icon" type="image/svg+xml" href="../asset/favicon.svg">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="시네픽 홈으로">
+      <img class="brand-mark" src="../asset/logo.svg" alt="" width="36" height="36">
+      <div><small>CINEPICK · MOVIE CURATION</small><p class="brand-title"><span class="name">시네픽</span> <span class="sub">| 오늘의 영화를 가볍게</span></p></div>
+    </a>
+  </header>
+  <main class="shell pt">
+    <section class="workspace" id="workspace" aria-live="polite">
+    <noscript><p class="nojs">이 페이지는 JavaScript가 필요해요. 브라우저에서 JavaScript를 켜주세요.</p></noscript>
+    </section>
+  </main>
+  <nav class="app-tabbar" aria-label="하단 메뉴">
+    <a class="app-tab" href="../index.html"><img src="../asset/icons/home.svg" alt="" width="24" height="24"><span>홈</span></a>
+    <a class="app-tab" href="browse.html"><img src="../asset/icons/star.svg" alt="" width="24" height="24"><span>둘러보기</span></a>
+    <a class="app-tab" href="movies.html"><img src="../asset/icons/ticket.svg" alt="" width="24" height="24"><span>나의영화</span></a>
+    <a class="app-tab active" href="mypage.html" aria-current="page"><img src="../asset/icons/user-active.svg" alt="" width="24" height="24"><span>마이페이지</span></a>
+  </nav>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<div id="modalRoot"></div>
+<script src="../data/config.js"></script>
+<script src="../data/movies.js"></script>
+<script src="../data/reviews.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/help.js"></script>
+</body>
+</html>
