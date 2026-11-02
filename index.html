@@ -403,39 +403,59 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .food-badge{display:inline-grid;place-items:center;margin-left:6px;width:22px;height:22px;border-radius:50%;background:var(--surface);border:1px solid var(--line);font-size:12px;vertical-align:middle;cursor:help;flex:none;}
 #homeResults .search-hint{display:none;}
 #homeResults .tlist{margin-top:0;}
+
+/* ===== 아이콘 · 포스터 보강 ===== */
+.ic{width:1em;height:1em;display:inline-block;vertical-align:-.14em;flex:none}
+.btn .ic{width:1.1em;height:1.1em;margin-right:6px}
+.app-tab .tab-icon{display:grid;place-items:center;height:24px;line-height:1}
+.app-tab .tab-icon .ic{width:23px;height:23px}
+.mood-icon .ic{width:20px;height:20px}
+.checkmark .ic{width:11px;height:11px;stroke-width:2.6}
+.stamp-mark .ic{width:14px;height:14px;stroke-width:2.4}
+.shortcut-icon{display:block;margin-bottom:2px}
+.shortcut-icon .ic{width:22px;height:22px}
+.header-search .ic{width:20px;height:20px}
+.search-clear{display:grid;place-items:center}
+.search-clear .ic{width:14px;height:14px}
+.profile-avatar .ic{width:26px;height:26px}
+.recovery-icon .ic{width:18px;height:18px}
+.starsvg{fill:none}
+.on .starsvg,.review-stars .starsvg.f{fill:currentColor}
+.review-stars{display:flex;align-items:center;gap:1px}
+.review-stars .ic{width:13px;height:13px}
+.star-input button{display:grid;place-items:center;color:var(--line-strong)}
+.star-input button .ic{width:28px;height:28px}
+.star-input button.on{color:var(--ink)}
+.pw{display:block;width:100%;height:100%}
+.pimg{width:100%;height:100%;object-fit:cover;display:block}
+.ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--surface);color:var(--line-strong);text-align:center;padding:6px}
+.ph .ic{width:min(45%,30px);height:auto;aspect-ratio:1}
+.ph b{display:none}
+.candidate-poster,.confirm-icon,.tcard .g,.review-poster,.review-detail-poster{overflow:hidden;padding:0}
+.poster{padding:0;min-height:0;aspect-ratio:2/3;max-width:230px;margin:0 auto;width:100%}
+.poster::before,.poster::after{display:none}
+.poster .ph{gap:12px;padding:18px}
+.poster .ph .ic{width:42px}
+.poster .ph b{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;line-height:1.35;color:var(--muted);word-break:keep-all}
+.candidate-info p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.decide-head .ic{margin-right:5px}
 </style>
 </head>
 <body>
 <div id="app">
  <header class="topbar">
  <div class="brand"><div class="brand-mark">SP</div><div><small>CINEPICK · MOVIE CURATION</small><h1><span>시네픽</span></h1></div></div>
- <div class="top-actions"><button class="text-button" id="headerRecords">내 티켓북 보기 ↗</button><button class="text-button" id="resetApp">처음부터</button></div><button class="header-search" id="headerSearch" aria-label="영화 검색" title="영화 검색">⌕</button>
+ <button class="header-search" id="headerSearch" aria-label="영화 검색" title="영화 검색"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
  </header>
- <section class="hero">
- <div class="hero-meta"><span><strong>01</strong> 기분 선택</span><span><strong>02</strong> 후보 확인</span><span><strong>03</strong> 직접 선택 또는 랜덤 추첨</span><span><strong>04</strong> 티켓 발권</span></div>
- </section>
  <div class="shell">
- <aside class="sidebar">
- <p class="side-label">YOUR MOVIE FLOW</p>
- <nav class="steps-nav" aria-label="앱 화면 단계">
- <button class="step-link active" data-step="1"><span class="num">1</span><span><b>기분 선택</b><small>지금 어떤 기분인가요?</small></span></button>
- <button class="step-link" data-step="3"><span class="num">2</span><span><b>후보 둘러보기</b><small>직접 고르거나 랜덤 추첨</small></span></button>
- <button class="step-link" data-step="4"><span class="num">4</span><span><b>추천 결과</b><small>마음에 드는 영화 선택</small></span></button>
- <button class="step-link" data-step="5"><span class="num">5</span><span><b>확정 · 발권</b><small>매칭 티켓 만들기</small></span></button>
- <button class="step-link" data-step="6"><span class="num">6</span><span><b>티켓북</b><small>도장판 · 레벨 · 보관</small></span></button>
- <button class="step-link" data-step="7"><span class="num">7</span><span><b>예외 상황</b><small>막히면 여기서 해결</small></span></button>
- </nav>
- <div class="sidebar-note"><strong>ONE NIGHT, ONE MOVIE</strong>선택 피로를 줄이는 작은 영화 의식. 정답보다 지금의 기분을 먼저 생각해요.</div>
- </aside>
  <main class="main"><section class="workspace" id="workspace" aria-live="polite"></section></main>
  </div>
- <footer class="footer"><span><strong>LO-FI PROTOTYPE</strong> · 영화 정보는 TMDB API를 통해 제공됩니다.</span><span>티켓과 보관 목록은 이 브라우저에 저장됩니다.</span></footer>
 </div>
 
  <nav class="app-tabbar" aria-label="하단 메뉴">
- <button class="app-tab active" data-app-tab="home"><span class="tab-icon">⌂</span><span>홈</span></button>
- <button class="app-tab" data-app-tab="browse" aria-label="다른 사용자 감상평 둘러보기"><span class="tab-icon"></span><span>둘러보기</span></button>
- <button class="app-tab" data-app-tab="mypage"><span class="tab-icon"></span><span>마이페이지</span></button>
+ <button class="app-tab active" data-app-tab="home"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg></span><span>홈</span></button>
+ <button class="app-tab" data-app-tab="browse" aria-label="다른 사용자 감상평 둘러보기"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></span><span>둘러보기</span></button>
+ <button class="app-tab" data-app-tab="mypage"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.7-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></span><span>마이페이지</span></button>
  </nav>
 
 <div class="toast" id="toast" role="status"></div>
@@ -460,60 +480,84 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  {id:15,title:'스파이더맨: 뉴 유니버스',en:'SPIDER-MAN: INTO THE SPIDER-VERSE',year:2018,runtime:117,genre:'애니메이션 · 액션',moods:['신나는','심심한'],food:' 피자와 맥주',tone:'에너지를 충전하고 싶은 밤',overview:'새로운 스파이더맨 마일스가 여러 차원의 히어로들과 만나며 자기만의 길을 찾아가요.',poster:''},
  {id:16,title:'마담 프루스트의 비밀정원',en:'ATTILA MARCEL',year:2013,runtime:106,genre:'코미디 · 드라마',moods:['센치한','지침','우울한'],food:' 디저트',tone:'몽글몽글한 기분이 필요한 밤',overview:'말없이 살아온 남자가 이웃의 특별한 정원에서 기억과 감정을 마주하는 동화 같은 이야기예요.',poster:''}
  ];
- const movies = RAW.map(m => ({...m, id:'mov_' + String(m.id).padStart(3,'0')}));
- // TMDB API: live movie data with the original curated list as a fallback.
+ const movies = RAW.map(m => ({...m, id:'mov_' + String(m.id).padStart(3,'0'), food:String(m.food||'').trim(), poster:''}));
+ /* ===== 아이콘 (SVG · 글꼴/이모지 없이도 항상 보입니다) ===== */
+ const svg = (p, cls) => `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+ const ICON = {
+  check: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+  close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
+  search: svg('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'),
+  star: svg('<path d="M12 3.8l2.5 5.1 5.6.8-4 4 .9 5.6-5-2.7-5 2.7.9-5.6-4-4 5.6-.8z"/>', 'starsvg'),
+  starOn: svg('<path d="M12 3.8l2.5 5.1 5.6.8-4 4 .9 5.6-5-2.7-5 2.7.9-5.6-4-4 5.6-.8z"/>', 'starsvg f'),
+  film: svg('<rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 5v14M16 5v14M4 9.5h4M4 14.5h4M16 9.5h4M16 14.5h4"/>'),
+  ticket: svg('<path d="M3.5 7h17v3.2a1.8 1.8 0 0 0 0 3.6V17h-17v-3.2a1.8 1.8 0 0 0 0-3.6z"/><path d="M14.5 8v8" stroke-dasharray="1.6 2"/>'),
+  bookmark: svg('<path d="M7 4h10v16l-5-3.6L7 20z"/>'),
+  bookmarkOn: svg('<path d="M7 4h10v16l-5-3.6L7 20z" fill="currentColor"/>'),
+  clock: svg('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+  ext: svg('<path d="M9 6H6v12h12v-3"/><path d="M12 12l7-7M14 5h5v5"/>'),
+  save: svg('<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/>'),
+  user: svg('<circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.7-5.5 7-5.5s6.2 1.9 7 5.5"/>'),
+  bolt: svg('<path d="M13 3L5 13.5h6L10 21l8-10.5h-6z"/>'),
+  cloud: svg('<path d="M7.5 18.5a4 4 0 0 1-.6-7.95A5.5 5.5 0 0 1 17.6 9.4a4.55 4.55 0 0 1-.6 9.1z"/>'),
+  moon: svg('<path d="M19.5 14.5A8 8 0 1 1 9.5 4.5a6.5 6.5 0 0 0 10 10z"/>'),
+  heart: svg('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>'),
+  umbrella: svg('<path d="M3.5 12a8.5 8.5 0 0 1 17 0z"/><path d="M12 12v6a2 2 0 0 1-4 0"/>'),
+  sparkle: svg('<path d="M12 4l1.8 5.2L19 11l-5.2 1.8L12 18l-1.8-5.2L5 11l5.2-1.8z"/>')
+ };
+
+ /* ===== 포스터: 이미지가 있으면 이미지, 없거나 실패하면 회색 자리표시자 ===== */
  const TMDB_API_KEY = "b58ad2e4deeca12db6c96c4cc95dfc62";
  const TMDB_IMAGE = 'https://image.tmdb.org/t/p/w500';
- function inferMoods(movie){
-   const ids = movie.genre_ids || [];
-   const text = `${movie.title || ''} ${movie.overview || ''}`.toLowerCase();
-   const moods = new Set();
-   if(ids.includes(28)||ids.includes(12)||ids.includes(878)||ids.includes(53)) moods.add('신나는');
-   if(ids.includes(35)||ids.includes(16)||ids.includes(10751)) moods.add('심심한');
-   if(ids.includes(10749)||ids.includes(10402)) moods.add('설레는');
-   if(ids.includes(18)||ids.includes(10749)) moods.add('센치한');
-   if(ids.includes(18)||ids.includes(14)||ids.includes(16)||/family|friend|hope|love|마음|가족|희망|사랑/.test(text)) moods.add('우울한');
-   if(ids.includes(99)||ids.includes(18)||/quiet|life|journey|일상|삶|여정/.test(text)) moods.add('지침');
-   if(!moods.size) ['신나는','심심한'].forEach(x=>moods.add(x));
-   return [...moods];
- }
- const genreNames = {28:'액션',12:'모험',16:'애니메이션',35:'코미디',80:'범죄',99:'다큐멘터리',18:'드라마',10751:'가족',14:'판타지',36:'역사',27:'공포',10402:'음악',9648:'미스터리',10749:'로맨스',878:'SF',10770:'TV 영화',53:'스릴러',10752:'전쟁',37:'서부'};
- async function loadTMDBMovies(){
-   try {
-     const url = new URL('https://api.themoviedb.org/3/movie/popular');
-     url.searchParams.set('api_key', TMDB_API_KEY);
-     url.searchParams.set('language','ko-KR');
-     url.searchParams.set('page','1');
-     const response = await fetch(url.toString());
-     if(!response.ok) throw new Error('TMDB API 응답 오류: '+response.status);
-     const data = await response.json();
-     if(!Array.isArray(data.results) || !data.results.length) throw new Error('영화 데이터가 비어 있습니다.');
-     const liveMovies = data.results.filter(m=>m.title).map((m,i)=>{
-       const ids=m.genre_ids||[];
-       const runtime=RAW.find(r=>r.title===m.title)?.runtime || 0;
-       return {id:'mov_'+String(i+1).padStart(3,'0'),tmdbId:m.id,title:m.title,en:m.original_title||m.title,year:(m.release_date||'').slice(0,4)||'미정',runtime,genre:ids.map(id=>genreNames[id]).filter(Boolean).slice(0,2).join(' · ')||'영화',moods:inferMoods(m),food:'간단한 야식',tone:'지금 기분에 맞춰 골라보는 영화',overview:m.overview||'줄거리 정보가 아직 제공되지 않았어요.',poster:m.poster_path?TMDB_IMAGE+m.poster_path:'',backdrop:m.backdrop_path?TMDB_IMAGE+m.backdrop_path:''};
-     });
-     if(liveMovies.length){
-       movies.splice(0,movies.length,...liveMovies);
-       communityReviews.forEach(r=>{ if(!byId(r.movieId)) r.movieId=movies[0].id; });
-       render();
-       const footer=document.querySelector('.footer span');
-       if(footer) footer.innerHTML='<strong>TMDB LIVE DATA</strong> · 영화 정보는 TMDB API에서 가져옵니다.';
-     }
-   } catch(error){
-     console.warn('TMDB 데이터를 불러오지 못해 기본 영화 목록을 사용합니다.',error);
-     const footer=document.querySelector('.footer span');
-     if(footer) footer.innerHTML='<strong>DEMO DATA</strong> · API 연결에 실패해 예시 영화 목록을 표시합니다.';
+ const POSTER_CACHE = 'posterCache';
+ const phHTML = m => `<span class="ph">${ICON.film}<b>${esc((m && m.title) || '')}</b></span>`;
+ const imgHTML = m => `<img class="pimg" src="${esc(m.poster)}" alt="${esc(m.title)} 포스터" loading="lazy">`;
+ const posterHTML = m => `<span class="pw" data-pid="${esc((m && m.id) || '')}">${m && m.poster ? imgHTML(m) : phHTML(m)}</span>`;
+ function applyPoster(m){ document.querySelectorAll('.pw[data-pid="' + m.id + '"]').forEach(w => { w.innerHTML = m.poster ? imgHTML(m) : phHTML(m); }); }
+ document.addEventListener('error', e => {
+   const t = e.target;
+   if(t && t.tagName === 'IMG' && t.classList.contains('pimg')){
+     const w = t.closest('.pw'); if(!w) return;
+     const m = byId(w.dataset.pid);
+     if(m) m.poster = '';
+     w.innerHTML = phHTML(m || {title:''});
    }
+ }, true);
+ function loadPosterCache(){
+   try { const c = JSON.parse(localStorage.getItem(POSTER_CACHE) || '{}'); movies.forEach(m => { if(c[m.id]) m.poster = c[m.id]; }); } catch(e){}
+ }
+ async function searchPoster(m){
+   const run = async withYear => {
+     const url = new URL('https://api.themoviedb.org/3/search/movie');
+     url.searchParams.set('api_key', TMDB_API_KEY);
+     url.searchParams.set('query', m.title);
+     url.searchParams.set('language', 'ko-KR');
+     if(withYear) url.searchParams.set('year', String(m.year));
+     const res = await fetch(url.toString());
+     if(!res.ok) throw new Error('TMDB ' + res.status);
+     const data = await res.json();
+     return (data.results || []).find(r => r.poster_path);
+   };
+   return (await run(true)) || (await run(false));
+ }
+ async function loadTMDBPosters(){
+   const found = {};
+   await Promise.all(movies.map(async m => {
+     if(m.poster){ found[m.id] = m.poster; return; }
+     try {
+       const hit = await searchPoster(m);
+       if(hit){ m.poster = TMDB_IMAGE + hit.poster_path; found[m.id] = m.poster; applyPoster(m); }
+     } catch(e){ /* 네트워크가 막혀 있으면 회색 자리표시자를 그대로 둡니다. */ }
+   }));
+   try { localStorage.setItem(POSTER_CACHE, JSON.stringify({...JSON.parse(localStorage.getItem(POSTER_CACHE) || '{}'), ...found})); } catch(e){}
  }
 
  const moodOptions = [
- {name:'신나는',icon:'',desc:'에너지를 끌어올리고 싶을 때'},
- {name:'지침',icon:'',desc:'편하게 쉬어가고 싶을 때'},
- {name:'센치한',icon:'',desc:'감정과 여운에 잠기고 싶을 때'},
- {name:'설레는',icon:'',desc:'두근거리는 이야기가 필요할 때'},
- {name:'우울한',icon:'',desc:'마음을 다독이고 싶을 때'},
- {name:'심심한',icon:'',desc:'재미있게 기분 전환하고 싶을 때'}
+ {name:'신나는',icon:ICON.bolt,desc:'에너지를 끌어올리고 싶을 때'},
+ {name:'지침',icon:ICON.cloud,desc:'편하게 쉬어가고 싶을 때'},
+ {name:'센치한',icon:ICON.moon,desc:'감정과 여운에 잠기고 싶을 때'},
+ {name:'설레는',icon:ICON.heart,desc:'두근거리는 이야기가 필요할 때'},
+ {name:'우울한',icon:ICON.umbrella,desc:'마음을 다독이고 싶을 때'},
+ {name:'심심한',icon:ICON.sparkle,desc:'재미있게 기분 전환하고 싶을 때'}
  ];
  const TITLES = ['우유부단 견습생','선택 장애 탈출러','룰렛 단골','영화 고르기 달인','시네픽 마스터'];
  const lvInfo = total => { const lv = Math.floor(total/10) + 1; return {lv, cur: total % 10, next: 10 - total % 10, name: TITLES[Math.min(lv, TITLES.length) - 1]}; };
@@ -551,8 +595,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  ];
  // 리뷰의 movieId를 영화 데이터와 동일한 형식으로 정규화합니다.
  communityReviews.forEach(r => r.movieId = 'mov_' + String(r.movieId).padStart(3, '0'));
- const foodEmoji = m => (m && m.food) ? m.food.split(' ')[0] : '';
- const foodBadge = m => (m && m.food) ? `<span class="food-badge" title="어울리는 음식: ${esc(m.food)}" aria-label="어울리는 음식 ${esc(m.food)}">${foodEmoji(m)}</span>` : '';
+ const foodEmoji = m => '';
+ const foodBadge = m => '';
  const titleOf = t => (byId(t.movieId) || {title:'삭제된 영화'}).title;
  const todayStr = () => { const d = new Date(); return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`; };
  const issuedToday = m => tickets().find(t => t.movieId === m.id && t.savedDate === todayStr());
@@ -571,13 +615,13 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  render();
  }
  function header(step, title, description, status){
- return `<div class="workspace-head"><div><div class="eyebrow">STEP 0${step} / CINEMA CLUB</div><h3>${title}</h3><p>${description}</p></div><span class="status-pill">${status}</span></div>`;
+ return `<div class="workspace-head"><div><h3>${title}</h3><p>${description}</p></div><span class="status-pill">${status}</span></div>`;
  }
  function chip(label, value){ return `<span class="chip"><em>${label}</em> ${value}</span>`; }
 
  function renderMood(){
  workspace.innerHTML = header(1,'지금 기분은?','지금의 기분과 가장 가까운 하나를 골라주세요.','선택 1개') +
- `<div class="content"><div class="section-row"><h4>오늘 밤의 무드</h4><span>MOOD FILTER · 단일 선택</span></div><div class="mood-grid">${moodOptions.map(m => `<button class="mood-card ${state.mood===m.name?'selected':''}" data-mood="${m.name}" aria-pressed="${state.mood===m.name}"><span class="checkmark"></span><span class="mood-icon">${m.icon}</span><strong>${m.name}</strong><small>${m.desc}</small></button>`).join('')}</div><div class="selection-summary">${state.mood ? chip('선택한 기분', state.mood) : '<span class="chip">아직 선택하지 않았어요</span>'}</div><div class="callout"><strong>작은 팁</strong> · 정확한 감정을 고르기 어려우면, 지금 보고 싶은 분위기에 가까운 것을 골라도 좋아요.</div><div class="actions"><button class="btn primary" id="toDuration" ${state.mood?'':'disabled'}>룰렛 돌리러 가기 <span aria-hidden="true"></span></button></div></div>`;
+ `<div class="content"><div class="section-row"><h4>오늘 밤의 무드</h4><span>하나만 선택</span></div><div class="mood-grid">${moodOptions.map(m => `<button class="mood-card ${state.mood===m.name?'selected':''}" data-mood="${m.name}" aria-pressed="${state.mood===m.name}"><span class="checkmark">${ICON.check}</span><span class="mood-icon">${m.icon}</span><strong>${m.name}</strong><small>${m.desc}</small></button>`).join('')}</div><div class="selection-summary">${state.mood ? chip('선택한 기분', state.mood) : '<span class="chip">아직 선택하지 않았어요</span>'}</div><div class="actions"><button class="btn primary" id="toDuration" ${state.mood?'':'disabled'}>룰렛 돌리러 가기</button></div></div>`;
  workspace.querySelectorAll('[data-mood]').forEach(b => b.addEventListener('click', () => { state.mood = b.dataset.mood; state.movie = null; state.candidates = []; state.lastMovieId = null; renderMood(); updateNavigation(); }));
  $('#toDuration').addEventListener('click', () => { state.maxRuntime = null; state.candidates = filteredMovies(); state.showWheel = true; setStep(3); });
  }
@@ -594,7 +638,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  if(!candidates.length){ renderRecovery('noCandidates'); return; }
  if(!state.showWheel){
  workspace.innerHTML = header(3,'조건에 맞는 영화가 모였어요','목록에서 직접 선택하거나, 결정이 어렵다면 룰렛에 맡겨보세요.','후보 ' + candidates.length + '편') +
- `<div class="content"><div class="selection-summary">${chip('기분', state.mood || '전체')}${chip('후보', candidates.length + '편')}</div><div class="divider"></div><div class="section-row"><h4>지금 볼 수 있는 영화</h4><span>조건에 맞는 후보만 표시</span></div><div class="candidate-list">${candidates.map(m => `<article class="candidate-card"><div class="candidate-poster">${String(m.poster||'').startsWith('http') ? `<img src="${esc(m.poster)}" alt="${esc(m.title)} 포스터" loading="lazy" style="width:100%;height:100%;object-fit:cover;border-radius:8px">` : esc(m.poster||'🎬')}</div><div class="candidate-info"><h4>${m.title}${foodBadge(m)}</h4><div class="candidate-meta">${m.year} · ${m.genre} · ${m.runtime}분</div><p>${m.overview}</p><div class="candidate-tags"><span>${m.moods.includes(state.mood) ? state.mood : m.moods[0]}</span><span>${m.tone}</span><span>${m.food}</span></div></div><button class="btn primary candidate-pick" data-pick-movie="${m.id}">이 영화 선택</button></article>`).join('')}</div><div class="callout"><strong>선택 방법</strong> · 마음에 드는 영화를 바로 선택하거나, 랜덤 추첨으로 한 편을 골라보세요.</div><div class="actions"><button class="btn" id="editConditions">← 조건 수정</button><button class="btn primary" id="openWheel">랜덤으로 한 편 고르기</button></div></div>`;
+ `<div class="content"><div class="selection-summary">${chip('기분', state.mood || '전체')}${chip('후보', candidates.length + '편')}</div><div class="divider"></div><div class="section-row"><h4>지금 볼 수 있는 영화</h4><span>조건에 맞는 후보만 표시</span></div><div class="candidate-list">${candidates.map(m => `<article class="candidate-card"><div class="candidate-poster">${posterHTML(m)}</div><div class="candidate-info"><h4>${m.title}${foodBadge(m)}</h4><div class="candidate-meta">${m.year} · ${m.genre} · ${m.runtime}분</div><p>${m.overview}</p><div class="candidate-tags"><span>${m.moods.includes(state.mood) ? state.mood : m.moods[0]}</span><span>${m.food}</span></div></div><button class="btn primary candidate-pick" data-pick-movie="${m.id}">이 영화 선택</button></article>`).join('')}</div><div class="actions"><button class="btn" id="editConditions">← 조건 수정</button><button class="btn primary" id="openWheel">랜덤으로 한 편 고르기</button></div></div>`;
  workspace.querySelectorAll('[data-pick-movie]').forEach(b => b.addEventListener('click', () => {
  const picked = byId(b.dataset.pickMovie); if(!picked) return;
  state.movie = picked; state.lastMovieId = picked.id; setStep(4);
@@ -611,10 +655,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const a0 = i * segDeg, a1 = a0 + segDeg, [x0,y0] = pt(a0, 96), [x1,y1] = pt(a1, 96), c = a0 + segDeg / 2;
  const fill = colors[(wheelSize % 2 && i === wheelSize - 1 && i % 2 === 0) ? 2 : i % 2];
  const path = wheelSize === 1 ? `<circle r="96" style="fill:${fill}"/>` : `<path d="M0 0 L${x0} ${y0} A96 96 0 ${segDeg > 180 ? 1 : 0} 1 ${x1} ${y1} Z" style="fill:${fill};stroke:var(--line-strong);stroke-width:.6"/>`;
- return path + `<text transform="${c > 180 ? `rotate(${c + 90}) translate(-58 0)` : `rotate(${c - 90}) translate(58 0)`}" text-anchor="middle" dominant-baseline="middle" style="fill:var(--ink);font-size:${wheelSize > 8 ? 7 : 8.5}px;font-weight:800">${foodEmoji(m)} ${esc(short(m.title))}</text>`;
+ return path + `<text transform="${c > 180 ? `rotate(${c + 90}) translate(-58 0)` : `rotate(${c - 90}) translate(58 0)`}" text-anchor="middle" dominant-baseline="middle" style="fill:var(--ink);font-size:${wheelSize > 8 ? 7 : 8.5}px;font-weight:800">${esc(short(m.title))}</text>`;
  }).join('');
  workspace.innerHTML = header(3,'운명에 맡겨볼까요?','룰렛이 멈춘 영화에 10초 안에 결정해요. 고민은 짧게!','후보 ' + candidates.length + '편') +
- `<div class="content"><div class="wheel-layout"><div class="wheel-wrap"><div class="wheel-pointer" aria-hidden="true"></div><svg class="roulette" id="wheel" viewBox="-100 -100 200 200" role="img" aria-label="후보 영화 ${candidates.length}편 룰렛" style="transform:rotate(${state.wheelRot}deg)"><circle r="98" style="fill:var(--paper);stroke:var(--ink);stroke-width:2"/>${segs}<circle r="14" style="fill:var(--paper);stroke:var(--ink);stroke-width:1.2"/><text text-anchor="middle" dominant-baseline="central" style="font-size:12px"></text></svg></div><div class="wheel-panel"><div class="eyebrow">YOUR CONDITIONS</div><h4>이번 밤의 후보</h4><p>선택한 기분에 맞는 영화만 룰렛에 올라가요.</p><div class="condition-list"><div class="condition-line"><span>현재 기분</span><strong>${state.mood}</strong></div><div class="condition-line"><span>추천 후보</span><strong>${candidates.length}편</strong></div><div class="condition-line"><span>결정 시간</span><strong>10초</strong></div></div><div class="spin-note" id="spinNote"></div><button class="btn primary full" id="spinButton">룰렛 돌리기</button><button class="btn full" id="backCandidates" style="margin-top:8px">후보 보기</button><button class="btn full" id="editConditions" style="margin-top:8px">조건 수정하기</button></div></div></div>`;
+ `<div class="content"><div class="wheel-layout"><div class="wheel-wrap"><div class="wheel-pointer" aria-hidden="true"></div><svg class="roulette" id="wheel" viewBox="-100 -100 200 200" role="img" aria-label="후보 영화 ${candidates.length}편 룰렛" style="transform:rotate(${state.wheelRot}deg)"><circle r="98" style="fill:var(--paper);stroke:var(--ink);stroke-width:2"/>${segs}<circle r="14" style="fill:var(--paper);stroke:var(--ink);stroke-width:1.2"/><text text-anchor="middle" dominant-baseline="central" style="font-size:12px"></text></svg></div><div class="wheel-panel"><h4>이번 밤의 후보</h4><p>선택한 기분에 맞는 영화만 룰렛에 올라가요.</p><div class="condition-list"><div class="condition-line"><span>현재 기분</span><strong>${state.mood}</strong></div><div class="condition-line"><span>추천 후보</span><strong>${candidates.length}편</strong></div><div class="condition-line"><span>결정 시간</span><strong>10초</strong></div></div><div class="spin-note" id="spinNote"></div><button class="btn primary full" id="spinButton">룰렛 돌리기</button><button class="btn full" id="backCandidates" style="margin-top:8px">후보 보기</button><button class="btn full" id="editConditions" style="margin-top:8px">조건 수정하기</button></div></div></div>`;
  $('#spinButton').addEventListener('click', spinRoulette);
  $('#backCandidates').addEventListener('click', () => { state.showWheel = false; renderWheel(); });
  $('#editConditions').addEventListener('click', () => setStep(1));
@@ -636,14 +680,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  $('#backCandidates').disabled = true; $('#editConditions').disabled = true;
  if(wheel){ void wheel.getBoundingClientRect(); wheel.style.transform = `rotate(${state.wheelRot}deg)`; }
  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
- spinTimeout = setTimeout(() => { state.spinning = false; state.movie = pick; state.lastMovieId = pick.id; state.fromRoulette = true; note.textContent = ` ${pick.title}!`; spinTimeout = setTimeout(() => setStep(4), 500); }, reduce ? 300 : 3200);
+ spinTimeout = setTimeout(() => { state.spinning = false; state.movie = pick; state.lastMovieId = pick.id; state.fromRoulette = true; note.textContent = `${pick.title}!`; spinTimeout = setTimeout(() => setStep(4), 500); }, reduce ? 300 : 3200);
  }
- function posterMarkup(movie){ return `<div class="poster" ${String(movie.poster||'').startsWith('http') ? `style="background-image:linear-gradient(0deg,rgba(0,0,0,.78),rgba(0,0,0,.05)),url('${esc(movie.poster)}');background-size:cover;background-position:center;color:white"` : ''}><span class="poster-kicker">TONIGHT'S PICK · ${movie.year}</span><span class="poster-title">${esc(movie.title)}</span><span class="poster-foot">${esc(movie.en)}<br>${String(movie.poster||'').startsWith('http') ? 'TMDB POSTER' : esc(movie.poster||'🎬')} &nbsp; A CINEMA ROULETTE PICK</span></div>`; }
- const bmLabel = m => bookmarks().includes(m.id) ? '보관 중 ' : '보관 ';
+ function posterMarkup(movie){ return `<div class="poster">${posterHTML(movie)}</div>`; }
+ const bmLabel = m => bookmarks().includes(m.id) ? ICON.bookmarkOn + '보관 중' : ICON.bookmark + '보관';
  function toggleBm(m, btn){
  const cur = bookmarks(), has = cur.includes(m.id);
  const ok = saveBm(has ? cur.filter(x => x !== m.id) : [...cur, m.id]);
- if(btn) btn.textContent = bmLabel(m);
+ if(btn) btn.innerHTML = bmLabel(m);
  showToast(has ? '보관을 해제했어요.' : (ok ? '보관함에 담았어요.' : '저장하지 못했어요. 창을 닫기 전까지만 유지돼요.'));
  }
  /* 10초 결정 타이머: 룰렛 결과에서만 작동. 시간이 다 되면 그 영화로 자동 확정 */
@@ -673,7 +717,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  overlay.className = 'ticket-tear-overlay';
  overlay.setAttribute('role', 'status');
  overlay.setAttribute('aria-live', 'polite');
- overlay.innerHTML = `<div class="ticket-tear-stage"><div class="ticket-tear-caption">CINEPICK · YOUR PICK</div><h2 class="ticket-tear-title">이 영화로 결정!</h2><p class="ticket-tear-subtitle">오늘의 영화 티켓을 찢어 확정하고 있어요.</p><div class="tear-ticket" aria-hidden="true"><div class="tear-ticket-half tear-ticket-top"><span class="tear-mark"></span><span class="tear-movie">${esc(m.title)}</span></div><div class="tear-ticket-half tear-ticket-bottom"><span>OFFICIAL PICK</span><span class="tear-code">SP · </span></div></div><div class="ticket-tear-foot">좋은 감상 되세요 · ENJOY THE MOVIE</div></div>`;
+ overlay.innerHTML = `<div class="ticket-tear-stage"><h2 class="ticket-tear-title">이 영화로 결정!</h2><p class="ticket-tear-subtitle">오늘의 영화 티켓을 찢어 확정하고 있어요.</p><div class="tear-ticket" aria-hidden="true"><div class="tear-ticket-half tear-ticket-top"><span class="tear-mark">${ICON.film}</span><span class="tear-movie">${esc(m.title)}</span></div><div class="tear-ticket-half tear-ticket-bottom"><span>OFFICIAL PICK</span><span class="tear-code">SP ${ICON.check}</span></div></div></div>`;
  document.body.appendChild(overlay);
  window.setTimeout(() => { overlay.remove(); const lv = state.lvUp; setStep(5); if(lv){ state.lvUp = lv; render(); } }, 1450);
  }
@@ -681,9 +725,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const m = state.movie;
  if(!m){ state.step = 3; renderWheel(); return; }
  const timed = state.fromRoulette;
- const timerBox = timed ? `<div class="decide-box" id="decideBox" role="timer" aria-live="off"><div class="decide-head"><span>⏱ 결정까지</span><strong><span id="decideNum">${DECIDE_SEC}</span>초</strong></div><div class="decide-track"><div class="decide-bar" id="decideBar"></div></div><p>시간이 끝나면 이 영화로 자동 확정돼요. 다른 영화를 보려면 ‘후보 보기’를 누르세요.</p></div>` : '';
- workspace.innerHTML = header(4,'오늘의 추천 영화', timed ? '룰렛이 골라준 영화예요. 10초 안에 결정해 볼까요?' : '마음에 들면 확정하세요. 다른 영화가 궁금하면 후보를 다시 볼 수 있어요.', timed ? '⏱ 10초 결정' : '추천 결과') +
- `<div class="content">${timerBox}<div class="result-layout"><div>${posterMarkup(m)}</div><div class="result-info"><div class="eyebrow">WE PICKED FOR YOU</div><h4>${m.title}${foodBadge(m)}</h4><p class="subline">${m.year} · ${m.genre} · ${m.runtime}분</p><div class="tags"><span class="tag">${m.moods.includes(state.mood) ? state.mood : m.moods[0]}</span><span class="tag">${m.tone}</span><span class="tag">${m.food}</span></div><p class="overview">${m.overview}</p><div class="actions" style="justify-content:stretch"><button class="btn" id="showCandidates">후보 보기 </button><button class="btn" id="tryAgain">다시 돌리기 ↻</button><button class="btn" id="bmBtn">${bmLabel(m)}</button><button class="btn primary" id="confirmMovie">이 영화로 확정 </button></div></div></div></div>`;
+ const timerBox = timed ? `<div class="decide-box" id="decideBox" role="timer" aria-live="off"><div class="decide-head"><span>${ICON.clock}결정까지</span><strong><span id="decideNum">${DECIDE_SEC}</span>초</strong></div><div class="decide-track"><div class="decide-bar" id="decideBar"></div></div><p>시간이 끝나면 이 영화로 자동 확정돼요. 다른 영화를 보려면 ‘후보 보기’를 누르세요.</p></div>` : '';
+ workspace.innerHTML = header(4,'오늘의 추천 영화', timed ? '룰렛이 골라준 영화예요. 10초 안에 결정해 볼까요?' : '마음에 들면 확정하세요. 다른 영화가 궁금하면 후보를 다시 볼 수 있어요.', timed ? '10초 결정' : '추천 결과') +
+ `<div class="content">${timerBox}<div class="result-layout"><div>${posterMarkup(m)}</div><div class="result-info"><h4>${m.title}${foodBadge(m)}</h4><p class="subline">${m.year} · ${m.genre} · ${m.runtime}분</p><div class="tags"><span class="tag">${m.moods.includes(state.mood) ? state.mood : m.moods[0]}</span><span class="tag">${m.food}</span></div><p class="overview">${m.overview}</p><div class="actions" style="justify-content:stretch"><button class="btn" id="showCandidates">후보 보기</button><button class="btn" id="tryAgain">다시 돌리기 ↻</button><button class="btn" id="bmBtn">${bmLabel(m)}</button><button class="btn primary" id="confirmMovie">${ICON.check}이 영화로 확정</button></div></div></div></div>`;
  $('#showCandidates').addEventListener('click', () => { clearTimers(); state.fromRoulette = false; state.showWheel = false; if(!state.mood) state.mood = m.moods[0]; setStep(3); });
  $('#tryAgain').addEventListener('click', () => { clearTimers(); if(!state.mood) state.mood = m.moods[0]; state.step = 3; state.showWheel = true; render(); setTimeout(spinRoulette, 60); });
  $('#bmBtn').addEventListener('click', e => toggleBm(m, e.currentTarget));
@@ -709,7 +753,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const stub = t ? `<div class="ticket-stub"><div class="k">MATCHING TICKET</div><div class="t">${m.title}</div><div class="d"><span>${t.savedDate}</span><span>No. ${esc(t.ticketId)}</span></div></div>` : '';
  const up = state.lvUp ? `<div class="lvup" role="status"><b>LEVEL UP! Lv.${state.lvUp.lv}</b><span>도장 10개 완성 · ${state.lvUp.name}</span></div>` : '';
  workspace.innerHTML = header(5,'선택 완료. 이제 감상할 시간!','영화를 확정했어요. 티켓을 발권하면 도장이 한 칸 채워져요.', t ? '티켓 발권 완료' : '영화 확정') +
- `<div class="content"><div class="confirm-banner"><div class="confirm-icon">${m.poster}</div><div><div class="eyebrow">TONIGHT'S MOVIE</div><h4>${m.title}${foodBadge(m)}</h4><p>${m.year} · ${m.genre} · ${m.runtime}분</p><p style="margin-top:6px">야식 페어링 · ${m.food}</p></div></div>${up}${stub}<div class="actions" style="justify-content:stretch;margin-top:0"><button class="btn primary" id="issueTicket" ${t ? 'disabled' : ''}>${t ? '발권 완료 ' : '매칭 티켓 발권 '}</button><button class="btn" id="watchMovie">감상 서비스 선택 ↗</button><button class="btn" id="bmBtn">${bmLabel(m)}</button></div><div class="callout"><strong>감상 준비</strong> · OTT 서비스 연결은 데모 단계예요. 서비스를 선택하면 공식 사이트로 이동하고, 영화 제목은 직접 검색해 주세요.</div><div class="actions"><button class="btn" id="moreMovie">새 영화 추천하기</button><button class="btn primary" id="toBook">티켓북 보기 →</button></div></div>`;
+ `<div class="content"><div class="confirm-banner"><div class="confirm-icon">${posterHTML(m)}</div><div><h4>${m.title}${foodBadge(m)}</h4><p>${m.year} · ${m.genre} · ${m.runtime}분</p><p style="margin-top:6px">야식 페어링 · ${m.food}</p></div></div>${up}${stub}<div class="actions" style="justify-content:stretch;margin-top:0"><button class="btn primary" id="issueTicket" ${t ? 'disabled' : ''}>${t ? ICON.check + '발권 완료' : ICON.ticket + '매칭 티켓 발권'}</button><button class="btn" id="watchMovie">감상 서비스 선택 ↗</button><button class="btn" id="bmBtn">${bmLabel(m)}</button></div><div class="actions"><button class="btn" id="moreMovie">새 영화 추천하기</button><button class="btn primary" id="toBook">티켓북 보기 →</button></div></div>`;
  $('#issueTicket').addEventListener('click', () => issueTicket(m));
  $('#watchMovie').addEventListener('click', () => openWatchModal(m));
  $('#bmBtn').addEventListener('click', e => toggleBm(m, e.currentTarget));
@@ -718,7 +762,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  }
  function openWatchModal(m){
  const root = $('#modalRoot');
- root.innerHTML = `<div class="modal-backdrop" id="backdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="eyebrow">READY TO WATCH</div><h3 id="modalTitle">어디에서 감상할까요?</h3><p>현재 프로토타입은 OTT 보유 여부를 조회하지 않아요. 서비스를 고르면 공식 사이트로 이동합니다.</p><div class="service-list"><button data-url="https://www.netflix.com/">Netflix ↗</button><button data-url="https://watcha.com/">WATCHA ↗</button><button data-url="https://www.wavve.com/">Wavve ↗</button><button data-url="https://www.tving.com/">TVING ↗</button></div><div class="modal-actions"><button class="btn" id="closeModal">닫기</button></div></div></div>`;
+ root.innerHTML = `<div class="modal-backdrop" id="backdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><h3 id="modalTitle">어디에서 감상할까요?</h3><p>현재 프로토타입은 OTT 보유 여부를 조회하지 않아요. 서비스를 고르면 공식 사이트로 이동합니다.</p><div class="service-list"><button data-url="https://www.netflix.com/">Netflix ↗</button><button data-url="https://watcha.com/">WATCHA ↗</button><button data-url="https://www.wavve.com/">Wavve ↗</button><button data-url="https://www.tving.com/">TVING ↗</button></div><div class="modal-actions"><button class="btn" id="closeModal">닫기</button></div></div></div>`;
  $('#closeModal').addEventListener('click', () => root.innerHTML = '');
  $('#backdrop').addEventListener('click', e => { if(e.target.id === 'backdrop') root.innerHTML = ''; });
  root.querySelectorAll('[data-url]').forEach(b => b.addEventListener('click', () => { const url = b.dataset.url; root.innerHTML = ''; showToast(`‘${m.title}’을 검색해서 이용 가능 여부를 확인해 주세요.`); window.open(url, '_blank', 'noopener,noreferrer'); }));
@@ -729,7 +773,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const chrono = tickets().slice().reverse();
  const cur = chrono.slice(Math.floor(chrono.length / 10) * 10);
  return Array.from({length:10}, (_, i) => cur[i]
- ? `<div class="stamp filled"><span class="stamp-mark"></span><strong>${esc(titleOf(cur[i]))}</strong><small>${esc(cur[i].savedDate)}</small></div>`
+ ? `<div class="stamp filled"><span class="stamp-mark">${ICON.check}</span><strong>${esc(titleOf(cur[i]))}</strong><small>${esc(cur[i].savedDate)}</small></div>`
  : `<div class="stamp"><span class="stamp-mark">${i + 1}</span><strong>비어 있음</strong></div>`).join('');
  }
  function renderTicketbook(){
@@ -739,11 +783,11 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  body = `<div class="lvbox"><div class="lvhead"><strong><span class="lvbadge">Lv.${L.lv}</span>${L.name}</strong><span>${L.cur} / 10</span></div><div class="timer-track" style="height:6px"><div class="timer-progress" style="width:${L.cur * 10}%;transition:none"></div></div><p class="lvnote">${t.length > 0 && L.cur === 0 ? '새 레벨 시작! 도장 10개를 다시 모아보세요.' : `다음 레벨까지 ${L.next}개`}</p></div>
  <div class="stamp-head"><h4>우유부단 탈출 도장판</h4><span>총 ${t.length}장 발권</span></div><div class="stamp-grid">${stampCells()}</div>
  <div class="stamp-head"><h4>발권한 티켓</h4><span>최신순</span></div>` +
- (t.length ? `<div class="tlist">${t.map(x => { const m = byId(x.movieId) || {title:'삭제된 영화', poster:'?'}; return `<div class="tcard"><div class="h"><div class="g">${m.poster}</div><div><div class="n">${esc(m.title)}${foodBadge(m)}</div><div class="s">${esc(x.savedDate)} · No. ${esc(x.ticketId)}</div></div></div><div class="memo"><input type="text" id="memo-${esc(x.ticketId)}" value="${esc(x.memo || '')}" maxlength="40" placeholder="한 줄 감상 메모" aria-label="${esc(m.title)} 메모"><button class="btn" data-memo="${esc(x.ticketId)}">저장</button><button class="btn danger" data-del="${esc(x.ticketId)}">삭제</button></div><button class="btn" data-review-ticket="${esc(x.movieId)}" style="min-height:0;padding:8px;font-size:11px">${myReviews().some(r => r.movieId === x.movieId) ? '내 리뷰 수정 ' : '이 영화 리뷰 쓰기 '}</button><p class="tmsg" id="mm-${esc(x.ticketId)}"></p></div>`; }).join('')}</div>`
+ (t.length ? `<div class="tlist">${t.map(x => { const m = byId(x.movieId) || {title:'삭제된 영화', poster:''}; return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div><div class="n">${esc(m.title)}${foodBadge(m)}</div><div class="s">${esc(x.savedDate)} · No. ${esc(x.ticketId)}</div></div></div><div class="memo"><input type="text" id="memo-${esc(x.ticketId)}" value="${esc(x.memo || '')}" maxlength="40" placeholder="한 줄 감상 메모" aria-label="${esc(m.title)} 메모"><button class="btn" data-memo="${esc(x.ticketId)}">저장</button><button class="btn danger" data-del="${esc(x.ticketId)}">삭제</button></div><button class="btn" data-review-ticket="${esc(x.movieId)}" style="min-height:0;padding:8px;font-size:11px">${myReviews().some(r => r.movieId === x.movieId) ? '내 리뷰 수정' : '이 영화 리뷰 쓰기'}</button><p class="tmsg" id="mm-${esc(x.ticketId)}"></p></div>`; }).join('')}</div>`
  : `<div class="empty-box"><strong>아직 발권한 티켓이 없어요</strong>룰렛을 돌려 첫 티켓을 만들어보세요.</div>`);
  } else {
- body = b.length ? `<div class="tlist">${b.map(m => `<div class="tcard"><div class="h"><div class="g">${m.poster}</div><div><div class="n">${m.title}${foodBadge(m)}</div><div class="s">${m.year} · ${m.genre} · ${m.runtime}분</div></div></div><div class="memo"><button class="btn primary" data-pick="${m.id}" style="flex:1">이 영화로 확정</button><button class="btn" data-unbm="${m.id}">보관 해제</button></div></div>`).join('')}</div>`
- : `<div class="empty-box"><strong>보관한 영화가 없어요</strong>추천 결과에서 ‘보관 ’를 눌러 모아보세요.</div>`;
+ body = b.length ? `<div class="tlist">${b.map(m => `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div><div class="n">${m.title}${foodBadge(m)}</div><div class="s">${m.year} · ${m.genre} · ${m.runtime}분</div></div></div><div class="memo"><button class="btn primary" data-pick="${m.id}" style="flex:1">이 영화로 확정</button><button class="btn" data-unbm="${m.id}">보관 해제</button></div></div>`).join('')}</div>`
+ : `<div class="empty-box"><strong>보관한 영화가 없어요</strong>추천 결과에서 ‘보관’을 눌러 모아보세요.</div>`;
  }
  workspace.innerHTML = header(6,'내 티켓북','발권한 티켓과 보관한 영화를 한곳에서 관리해요.', `Lv.${L.lv} ${L.name}`) +
  `<div class="content"><div class="tabs" role="tablist"><button role="tab" data-tab="tickets" aria-selected="${state.tab === 'tickets'}">티켓북 ${t.length}</button><button role="tab" data-tab="bookmarks" aria-selected="${state.tab === 'bookmarks'}">보관 ${b.length}</button></div>${body}<div class="actions"><button class="btn primary" id="startAgain">영화 추천받기 →</button></div></div>`;
@@ -766,12 +810,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  function renderRecovery(type = 'all'){
  state.step = 7;
  const entries = [
- {id:'noCandidates',icon:'⌕',title:'조건에 맞는 영화가 없어요',desc:`${state.mood || '선택한 기분'}에 맞는 후보가 없어요. 다른 기분을 골라보세요.`,button:'조건 다시 설정',action:() => setStep(1)},
+ {id:'noCandidates',icon:ICON.search,title:'조건에 맞는 영화가 없어요',desc:`${state.mood || '선택한 기분'}에 맞는 후보가 없어요. 다른 기분을 골라보세요.`,button:'조건 다시 설정',action:() => setStep(1)},
  
- {id:'ott',icon:'↗',title:'감상 서비스를 찾지 못했어요',desc:'서비스 앱에서 영화 제목을 직접 검색해보세요. 이 프로토타입은 OTT별 제공 여부를 조회하지 않아요.',button:'감상 서비스 선택',action:() => state.movie ? openWatchModal(state.movie) : showToast('먼저 영화를 추천받아 주세요.')},
- {id:'storage',icon:'▣',title:'기록을 저장하지 못했어요',desc:'브라우저 저장이 제한되어 있을 수 있어요. 이 경우에도 추천 흐름은 계속 이용할 수 있고, 창을 닫기 전까지는 기록이 유지돼요.',button:'저장 안내 보기',action:() => showToast('브라우저의 사이트 데이터 저장 설정을 확인해 주세요.')}
+ {id:'ott',icon:ICON.ext,title:'감상 서비스를 찾지 못했어요',desc:'서비스 앱에서 영화 제목을 직접 검색해보세요. 이 프로토타입은 OTT별 제공 여부를 조회하지 않아요.',button:'감상 서비스 선택',action:() => state.movie ? openWatchModal(state.movie) : showToast('먼저 영화를 추천받아 주세요.')},
+ {id:'storage',icon:ICON.save,title:'기록을 저장하지 못했어요',desc:'브라우저 저장이 제한되어 있을 수 있어요. 이 경우에도 추천 흐름은 계속 이용할 수 있고, 창을 닫기 전까지는 기록이 유지돼요.',button:'저장 안내 보기',action:() => showToast('브라우저의 사이트 데이터 저장 설정을 확인해 주세요.')}
  ].filter(e => type === 'all' || e.id === type);
- workspace.innerHTML = header(7,'막히는 순간에도, 다음 선택은 있어요.','예상 가능한 예외 상황에서 바로 복구할 수 있도록 준비했어요.','HELP / RECOVERY') +
+ workspace.innerHTML = header(7,'막히는 순간에도, 다음 선택은 있어요.','예상 가능한 예외 상황에서 바로 복구할 수 있도록 준비했어요.','도움말') +
  `<div class="content"><div class="recovery-list">${entries.map(e => `<article class="recovery"><div class="recovery-icon">${e.icon}</div><div><h4>${e.title}</h4><p>${e.desc}</p><button class="btn" data-recovery="${e.id}">${e.button} →</button></div></article>`).join('')}</div><div class="actions"><button class="btn" id="backToApp">← 앱으로 돌아가기</button></div></div>`;
  workspace.querySelectorAll('[data-recovery]').forEach(b => b.addEventListener('click', () => { const e = entries.find(x => x.id === b.dataset.recovery); if(e) e.action(); }));
  $('#backToApp').addEventListener('click', () => setStep(state.movie ? 4 : (state.mood ? 2 : 1)));
@@ -783,14 +827,13 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const dailyMovie = movies[dayIndex % movies.length];
  workspace.innerHTML = `<div class="home-screen">
  <div id="homeSearchPanel" style="display:none">${searchBox('homeQ')}<div id="homeResults"></div></div>
- <p style="margin:0;color:var(--muted);font-size:12px">지금 기분에 맞는 영화 한 편을 가볍게 골라보세요.</p>
- <div class="home-feature"><small>YOUR MOOD, ONE MOVIE</small><h3>지금 기분에 맞는 영화</h3><p>기분을 선택하고 보고 싶은 영화를 골라보세요.</p><button id="homeStart">영화 추천 시작하기 →</button></div>
+  <div class="home-feature"><h3>지금 기분에 맞는 영화</h3><p>기분을 선택하고 보고 싶은 영화를 골라보세요.</p><button id="homeStart">영화 추천 시작하기 →</button></div>
  <div class="home-section-title">오늘의 영화</div>
- <article class="candidate-card today-movie-card"><div class="candidate-poster">${dailyMovie.poster}</div><div class="candidate-info"><div class="eyebrow">TODAY'S PICK · ${dailyMovie.year}</div><h4>${dailyMovie.title}${foodBadge(dailyMovie)}</h4><div class="candidate-meta">${dailyMovie.genre} · ${dailyMovie.runtime}분</div><p>${dailyMovie.overview}</p><div class="candidate-tags"><span>${dailyMovie.moods[0]}</span><span>${dailyMovie.tone}</span><span>${dailyMovie.food}</span></div><button class="btn primary" id="todayMoviePick">오늘은 이 영화 보기</button></div></article>
+ <article class="candidate-card today-movie-card"><div class="candidate-poster">${posterHTML(dailyMovie)}</div><div class="candidate-info"><h4>${dailyMovie.title}${foodBadge(dailyMovie)}</h4><div class="candidate-meta">${dailyMovie.genre} · ${dailyMovie.runtime}분</div><p>${dailyMovie.overview}</p><div class="candidate-tags"><span>${dailyMovie.moods[0]}</span><span>${dailyMovie.food}</span></div><button class="btn primary" id="todayMoviePick">오늘은 이 영화 보기</button></div></article>
  <div class="home-section-title">나의 시네마</div>
  <div class="home-shortcuts">
- <button class="home-shortcut" id="homeTickets"><span class="shortcut-icon"></span><strong>나의 티켓북</strong><small>발권한 영화 ${t.length}편</small></button>
- <button class="home-shortcut" id="homeSaved"><span class="shortcut-icon"></span><strong>보관한 영화</strong><small>저장한 영화 ${b.length}편</small></button>
+ <button class="home-shortcut" id="homeTickets"><span class="shortcut-icon">${ICON.ticket}</span><strong>나의 티켓북</strong><small>발권한 영화 ${t.length}편</small></button>
+ <button class="home-shortcut" id="homeSaved"><span class="shortcut-icon">${ICON.bookmark}</span><strong>보관한 영화</strong><small>저장한 영화 ${b.length}편</small></button>
  </div>
  </div>`;
  const hq = $('#homeQ');
@@ -812,7 +855,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  ];
  const norm = s => String(s).toLowerCase().replace(/\s+/g, '');
  const matchMovie = (m, q) => !q || [m.title, m.en, m.genre, m.tone, ...m.moods].some(v => norm(v).includes(q));
- const stars = n => ''.repeat(Math.round(n)) + ''.repeat(5 - Math.round(n));
+ const stars = n => Array.from({length:5}, (_, i) => i < Math.round(n) ? ICON.starOn : ICON.star).join('');
 
  function renderMovieResults(box, q){
  if(!box) return;
@@ -821,16 +864,16 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  box.innerHTML = !q
  ? `<div class="search-hint">검색어를 입력하면 영화가 나와요. 영화를 골라 바로 리뷰를 쓸 수 있어요.</div>`
  : found.length
- ? `<div class="home-section-title">검색 결과 ${found.length}편</div><div class="tlist" style="margin-top:0">${found.map(m => { const has = mine.some(r => r.movieId === m.id); return `<div class="tcard"><div class="h"><div class="g">${m.poster}</div><div style="min-width:0"><div class="n">${esc(m.title)}${foodBadge(m)}</div><div class="s">${m.year} · ${esc(m.genre)} · ${m.runtime}분</div></div></div><div class="memo"><button class="btn primary" data-write="${m.id}" style="flex:1">${has ? '내 리뷰 수정 ' : '리뷰 쓰기 '}</button><button class="btn" data-bm-search="${m.id}">${bmLabel(m)}</button></div></div>`; }).join('')}</div>`
+ ? `<div class="home-section-title">검색 결과 ${found.length}편</div><div class="tlist" style="margin-top:0">${found.map(m => { const has = mine.some(r => r.movieId === m.id); return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div style="min-width:0"><div class="n">${esc(m.title)}${foodBadge(m)}</div><div class="s">${m.year} · ${esc(m.genre)} · ${m.runtime}분</div></div></div><div class="memo"><button class="btn primary" data-write="${m.id}" style="flex:1">${has ? '내 리뷰 수정' : '리뷰 쓰기'}</button><button class="btn" data-bm-search="${m.id}">${bmLabel(m)}</button></div></div>`; }).join('')}</div>`
  : `<div class="empty-box"><strong>‘${esc(state.q)}’에 맞는 영화가 없어요</strong>제목 일부나 장르(예: 음악, 코미디)로 다시 검색해 보세요.</div>`;
  box.querySelectorAll('[data-write]').forEach(b => b.addEventListener('click', () => openReviewEditor(b.dataset.write)));
  box.querySelectorAll('[data-bm-search]').forEach(b => b.addEventListener('click', e => toggleBm(byId(b.dataset.bmSearch), e.currentTarget)));
  }
- const searchBox = id => `<div class="search-box"><span aria-hidden="true">⌕</span><input type="search" id="${id}" placeholder="영화 검색하고 리뷰 남기기 (제목·장르·기분)" value="${esc(state.q || '')}" aria-label="영화 검색" autocomplete="off"><button class="search-clear" data-clear="${id}" aria-label="검색어 지우기"></button></div>`;
+ const searchBox = id => `<div class="search-box"><span aria-hidden="true">${ICON.search}</span><input type="search" id="${id}" placeholder="영화 검색하고 리뷰 남기기 (제목·장르·기분)" value="${esc(state.q || '')}" aria-label="영화 검색" autocomplete="off"><button class="search-clear" data-clear="${id}" aria-label="검색어 지우기">${ICON.close}</button></div>`;
  function refreshSearch(){ if(state.activeTab === 'browse') updateBrowse(); else if(state.activeTab === 'home') renderMovieResults($('#homeResults'), norm(state.q || '')); }
  function renderBrowse(){
  workspace.innerHTML = `<div class="browse-screen">
- <div class="browse-heading"><div><div class="eyebrow">둘러보기 · SEARCH & REVIEWS</div><h2>영화 찾고<br>리뷰 남기기</h2></div><span class="status-pill" id="reviewCount"></span></div>
+ <div class="browse-heading"><div><h2>영화 찾고<br>리뷰 남기기</h2></div><span class="status-pill" id="reviewCount"></span></div>
  <p class="browse-subtitle">영화 제목·장르·기분으로 검색하고, 본 영화에 별점과 감상평을 남겨보세요.</p>
  ${searchBox('browseQ')}
  <div id="movieResults"></div>
@@ -851,7 +894,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const list = allReviews().filter(r => { const m = byId(r.movieId); return m && matchMovie(m, q); });
  $('#reviewCount').textContent = list.length + '개 리뷰';
  $('#reviewHeading').textContent = q ? `‘${state.q}’ 감상평 ${list.length}개` : '최근 감상평';
- $('#reviewList').innerHTML = list.length ? list.map(r => { const m = byId(r.movieId); return `<button class="review-card${r.mine ? ' mine' : ''}" data-review-id="${esc(r.id)}" aria-label="${esc(m.title)} 감상평 자세히 보기"><div class="review-poster">${m.poster}</div><div><h3>${esc(m.title)}${foodBadge(m)}</h3><div class="review-meta">${r.mine ? '<span class="mine-badge">나</span>' : esc(r.user) + ' · '}${esc(r.date)}</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)}</span></div><p class="review-excerpt">${esc(r.title ? r.title + ' — ' : '')}${esc(r.review)}</p><div class="review-open-hint">감상평 전체 보기 →</div></div></button>`; }).join('')
+ $('#reviewList').innerHTML = list.length ? list.map(r => { const m = byId(r.movieId); return `<button class="review-card${r.mine ? ' mine' : ''}" data-review-id="${esc(r.id)}" aria-label="${esc(m.title)} 감상평 자세히 보기"><div class="review-poster">${posterHTML(m)}</div><div><h3>${esc(m.title)}${foodBadge(m)}</h3><div class="review-meta">${r.mine ? '<span class="mine-badge">나</span>' : esc(r.user) + ' · '}${esc(r.date)}</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)}</span></div><p class="review-excerpt">${esc(r.title ? r.title + ' — ' : '')}${esc(r.review)}</p><div class="review-open-hint">감상평 전체 보기 →</div></div></button>`; }).join('')
  : `<div class="empty-box" style="margin-top:0"><strong>아직 감상평이 없어요</strong>첫 리뷰를 남겨보세요.</div>`;
  workspace.querySelectorAll('[data-review-id]').forEach(btn => btn.addEventListener('click', () => openReviewDetail(btn.dataset.reviewId)));
  }
@@ -860,8 +903,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const old = myReviews().find(r => r.movieId === movieId);
  let rating = old ? old.rating : 0;
  const root = $('#modalRoot');
- root.innerHTML = `<div class="modal-backdrop" id="editBackdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle"><div class="eyebrow">${old ? 'EDIT MY REVIEW' : 'WRITE A REVIEW'}</div><div class="review-detail-top"><div class="review-detail-poster">${m.poster}</div><div><h3 id="editTitle">${esc(m.title)}</h3><div class="review-meta">${m.year} · ${esc(m.genre)} · ${m.runtime}분</div></div></div>
- <div class="star-input" role="radiogroup" aria-label="별점">${[1,2,3,4,5].map(n => `<button type="button" role="radio" data-star="${n}" aria-label="${n}점"></button>`).join('')}<span id="starText"></span></div>
+ root.innerHTML = `<div class="modal-backdrop" id="editBackdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="editTitle"><div class="review-detail-top"><div class="review-detail-poster">${posterHTML(m)}</div><div><h3 id="editTitle">${esc(m.title)}</h3><div class="review-meta">${m.year} · ${esc(m.genre)} · ${m.runtime}분</div></div></div>
+ <div class="star-input" role="radiogroup" aria-label="별점">${[1,2,3,4,5].map(n => `<button type="button" role="radio" data-star="${n}" aria-label="${n}점">${ICON.star}</button>`).join('')}<span id="starText"></span></div>
  <input class="review-field" id="rvTitle" maxlength="30" placeholder="한 줄 제목 (선택)" value="${esc(old ? old.title || '' : '')}">
  <textarea class="review-field" id="rvBody" maxlength="300" rows="5" placeholder="어떤 밤에 보면 좋을지, 무엇이 기억에 남았는지 적어주세요.">${esc(old ? old.review : '')}</textarea>
  <div class="rv-foot"><span class="tmsg" id="rvMsg" style="color:var(--accent)"></span><span id="rvLen" class="rv-len"></span></div>
@@ -888,7 +931,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  function openReviewDetail(reviewId){
  const r = allReviews().find(x => String(x.id) === String(reviewId)); if(!r) return;
  const m = byId(r.movieId); const root = $('#modalRoot');
- root.innerHTML = `<div class="modal-backdrop" id="reviewBackdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle"><div class="eyebrow">${r.mine ? 'MY REVIEW' : 'COMMUNITY REVIEW'}</div><div class="review-detail-top"><div class="review-detail-poster">${m.poster}</div><div><h3 id="reviewModalTitle">${esc(m.title)}</h3><div class="review-meta">${m.year} · ${esc(m.genre)} · ${m.runtime}분</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)} / 5.0</span></div><div class="review-meta" style="margin-top:5px">${esc(r.user)} · ${esc(r.date)}</div></div></div>${r.title ? `<h4 style="font-size:14px;margin:0 0 9px">${esc(r.title)}</h4>` : ''}<div class="review-quote">${esc(r.review)}</div><p style="margin-top:14px;line-height:1.6">${esc(m.overview)}</p><div class="modal-actions" style="gap:8px;flex-wrap:wrap">${r.mine ? '<button class="btn danger" id="delMyReview">삭제</button><button class="btn" id="editMyReview">수정 </button>' : '<button class="btn" id="writeOwn">나도 리뷰 쓰기 </button>'}<button class="btn" id="closeReviewModal">닫기</button><button class="btn primary" id="saveReviewedMovie">${bookmarks().includes(m.id) ? '보관 중 ' : '영화 보관 '}</button></div></div></div>`;
+ root.innerHTML = `<div class="modal-backdrop" id="reviewBackdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle"><div class="review-detail-top"><div class="review-detail-poster">${posterHTML(m)}</div><div><h3 id="reviewModalTitle">${esc(m.title)}</h3><div class="review-meta">${m.year} · ${esc(m.genre)} · ${m.runtime}분</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)} / 5.0</span></div><div class="review-meta" style="margin-top:5px">${esc(r.user)} · ${esc(r.date)}</div></div></div>${r.title ? `<h4 style="font-size:14px;margin:0 0 9px">${esc(r.title)}</h4>` : ''}<div class="review-quote">${esc(r.review)}</div><p style="margin-top:14px;line-height:1.6">${esc(m.overview)}</p><div class="modal-actions" style="gap:8px;flex-wrap:wrap">${r.mine ? '<button class="btn danger" id="delMyReview">삭제</button><button class="btn" id="editMyReview">수정</button>' : '<button class="btn" id="writeOwn">나도 리뷰 쓰기</button>'}<button class="btn" id="closeReviewModal">닫기</button><button class="btn primary" id="saveReviewedMovie">${bmLabel(m)}</button></div></div></div>`;
  const close = () => { root.innerHTML = ''; };
  $('#closeReviewModal').addEventListener('click', close);
  $('#reviewBackdrop').addEventListener('click', e => { if(e.target.id === 'reviewBackdrop') close(); });
@@ -903,8 +946,8 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  function renderMyPage(){
  const t=tickets(), b=bookmarks(), L=lvInfo(t.length);
  workspace.innerHTML = `<div class="content">
- <div class="eyebrow">MY CINEMA PROFILE</div><h3 style="font-size:25px;letter-spacing:-.05em;margin:5px 0 18px">마이페이지</h3>
- <div class="profile-summary"><div class="profile-avatar">◉</div><div><h4>나의 영화 생활</h4><p>오늘도 영화 한 편, 가볍게 골라봐요.</p></div></div>
+ <h3 style="font-size:25px;letter-spacing:-.05em;margin:5px 0 18px">마이페이지</h3>
+ <div class="profile-summary"><div class="profile-avatar">${ICON.user}</div><div><h4>나의 영화 생활</h4><p>오늘도 영화 한 편, 가볍게 골라봐요.</p></div></div>
  <div class="home-section-title">시네마 기록</div>
  <div class="lvbox"><div class="lvhead"><strong><span class="lvbadge">Lv.${L.lv}</span>${L.name}</strong><span>${L.cur} / 10</span></div><div class="cinema-progress" role="progressbar" aria-label="다음 레벨 영화 기록" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${L.cur}">${Array.from({length:10},(_,i)=>`<span class="cinema-progress-segment ${i<L.cur?'filled':''}"></span>`).join('')}</div><p class="lvnote">영화 한 편을 기록할 때마다 한 칸씩 채워져요 · 다음 레벨까지 ${L.next}개</p></div>
  <div class="profile-row"><span>발권한 영화</span><strong>${t.length}편</strong></div>
@@ -956,10 +999,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  });
  }
  document.querySelectorAll('.step-link').forEach(b => b.addEventListener('click', () => setStep(Number(b.dataset.step))));
- $('#headerRecords').addEventListener('click', () => { state.tab = 'tickets'; setStep(6); });
- $('#resetApp').addEventListener('click', () => { state = {...defaultState}; $('#modalRoot').innerHTML = ''; render(); showToast('새로운 영화 선택을 시작해요.'); });
+  loadPosterCache();
  render();
- loadTMDBMovies();
+ loadTMDBPosters();
 })();
 </script>
 </body>
