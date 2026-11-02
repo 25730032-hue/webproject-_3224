@@ -687,7 +687,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  {name:'우울한',icon:ICON.umbrella,desc:'마음을 다독이고 싶을 때'},
  {name:'심심한',icon:ICON.sparkle,desc:'재미있게 기분 전환하고 싶을 때'}
  ];
- const TITLES = ['우유부단 견습생','선택 장애 탈출러','룰렛 단골','영화 고르기 달인','시네픽 마스터'];
+ const TITLES = ['우유부단 견습생','선택 고민 해결사','룰렛 단골','영화 고르기 달인','시네픽 마스터'];
  const lvInfo = total => { const lv = Math.floor(total/10) + 1; return {lv, cur: total % 10, next: 10 - total % 10, name: TITLES[Math.min(lv, TITLES.length) - 1]}; };
 
  const defaultState = {activeTab:'home',step:1,mood:null,maxRuntime:null,movie:null,candidates:[],lastMovieId:null,spinning:false,showWheel:false,wheelRot:0,fromRoulette:false,tab:'tickets',lvUp:null,delId:null};
