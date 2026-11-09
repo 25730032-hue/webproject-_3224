@@ -2186,17 +2186,37 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const actorSearchCache=new Map();
  let actorSearchTimer=null,actorSearchSeq=0,actorMatchedIds=new Set(),actorPending=false;
  let actorMovieCards=[];
+// TMDB가 한글 이름을 못 찾는 경우를 대비한 해외 배우 한글→영문 이름표 (자주 검색되는 배우 위주)
+const ACTOR_ALIASES={'톰크루즈':'Tom Cruise','톰행크스':'Tom Hanks','브래드피트':'Brad Pitt','레오나르도디카프리오':'Leonardo DiCaprio','디카프리오':'Leonardo DiCaprio','조니뎁':'Johnny Depp','로버트다우니주니어':'Robert Downey Jr.','로다주':'Robert Downey Jr.','스칼렛요한슨':'Scarlett Johansson','스칼렛조핸슨':'Scarlett Johansson','크리스헴스워스':'Chris Hemsworth','크리스에반스':'Chris Evans','크리스프랫':'Chris Pratt','마크러팔로':'Mark Ruffalo','휴잭맨':'Hugh Jackman','라이언레이놀즈':'Ryan Reynolds','라이언고슬링':'Ryan Gosling','엠마스톤':'Emma Stone','엠마왓슨':'Emma Watson','제니퍼로렌스':'Jennifer Lawrence','안젤리나졸리':'Angelina Jolie','나탈리포트만':'Natalie Portman','앤해서웨이':'Anne Hathaway','메릴스트립':'Meryl Streep','샌드라불럭':'Sandra Bullock','니콜키드먼':'Nicole Kidman','케이트윈슬렛':'Kate Winslet','마고로비':'Margot Robbie','젠데이아':'Zendaya','티모시샬라메':'Timothée Chalamet','플로렌스퓨':'Florence Pugh','다니엘크레이그':'Daniel Craig','키아누리브스':'Keanu Reeves','덴젤워싱턴':'Denzel Washington','모건프리먼':'Morgan Freeman','사무엘잭슨':'Samuel L. Jackson','새뮤얼잭슨':'Samuel L. Jackson','맷데이먼':'Matt Damon','벤애플렉':'Ben Affleck','크리스찬베일':'Christian Bale','크리스천베일':'Christian Bale','앤서니홉킨스':'Anthony Hopkins','안소니홉킨스':'Anthony Hopkins','잭니콜슨':'Jack Nicholson','알파치노':'Al Pacino','로버트드니로':'Robert De Niro','윌스미스':'Will Smith','조지클루니':'George Clooney','제이크질렌할':'Jake Gyllenhaal','톰홀랜드':'Tom Holland','톰하디':'Tom Hardy','베네딕트컴버배치':'Benedict Cumberbatch','이안맥켈런':'Ian McKellen','일라이저우드':'Elijah Wood','다니엘래드클리프':'Daniel Radcliffe','헨리카빌':'Henry Cavill','가도갓':'Gal Gadot','갤가돗':'Gal Gadot','마이클패스벤더':'Michael Fassbender','조슈브롤린':'Josh Brolin','엘리자베스올슨':'Elizabeth Olsen','브리라슨':'Brie Larson','안야테일러조이':'Anya Taylor-Joy','헤일리스테인펠드':'Hailee Steinfeld','마동석':'Don Lee','성룡':'Jackie Chan','재키찬':'Jackie Chan','이연걸':'Jet Li','양조위':'Tony Leung Chiu-wai','주윤발':'Chow Yun-fat','유덕화':'Andy Lau','금성무':'Takeshi Kaneshiro','기무라타쿠야':'Takuya Kimura','와타나베켄':'Ken Watanabe','히로세스즈':'Suzu Hirose','야마시타토모히사':'Tomohisa Yamashita'};
+function actorQueryVariants(query){
+  const raw=String(query||'').trim(), tight=raw.replace(/\s+/g,'');
+  const k=norm(raw), out=[raw];
+  if(tight!==raw)out.push(tight);
+  if(ACTOR_ALIASES[k])out.push(ACTOR_ALIASES[k]);
+  else if(k.length>=3){ // 일부만 입력해도(예: '톰 크루') 이름표에서 찾기
+    for(const key of Object.keys(ACTOR_ALIASES)){ if(key.startsWith(k)){ out.push(ACTOR_ALIASES[key]); break; } }
+  }
+  return [...new Set(out)];
+}
+async function fetchPeople(name,lang){
+  const u=new URL('https://api.themoviedb.org/3/search/person');
+  u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('query',name);u.searchParams.set('language',lang);u.searchParams.set('include_adult','false');
+  const r=await fetch(u);if(!r.ok)return [];
+  return (await r.json()).results||[];
+}
 async function searchActorMovieIds(query){
   if(actorSearchCache.has(query))return actorSearchCache.get(query);
-  const u=new URL('https://api.themoviedb.org/3/search/person');
-  u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('query',query);u.searchParams.set('language','ko-KR');u.searchParams.set('include_adult','false');
-  const r=await fetch(u);if(!r.ok)throw new Error('인물 검색 실패');
-  const data=await r.json();
-  const all=data.results||[];
-  const actors=all.filter(p=>p.known_for_department==='Acting');
-  const people=(actors.length?actors:all).slice(0,3);
+  const variants=actorQueryVariants(query);
+  const lists=await Promise.all(variants.map(v=>fetchPeople(v,'ko-KR').catch(()=>[])));
+  const seenP=new Set(),people=[];
+  lists.forEach(list=>{
+    const acting=list.filter(p=>p.known_for_department==='Acting');
+    (acting.length?acting:list).slice(0,3).forEach(p=>{if(!seenP.has(p.id)){seenP.add(p.id);people.push(p);}});
+  });
+  const top=people.slice(0,3);
+  if(!top.length&&!variants.length)throw new Error('인물 검색 실패');
   const byTmdb=new Map();
-  await Promise.all(people.map(async person=>{
+  await Promise.all(top.map(async person=>{
     const cu=new URL(`https://api.themoviedb.org/3/person/${person.id}/movie_credits`);
     cu.searchParams.set('api_key',TMDB_API_KEY);cu.searchParams.set('language','ko-KR');
     try{
@@ -2226,21 +2246,23 @@ const stars = n => Array.from({length:5}, (_, i) => i < Math.round(n) ? ICON.sta
 
  function renderMovieResults(box, q){
  if(!box) return;
- if(!q){box.innerHTML='<div class="search-hint">검색어를 입력하면 내장 영화(J)와 TMDB 영화(A)에서 함께 찾아요.</div>';return;}
+ if(!q){box.innerHTML='<div class="search-hint">영화 제목이나 배우 이름으로 검색해 보세요.</div>';return;}
  const token=++apiSearchToken;clearTimeout(apiSearchTimer);
  const localHit=localMovies.filter(m=>matchMovie(m,q));
  box.innerHTML='<div class="empty-box"><strong>검색 중…</strong></div>';
  apiSearchTimer=setTimeout(async()=>{
    let results=[],failed=false;
-   try{results=await searchMovieAPI(q);}catch(e){failed=true;}
+   let actorCards=[];
+   const [apiRes,actorRes]=await Promise.allSettled([searchMovieAPI(q),searchActorMovieIds(q)]);
+   if(apiRes.status==='fulfilled')results=apiRes.value;else failed=true;
+   if(actorRes.status==='fulfilled')actorCards=actorRes.value;else if(apiRes.status!=='fulfilled')failed=true;
    if(token!==apiSearchToken||!box.isConnected)return;
-   results.forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
+   [...results,...actorCards].forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
    const mKey=m=>norm(m.title||'')+'|'+(parseInt(m.year,10)||'');
-   const lk=new Set(localHit.map(mKey));
-   const found=[...localHit.slice(0,20),...results.filter(m=>!lk.has(mKey(m))).slice(0,12)];
+   const lk=new Set(localHit.map(mKey)),found=localHit.slice(0,20);
+   [...results.slice(0,12),...actorCards.slice(0,30)].forEach(m=>{const k=mKey(m);if(lk.has(k))return;lk.add(k);found.push(m);});
    const mineNow=myReviews();
-   const nJ=found.filter(m=>m.source==='J').length,nA=found.length-nJ;
-   box.innerHTML=found.length?`<div class="home-section-title">검색 결과 ${found.length}편 (JSON ${nJ} · API ${nA})</div>${failed?'<div class="search-hint">TMDB 연결에 실패해 내장 영화만 보여드려요.</div>':''}<div class="tlist" style="margin-top:0">${found.map(m=>{const has=mineNow.some(r=>r.movieId===m.id);return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div style="min-width:0"><div class="n">${esc(m.title)}${sourceBadge(m)}</div><div class="s">${m.year||'연도 정보 없음'} · ${esc(m.genre||'영화')} · ${m.runtime?m.runtime+'분':'상영시간 정보 없음'}</div></div></div><div class="memo"><button class="btn primary" data-write="${esc(m.id)}" style="flex:1">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${esc(m.id)}">${bmLabel(m)}</button></div></div>`;}).join('')}</div>`:`<div class="empty-box"><strong>검색 결과가 없어요</strong>${failed?'TMDB 연결도 실패했어요.':''}</div>`;
+   box.innerHTML=found.length?`<div class="home-section-title">검색 결과 ${found.length}편</div>${failed?'<div class="search-hint">TMDB 연결에 실패해 내장 영화만 보여드려요.</div>':''}<div class="tlist" style="margin-top:0">${found.map(m=>{const has=mineNow.some(r=>r.movieId===m.id);return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div style="min-width:0"><div class="n">${esc(m.title)}${sourceBadge(m)}</div><div class="s">${m.year||'연도 정보 없음'} · ${esc(m.genre||'영화')} · ${m.runtime?m.runtime+'분':'상영시간 정보 없음'}</div></div></div><div class="memo"><button class="btn primary" data-write="${esc(m.id)}" style="flex:1">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${esc(m.id)}">${bmLabel(m)}</button></div></div>`;}).join('')}</div>`:`<div class="empty-box"><strong>검색 결과가 없어요</strong>${failed?'TMDB 연결도 실패했어요.':''}</div>`;
    box.querySelectorAll('[data-write]').forEach(b=>b.addEventListener('click',()=>openReviewEditor(b.dataset.write)));
    box.querySelectorAll('[data-bm-search]').forEach(b=>b.addEventListener('click',e=>toggleBm(byId(b.dataset.bmSearch),e.currentTarget)));
  },300);
@@ -2327,8 +2349,7 @@ function renderBrowse(){
     <div class="browse-filter-summary" id="filterSummary">장르, 개봉 연도, 러닝타임을 고른 뒤 ‘검색’을 눌러 주세요.</div>
   </div>
   <div class="browse-search-row">${searchBox('browseQ')}<button class="browse-search-btn" id="browseSearchBtn" type="button">검색</button></div>
-  <p class="source-legend"><b class="a">A</b> TMDB API 영화 150편 · <b class="a" style="background:#555">J</b> 내장 JSON 영화 150편 (검색·필터는 둘 다에서 찾아요)</p>
-  <div id="movieResults"><div class="empty-box"><strong>영화 150편을 불러오는 중…</strong><p>불러오기가 끝나면 전체 영화가 먼저 표시됩니다.</p></div></div>
+    <div id="movieResults"><div class="empty-box"><strong>영화 150편을 불러오는 중…</strong><p>불러오기가 끝나면 전체 영화가 먼저 표시됩니다.</p></div></div>
   <div class="home-section-title" id="reviewHeading">사용자 리뷰</div>
   <div class="review-list" id="reviewList"></div>
   <p class="review-disclaimer">※ ‘나’ 표시가 없는 리뷰는 화면 확인용 예시입니다. 내가 쓴 리뷰는 이 브라우저에만 저장돼요.</p>
@@ -2429,12 +2450,12 @@ root.querySelector('#detailWriteReview').addEventListener('click',()=>openReview
     if(runtime==='unknown'&&n>0)return false;
     return true;
   });
-  renderBrowseMovies(found,hasFilter?'검색 결과 (J·A)':(usingApi?'전체 API 영화':'전체 영화'));
+  renderBrowseMovies(found,hasFilter?'검색 결과':(usingApi?'전체 API 영화':'전체 영화'));
   const sum=$('#filterSummary');
   const runtimePending=runtime&&allMovies.some(m=>m.source==='A'&&m.runtime==null);
   if(sum)sum.textContent=runtimePending?'러닝타임 정보를 아직 불러오는 중이에요. 잠시 후 다시 ‘검색’을 눌러 주세요.'
     :actorPending?`${found.length}편 일치 · 배우 출연작 검색 중…`
-    :hasFilter?`${found.length}편의 영화가 조건에 맞아요. (JSON ${found.filter(m=>m.source==='J').length} · API ${found.filter(m=>m.source==='A').length})`
+    :hasFilter?`${found.length}편의 영화가 조건에 맞아요.`
     :usingApi?`전체 API 영화 ${allMovies.length}편을 표시하고 있어요.`
     :`API를 불러오는 중이거나 연결되지 않아 JSON 영화 ${allMovies.length}편을 표시하고 있어요.`;
   const list=allReviews().filter(r=>{const m=byId(r.movieId);return m&&(!q||matchMovie(m,q));});
