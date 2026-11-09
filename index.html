@@ -1431,6 +1431,15 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .home-collection-note{font-size:10px;color:var(--muted);margin:0}
 .home-collection-more{font-size:9px;font-weight:900;letter-spacing:.12em;color:var(--muted);white-space:nowrap;padding-bottom:2px}
 .home-rank-row,.home-release-row{display:flex;gap:11px;overflow-x:auto;overflow-y:hidden;padding:2px 2px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+/* Home movie rails: swipe on touch, click-and-drag with a mouse */
+.home-collection-track{display:flex;align-items:flex-start;gap:12px;width:100%;overflow-x:auto;overflow-y:hidden;padding:2px 2px 13px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:#999 transparent;cursor:grab;user-select:none;-webkit-user-select:none}
+.home-collection-track:active{cursor:grabbing}
+.home-collection-track::-webkit-scrollbar{height:5px}
+.home-collection-track::-webkit-scrollbar-track{background:transparent}
+.home-collection-track::-webkit-scrollbar-thumb{background:#999;border-radius:99px}
+.home-collection-track img{-webkit-user-drag:none;user-drag:none}
+.home-collection-track.is-dragging{scroll-snap-type:none;scroll-behavior:auto}
+.home-collection-track.is-dragging *{pointer-events:none}
 .home-rank-card,.home-release-card{position:relative;flex:0 0 116px;min-width:0;scroll-snap-align:start;border:0;background:transparent;text-align:left;padding:0;color:var(--ink);cursor:pointer}
 .home-rank-poster,.home-release-poster{width:116px;height:174px;border-radius:9px;overflow:hidden;background:var(--surface);border:1px solid var(--line);position:relative}
 .home-rank-poster .pw,.home-rank-poster .pimg,.home-rank-poster .ph,.home-release-poster .pw,.home-release-poster .pimg,.home-release-poster .ph{display:block;width:100%;height:100%}
@@ -1447,6 +1456,66 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 @media(max-width:390px){.home-rank-card{flex-basis:108px}.home-rank-poster{width:108px;height:162px}.home-release-card{flex-basis:100px}.home-release-poster{width:100px;height:150px}}
 
 
+
+ .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+ .review-filter-row{display:flex;gap:9px;align-items:center;margin:14px 0 16px}
+ .review-filter-wrap{position:relative;display:block;min-width:150px}
+ .review-filter-wrap select{appearance:none;width:100%;border:1px solid var(--line-strong);border-radius:10px;background:var(--paper);color:var(--ink);padding:11px 38px 11px 13px;font:inherit;font-size:12px;font-weight:800}
+ .review-filter-arrow{position:absolute;right:13px;top:50%;transform:translateY(-55%);pointer-events:none;font-size:19px;color:var(--muted)}
+ .review-movie-search{flex:1;min-width:0}
+ .review-movie-search[hidden]{display:none}
+ .review-movie-search input{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);padding:11px 12px;font:inherit;font-size:12px}
+ .review-editorial-card{display:block;padding:16px 15px}
+ .review-editorial-copy{min-width:0}
+ .review-editorial-card h3{font-size:15px;line-height:1.45;margin:0 0 7px}
+ .review-editorial-card .review-excerpt{font-size:12px;line-height:1.7;color:var(--muted);display:block;margin:0 0 12px}
+ .review-editorial-movie{font-size:12px;font-weight:900;margin-bottom:5px}
+ .review-card-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}
+ .review-like{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800}
+ .review-like.liked{background:var(--soft-red);border-color:var(--accent)}
+ .review-open-hint{border:0;background:transparent;color:var(--muted);font-size:10px;font-weight:800;padding:5px}
+
+ .movie-review-group{display:grid;gap:9px;margin-bottom:18px}
+ .movie-review-group-title{display:flex;align-items:center;justify-content:space-between;margin:5px 2px 2px;font-size:13px;font-weight:900}
+ .movie-review-group-title span{font-size:10px;color:var(--muted);font-weight:600}
+
+/* Browse filter panel */
+.browse-screen .browse-heading{margin-bottom:14px}
+.browse-screen .browse-filter-panel{border:1px solid var(--line);background:var(--paper);padding:15px;margin:0 0 12px;border-radius:12px}
+.browse-screen .browse-filter-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.browse-screen .browse-filter-heading strong{font-size:13px;letter-spacing:-.02em}
+.browse-screen .browse-filter-heading .text-button{padding:7px 11px;font-size:11px;border-radius:7px}
+.browse-screen .browse-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.browse-screen .browse-filters select{appearance:none;-webkit-appearance:none;min-width:0;width:100%;height:42px;border:1px solid var(--line);background-color:var(--surface);color:var(--ink);border-radius:8px;padding:0 29px 0 11px;font:inherit;font-size:12px;line-height:normal;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.browse-screen .browse-filter-summary{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5}
+.browse-screen .search-box{margin:0 0 8px}
+.browse-screen .browse-subtitle{display:none}
+.review-filter-wrap{position:relative;display:block;min-width:164px}
+.review-filter-wrap select{display:block;appearance:none;-webkit-appearance:none;width:100%;height:44px;border:1px solid var(--line-strong);border-radius:10px;background:var(--paper);color:var(--ink);padding:0 42px 0 14px;font:inherit;font-size:12px;font-weight:800;line-height:normal}
+.review-filter-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;display:flex;align-items:center;justify-content:center;width:14px;height:14px;font-size:17px;line-height:1;color:var(--muted)}
+@media(max-width:520px){.browse-screen .browse-filter-panel{padding:12px;border-radius:10px}.browse-screen .browse-filter-heading{margin-bottom:9px}.browse-screen .browse-filters{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.browse-screen .browse-filters select{height:39px;padding:0 22px 0 7px;font-size:10px;background-position:right 6px center}.browse-screen .browse-filter-summary{font-size:10px;margin-top:8px}.browse-screen .search-box{margin-top:10px}}
+@media(max-width:350px){.browse-screen .browse-filters{grid-template-columns:1fr}.browse-screen .browse-filters select{height:40px;padding:0 10px;font-size:11px;background-image:none}}
+
+/* Home collection headings: compact editorial typography */
+.home-collection-section{margin-top:24px}
+.home-collection-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:0 0 10px}
+.home-collection-heading h3{font-size:15px;line-height:1.35;font-weight:850;letter-spacing:-.045em;margin:0}
+.home-collection-heading p{font-size:10px;line-height:1.4;font-weight:400;color:var(--muted);opacity:.72;margin:4px 0 0}
+.home-collection-label{display:none!important}
+.home-collection-section .home-collection-track{margin-top:0}
+.movie-detail-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.movie-detail-actions .btn{flex:1 1 125px;min-height:42px}
+
+/* 둘러보기 검색줄: 입력창 + 검색 버튼을 한 줄에 */
+.browse-search-row{display:flex;align-items:stretch;gap:8px;margin:0 0 8px}
+.browse-search-row .search-box{flex:1;min-width:0;margin:0!important}
+.browse-search-row .search-box>span{display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex:none}
+.browse-search-row .search-box>span .ic{width:18px;height:18px;margin:0;vertical-align:0}
+.browse-search-btn{flex:none;min-width:64px;padding:0 16px;border:0;border-radius:12px;background:var(--ink);color:var(--paper);font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.browse-search-btn:active{opacity:.85}
+/* 리뷰 탭 드롭다운 화살표: 글자(⌄) 대신 SVG로 정중앙 배치 */
+.review-filter-wrap select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23777' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;background-size:14px 14px;padding-right:38px!important}
+.review-filter-arrow{display:none!important}
 </style>
 </head>
 <body>
@@ -1468,7 +1537,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  <button class="app-tab" data-app-tab="mypage"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.7-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></span><span>마이페이지</span></button>
  </nav>
 
-<div class="toast" id="toast" role="status"></div><div id="datasetStatus" style="position:fixed;right:12px;bottom:12px;z-index:50;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--muted);box-shadow:0 2px 10px #0002">JSON 150 + API 150 준비 중</div>
+<div class="toast" id="toast" role="status"></div><div id="datasetStatus" style="position:fixed;right:12px;bottom:84px;z-index:20;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--muted);box-shadow:0 2px 10px #0002">JSON 150 + API 150 준비 중</div>
 <div id="modalRoot"></div>
 <script>
 (() => {
@@ -1523,51 +1592,65 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  async function loadApiCatalog(){
    if(apiCatalogPromise) return apiCatalogPromise;
    apiCatalogPromise=(async()=>{
-     const gathered=[];
-     // TMDB discover pages contain up to 20 films each; request 8 pages and trim to 150.
-     for(let page=1;page<=20 && gathered.length<150;page++){
-       const url=new URL('https://api.themoviedb.org/3/discover/movie');
-       url.searchParams.set('api_key',TMDB_API_KEY);
-       url.searchParams.set('language','ko-KR');
-       url.searchParams.set('sort_by','popularity.desc');
-       url.searchParams.set('include_adult','false');
-       url.searchParams.set('page',String(page));
-       const res=await fetch(url.toString());
-       if(!res.ok) throw new Error('TMDB '+res.status);
-       const data=await res.json();
-       const genreMap={28:'액션',12:'모험',16:'애니메이션',35:'코미디',80:'범죄',99:'다큐멘터리',18:'드라마',10751:'가족',14:'판타지',36:'역사',27:'공포',10402:'음악',9648:'미스터리',10749:'로맨스',878:'SF',10770:'TV 영화',53:'스릴러',10752:'전쟁',37:'서부'};
-       for(const r of (data.results||[])){
-         if(!r.title && !r.original_title) continue;
-         const title=r.title||r.original_title;
-         const year=Number((r.release_date||'').slice(0,4))||'';
-         if(movies.some(x=>norm(x.title)===norm(title) && String(x.year)===String(year))) continue;
-         if(gathered.some(x=>x.tmdbId===r.id)) continue;
-         const genres=(r.genre_ids||[]).map(id=>genreMap[id]).filter(Boolean);
-         gathered.push({id:'api_'+r.id,title,en:(r.original_title||title).toUpperCase(),year,runtime:null,genre:genres.join(' · ')||'영화',moods:['심심한','센치한'],food:'팝콘',tone:'새로운 영화를 발견하는 밤',overview:r.overview||'줄거리 정보가 없습니다.',poster:r.poster_path?TMDB_IMAGE+r.poster_path:'',source:'A',tmdbId:r.id});
-         if(gathered.length>=150) break;
+     const genreMap={28:'액션',12:'모험',16:'애니메이션',35:'코미디',80:'범죄',99:'다큐멘터리',18:'드라마',10751:'가족',14:'판타지',36:'역사',27:'공포',10402:'음악',9648:'미스터리',10749:'로맨스',878:'SF',10770:'TV 영화',53:'스릴러',10752:'전쟁',37:'서부'};
+     const cacheKey='cinepick_tmdb_catalog_150_v3';
+     const toMovie=r=>{
+       const title=r.title||r.original_title||'제목 정보 없음';
+       return {id:'api_'+r.id,title,en:(r.original_title||title).toUpperCase(),year:Number((r.release_date||'').slice(0,4))||'',runtime:Number(r.runtime)||null,genre:(r.genre_ids||[]).map(id=>genreMap[id]).filter(Boolean).join(' · ')||'영화',moods:['심심한','센치한'],food:'팝콘',tone:'새로운 영화를 발견하는 밤',overview:r.overview||'줄거리 정보가 없습니다.',poster:r.poster_path?(String(r.poster_path).startsWith('http')?r.poster_path:TMDB_IMAGE+r.poster_path):'',source:'A',tmdbId:r.id};
+     };
+     const publish=()=>{
+       apiMovies.forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
+       const status=document.getElementById('datasetStatus');
+       if(status)status.textContent=`총 ${localMovies.length+apiMovies.length}편 · J ${localMovies.length} / A ${apiMovies.length}`;
+       if(state.activeTab==='browse')updateBrowse();
+     };
+     try{
+       let cached=[];
+       try{cached=JSON.parse(localStorage.getItem(cacheKey)||'[]');}catch(_){}
+       if(Array.isArray(cached)&&cached.length>=150&&cached.every(m=>m&&m.id&&m.tmdbId&&m.source==='A')){
+         apiMovies=cached.slice(0,150);publish();
        }
+       const requests=await Promise.allSettled(Array.from({length:8},(_,i)=>{
+         const u=new URL('https://api.themoviedb.org/3/discover/movie');
+         u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('language','ko-KR');
+         u.searchParams.set('sort_by','popularity.desc');u.searchParams.set('include_adult','false');u.searchParams.set('page',String(i+1));
+         return fetch(u.toString()).then(r=>{if(!r.ok)throw new Error('TMDB '+r.status);return r.json();});
+       }));
+       const raw=requests.filter(x=>x.status==='fulfilled').flatMap(x=>x.value.results||[]);
+       const seen=new Set();
+       const fresh=raw.filter(r=>(r.title||r.original_title)&&r.id&&!seen.has(r.id)&&seen.add(r.id)).map(toMovie);
+       if(fresh.length){
+         // Prefer fresh data, but use a valid cache to top up if the API partially failed.
+         let prior=[];try{prior=JSON.parse(localStorage.getItem(cacheKey)||'[]');}catch(_){}
+         const combined=[...fresh,...(Array.isArray(prior)?prior:[])];
+         const ids=new Set();
+         apiMovies=combined.filter(m=>m&&m.tmdbId&&!ids.has(m.tmdbId)&&ids.add(m.tmdbId)).slice(0,150);
+         publish();
+         try{localStorage.setItem(cacheKey,JSON.stringify(apiMovies));}catch(_){}
+       }else if(!apiMovies.length){
+         const status=document.getElementById('datasetStatus');
+         if(status)status.textContent='TMDB API 연결 실패 · 네트워크와 API 키를 확인해 주세요.';
+                   if(state.activeTab==='browse')updateBrowse();
+       }
+       // Enrich runtimes in the background; don't block the 150 movie list.
+       let idx=0;
+       const workers=Array.from({length:8},async()=>{
+         while(idx<apiMovies.length){
+           const m=apiMovies[idx++];if(m.runtime||!m.tmdbId)continue;
+           try{
+             const u=new URL(`https://api.themoviedb.org/3/movie/${m.tmdbId}`);
+             u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('language','ko-KR');
+             const r=await fetch(u.toString());if(r.ok){const d=await r.json();m.runtime=Number(d.runtime)||null;}
+           }catch(_){}
+         }
+       });
+       Promise.all(workers).then(()=>{try{localStorage.setItem(cacheKey,JSON.stringify(apiMovies));}catch(_){}if(state.activeTab==='browse')updateBrowse();});
+       return apiMovies;
+     }catch(err){
+       console.warn('TMDB catalog load failed',err);
+               if(state.activeTab==='browse')updateBrowse();
+        throw err;
      }
-     // Discover results omit runtime; retrieve movie details with a small concurrency limit.
-     let runtimeIndex=0;
-     const runtimeWorkers=Array.from({length:6},async()=>{
-       while(runtimeIndex<gathered.length){
-         const m=gathered[runtimeIndex++];
-         try{
-           const detailUrl=new URL(`https://api.themoviedb.org/3/movie/${m.tmdbId}`);
-           detailUrl.searchParams.set('api_key',TMDB_API_KEY);
-           detailUrl.searchParams.set('language','ko-KR');
-           const detailRes=await fetch(detailUrl.toString());
-           if(detailRes.ok){const detail=await detailRes.json();m.runtime=Number(detail.runtime)||null;}
-         }catch(_){m.runtime=null;}
-       }
-     });
-     await Promise.all(runtimeWorkers);
-     apiMovies=gathered;
-     apiMovies.forEach(m=>{if(!movies.some(x=>x.id===m.id)) movies.push(m);});
-     const status=document.getElementById('datasetStatus');
-     if(status) status.textContent=`총 ${localMovies.length+apiMovies.length}편 · J ${localMovies.length} / A ${apiMovies.length}`;
-     if(state.activeTab==='browse') updateBrowse();
-     return apiMovies;
    })();
    return apiCatalogPromise;
  }
@@ -1697,23 +1780,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  const saveTickets = v => wr('savedTickets', 'tickets', v);
  const saveBm = v => wr('bookmarkedIds', 'bm', v);
  const byId = id => movies.find(m => m.id === id);
- // 프로토타입용 예시 리뷰입니다. 실제 다른 사용자 데이터와 연동된 것은 아닙니다.
- const communityReviews = [
- {id:101,movieId:1,user:'밤산책러',rating:4.5,date:'오늘',title:'야식 먹으면서 보기 딱 좋은 영화',review:'잔잔한데 지루하지 않고, 음식이 만들어지는 장면을 보고 있으니 마음까지 편해졌어요. 복잡한 하루 끝에 아무 생각 없이 쉬고 싶을 때 추천해요.'},
- {id:102,movieId:4,user:'치킨무좋아',rating:4.0,date:'어제',title:'친구 없이 혼자 봐도 빵 터짐',review:'전개가 빠르고 웃음 포인트가 계속 나와서 치킨 먹으면서 보기 좋았어요. 깊은 생각 없이 시원하게 웃고 싶은 밤에 잘 맞아요.'},
- {id:103,movieId:3,user:'새벽플레이리스트',rating:4.5,date:'2일 전',title:'음악이 오래 남는 따뜻한 이야기',review:'대사보다 음악과 분위기가 기억에 남았어요. 조금 센치한 밤에 혼자 조용히 보기 좋고, 보고 나서 플레이리스트도 찾아 듣게 됐어요.'},
- {id:104,movieId:6,user:'반전수집가',rating:5.0,date:'3일 전',title:'다 보고 나서 이야기하고 싶어지는 영화',review:'처음에는 가볍게 시작했는데 끝나고 나니 생각할 거리가 많았어요. 결말을 알고 보기보다는 아무 정보 없이 보는 걸 추천합니다.'},
- {id:105,movieId:5,user:'감정은소중해',rating:4.5,date:'4일 전',title:'생각보다 마음을 많이 건드려요',review:'애니메이션이라 편하게 시작했는데 감정을 바라보는 방식이 좋았어요. 괜히 울컥하는 장면이 있어서 혼자 보는 밤에 잘 어울렸습니다.'},
- {id:106,movieId:2,user:'청춘재생중',rating:4.0,date:'지난주',title:'기분 전환이 필요할 때 추천',review:'음악이 신나고 러닝타임도 부담스럽지 않아요. 뭔가 시작하고 싶은 기분이 드는 영화라 주말 밤에 보기 좋았습니다.'},
- {id:107,movieId:1,user:'퇴근후한편',rating:4.0,date:'지난주',title:'편안하게 하루 마무리하기 좋아요',review:'큰 사건이 없어도 인물들이 살아가는 모습을 따라가다 보면 마음이 차분해져요. 늦은 밤에 부담 없이 보기 좋은 작품이었습니다.'},
- {id:108,movieId:4,user:'팝콘대신치킨',rating:4.5,date:'5일 전',title:'웃고 싶을 때 꺼내 보는 영화',review:'캐릭터들이 만들어 내는 상황이 계속 웃겨서 스트레스가 풀렸어요. 혼자 봤는데도 몇 번이나 소리 내서 웃었습니다.'},
- {id:109,movieId:3,user:'새벽감성주의',rating:5.0,date:'6일 전',title:'엔딩 이후에도 여운이 남아요',review:'음악과 장면이 자연스럽게 어우러져서 이야기에 빠져들었어요. 조용한 밤에 집중해서 보면 더 좋을 것 같아요.'},
- {id:110,movieId:5,user:'오늘도힐링중',rating:4.5,date:'1주 전',title:'가볍게 시작했다가 위로받았어요',review:'감정을 표현하는 방식이 귀엽고 섬세해서 좋았어요. 기분이 조금 가라앉은 날 보면 위로가 될 만한 영화예요.'},
- {id:111,movieId:6,user:'결말은비밀',rating:4.5,date:'1주 전',title:'스포일러 없이 보는 걸 추천',review:'초반에 나온 작은 단서들이 뒤에서 연결되는 재미가 있어요. 다 보고 나서 장면들을 다시 떠올리게 되는 영화였습니다.'},
- {id:112,movieId:2,user:'플레이리스트수집가',rating:4.5,date:'2주 전',title:'보고 나면 노래가 계속 생각나요',review:'영화 분위기와 음악이 잘 맞아서 보는 내내 기분이 좋아졌어요. 영화가 끝난 뒤에도 사운드트랙을 찾아 듣게 됐습니다.'}
- ];
- // 리뷰의 movieId를 영화 데이터와 동일한 형식으로 정규화합니다.
- communityReviews.forEach(r => r.movieId = 'mov_' + String(r.movieId).padStart(3, '0'));
+ // 리뷰 예시 22편에 필요한 영화 데이터가 카탈로그에 없으면 보조 데이터로 추가합니다.
+ const seededReviewMovies = [{"id": "seed_movie_01", "title": "인터스텔라", "en": "인터스텔라", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "인터스텔라 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_02", "title": "라라랜드", "en": "라라랜드", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "라라랜드 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_03", "title": "트루먼 쇼", "en": "트루먼 쇼", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "트루먼 쇼 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_04", "title": "쇼생크 탈출", "en": "쇼생크 탈출", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "쇼생크 탈출 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_05", "title": "인턴", "en": "인턴", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "인턴 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_06", "title": "타이타닉", "en": "타이타닉", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "타이타닉 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_07", "title": "기생충", "en": "기생충", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "기생충 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_08", "title": "벌새", "en": "벌새", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "벌새 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_09", "title": "식스 센스", "en": "식스 센스", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "식스 센스 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_10", "title": "그랜드 부다페스트 호텔", "en": "그랜드 부다페스트 호텔", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "그랜드 부다페스트 호텔 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_11", "title": "7번방의 선물", "en": "7번방의 선물", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "7번방의 선물 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_12", "title": "부산행", "en": "부산행", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "부산행 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_13", "title": "이터널 선샤인", "en": "이터널 선샤인", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "이터널 선샤인 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_14", "title": "탑건: 매버릭", "en": "탑건: 매버릭", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "탑건: 매버릭 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_15", "title": "리틀 포레스트", "en": "리틀 포레스트", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "리틀 포레스트 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_16", "title": "인셉션", "en": "인셉션", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "인셉션 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_17", "title": "헤어질 결심", "en": "헤어질 결심", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "헤어질 결심 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_18", "title": "패터슨", "en": "패터슨", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "패터슨 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_19", "title": "유전", "en": "유전", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "유전 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_20", "title": "위플래쉬", "en": "위플래쉬", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "위플래쉬 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_21", "title": "돈 룩 업", "en": "돈 룩 업", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "돈 룩 업 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}, {"id": "seed_movie_22", "title": "주토피아", "en": "주토피아", "year": "", "runtime": null, "genre": "영화", "moods": [], "food": "팝콘", "overview": "주토피아 리뷰를 위한 영화 정보입니다.", "poster": "", "source": "J"}];
+ seededReviewMovies.forEach(m=>{if(!movies.some(x=>x.title===m.title))movies.push(m);});
+ const communityReviews = [{"id": "seed_01", "movieId": "seed_movie_01", "movieTitle": "인터스텔라", "user": "시네픽 관객", "rating": 4.5, "date": "1일 전", "title": "여운이 오래 남는 영화", "review": "잔잔하게 흘러가는 이야기 속에서 예상하지 못한 감정을 느꼈다. 마지막 장면은 한동안 잊지 못할 것 같다.", "likes": 0}, {"id": "seed_02", "movieId": "seed_movie_02", "movieTitle": "라라랜드", "user": "시네픽 관객", "rating": 4.5, "date": "2일 전", "title": "사랑은 타이밍일까", "review": "두 사람의 감정선이 너무 현실적이었다. 사랑이라는 감정이 얼마나 복잡한지 다시 생각하게 됐다.", "likes": 0}, {"id": "seed_03", "movieId": "seed_movie_03", "movieTitle": "트루먼 쇼", "user": "시네픽 관객", "rating": 5.0, "date": "3일 전", "title": "세상을 바라보는 새로운 시선", "review": "화려한 영상미보다 영화가 전달하는 메시지가 더 인상 깊었다. 보고 난 뒤 생각이 많아졌다.", "likes": 0}, {"id": "seed_04", "movieId": "seed_movie_04", "movieTitle": "쇼생크 탈출", "user": "시네픽 관객", "rating": 4.5, "date": "4일 전", "title": "다시 보고 싶은 명작", "review": "처음에는 평범하게 느껴졌지만 후반부로 갈수록 몰입감이 대단했다.", "likes": 0}, {"id": "seed_05", "movieId": "seed_movie_05", "movieTitle": "인턴", "user": "시네픽 관객", "rating": 4.5, "date": "5일 전", "title": "생각보다 훨씬 따뜻한 영화", "review": "작은 친절이 누군가에게 얼마나 큰 의미가 될 수 있는지 보여주는 작품이었다.", "likes": 0}, {"id": "seed_06", "movieId": "seed_movie_06", "movieTitle": "타이타닉", "user": "시네픽 관객", "rating": 5.0, "date": "6일 전", "title": "아름답지만 슬픈 이야기", "review": "아름다운 장면들이 많았지만 그만큼 마음이 아팠다. 엔딩 크레딧이 올라갈 때까지 자리를 뜨기 어려웠다.", "likes": 0}, {"id": "seed_07", "movieId": "seed_movie_07", "movieTitle": "기생충", "user": "시네픽 관객", "rating": 4.5, "date": "7일 전", "title": "인간의 욕망이 만들어낸 결과", "review": "긴장감 있는 전개와 배우들의 연기가 인상적이었다. 인간의 욕심에 대해 생각하게 된다.", "likes": 0}, {"id": "seed_08", "movieId": "seed_movie_08", "movieTitle": "벌새", "user": "시네픽 관객", "rating": 4.5, "date": "8일 전", "title": "현실적인 청춘의 모습", "review": "누구나 한 번쯤 겪었을 고민들이 담겨 있어 공감하면서 봤다.", "likes": 0}, {"id": "seed_09", "movieId": "seed_movie_09", "movieTitle": "식스 센스", "user": "시네픽 관객", "rating": 5.0, "date": "9일 전", "title": "마지막 반전이 모든 것을 바꿨다", "review": "처음부터 다시 보고 싶어지는 영화다. 사소한 장면 하나까지 의미가 있었다.", "likes": 0}, {"id": "seed_10", "movieId": "seed_movie_10", "movieTitle": "그랜드 부다페스트 호텔", "user": "시네픽 관객", "rating": 4.5, "date": "10일 전", "title": "영상미만으로도 충분하다", "review": "색감과 음악, 화면 구성이 정말 아름다웠다. 이야기보다 분위기에 빠져들게 만드는 작품이다.", "likes": 0}, {"id": "seed_11", "movieId": "seed_movie_11", "movieTitle": "7번방의 선물", "user": "시네픽 관객", "rating": 4.5, "date": "11일 전", "title": "웃다가 울게 되는 영화", "review": "유쾌한 장면도 많지만 그 안에 담긴 가족의 이야기가 마음을 울렸다.", "likes": 0}, {"id": "seed_12", "movieId": "seed_movie_12", "movieTitle": "부산행", "user": "시네픽 관객", "rating": 5.0, "date": "12일 전", "title": "끝까지 긴장을 놓을 수 없다", "review": "빠른 전개와 몰입감 덕분에 러닝타임이 길게 느껴지지 않았다.", "likes": 62}, {"id": "seed_13", "movieId": "seed_movie_13", "movieTitle": "이터널 선샤인", "user": "시네픽 관객", "rating": 4.5, "date": "13일 전", "title": "사랑의 또 다른 의미", "review": "사랑이 꼭 함께하는 것만을 의미하지는 않는다는 생각이 들었다.", "likes": 63}, {"id": "seed_14", "movieId": "seed_movie_14", "movieTitle": "탑건: 매버릭", "user": "시네픽 관객", "rating": 4.5, "date": "14일 전", "title": "기대 이상으로 재미있었다", "review": "큰 기대 없이 봤는데 생각보다 훨씬 재미있었다. 연출과 액션 모두 만족스러웠다.", "likes": 64}, {"id": "seed_15", "movieId": "seed_movie_15", "movieTitle": "리틀 포레스트", "user": "시네픽 관객", "rating": 5.0, "date": "15일 전", "title": "가족과 함께 보기 좋은 영화", "review": "따뜻한 분위기와 유쾌한 이야기가 잘 어우러져 부담 없이 즐길 수 있었다.", "likes": 65}, {"id": "seed_16", "movieId": "seed_movie_16", "movieTitle": "인셉션", "user": "시네픽 관객", "rating": 4.5, "date": "16일 전", "title": "이해하기 어렵지만 매력적이다", "review": "한 번 보고 모든 내용을 이해하기는 어려웠다. 하지만 그래서 더 오래 기억에 남는다.", "likes": 66}, {"id": "seed_17", "movieId": "seed_movie_17", "movieTitle": "헤어질 결심", "user": "시네픽 관객", "rating": 4.5, "date": "17일 전", "title": "배우들의 연기가 압도적이다", "review": "인물의 감정이 화면 너머로 그대로 전달됐다. 연기만으로도 충분히 볼 가치가 있는 영화다.", "likes": 67}, {"id": "seed_18", "movieId": "seed_movie_18", "movieTitle": "패터슨", "user": "시네픽 관객", "rating": 5.0, "date": "18일 전", "title": "평범한 하루의 소중함", "review": "특별한 사건이 없어도 일상은 충분히 아름다울 수 있다는 걸 느꼈다.", "likes": 68}, {"id": "seed_19", "movieId": "seed_movie_19", "movieTitle": "유전", "user": "시네픽 관객", "rating": 4.5, "date": "19일 전", "title": "무서운데 계속 보게 된다", "review": "분위기를 조성하는 방식이 뛰어났다. 단순히 놀라게 하는 공포영화와는 달랐다.", "likes": 69}, {"id": "seed_20", "movieId": "seed_movie_20", "movieTitle": "위플래쉬", "user": "시네픽 관객", "rating": 4.5, "date": "20일 전", "title": "꿈을 향해 달려가는 사람들에게", "review": "자신의 꿈을 위해 노력하는 모습이 인상 깊었다. 나도 다시 도전하고 싶어졌다.", "likes": 70}, {"id": "seed_21", "movieId": "seed_movie_21", "movieTitle": "돈 룩 업", "user": "시네픽 관객", "rating": 5.0, "date": "21일 전", "title": "조금은 아쉬웠던 결말", "review": "전반부는 흥미로웠지만 후반부의 전개가 다소 급하게 느껴졌다. 그래도 볼거리는 충분했다.", "likes": 71}, {"id": "seed_22", "movieId": "seed_movie_22", "movieTitle": "주토피아", "user": "시네픽 관객", "rating": 4.5, "date": "22일 전", "title": "사랑스러운 캐릭터들의 향연", "review": "개성 있는 캐릭터와 유머가 매력적이었다. 보는 내내 기분 좋게 웃을 수 있었다.", "likes": 72}];
  const foodEmoji = m => '';
  const foodBadge = m => '';
  const titleOf = t => (byId(t.movieId) || {title:'삭제된 영화'}).title;
@@ -1800,12 +1870,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  spinTimeout = setTimeout(() => { state.spinning = false; state.movie = pick; state.lastMovieId = pick.id; state.fromRoulette = true; note.textContent = `${pick.title}!`; spinTimeout = setTimeout(() => setStep(4), 500); }, reduce ? 300 : 3200);
  }
  function posterMarkup(movie){ return `<div class="poster">${posterHTML(movie)}</div>`; }
- const bmLabel = m => bookmarks().includes(m.id) ? ICON.bookmarkOn + '보관 중' : ICON.bookmark + '보관';
+ const bmLabel = m => bookmarks().includes(m.id) ? ICON.bookmarkOn + '찜 중' : ICON.bookmark + '찜';
  function toggleBm(m, btn){
  const cur = bookmarks(), has = cur.includes(m.id);
  const ok = saveBm(has ? cur.filter(x => x !== m.id) : [...cur, m.id]);
  if(btn) btn.innerHTML = bmLabel(m);
- showToast(has ? '보관을 해제했어요.' : (ok ? '보관함에 담았어요.' : '저장하지 못했어요. 창을 닫기 전까지만 유지돼요.'));
+ showToast(has ? '찜을 해제했어요.' : (ok ? '찜했어요.' : '저장하지 못했어요. 창을 닫기 전까지만 유지돼요.'));
  }
  /* 10초 결정 타이머: 룰렛 결과에서만 작동. 시간이 다 되면 그 영화로 자동 확정 */
  const DECIDE_SEC = 10;
@@ -1950,11 +2020,11 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  (t.length ? `<div class="tlist">${t.map(x => { const m = byId(x.movieId) || {title:'삭제된 영화', poster:''}; return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div><div class="n">${esc(m.title||'제목 정보 없음')}${sourceBadge(m)}${foodBadge(m)}</div><div class="s">${esc(x.savedDate)} · No. ${esc(x.ticketId)}</div></div></div><div class="memo"><input type="text" id="memo-${esc(x.ticketId)}" value="${esc(x.memo || '')}" maxlength="40" placeholder="한 줄 감상 메모" aria-label="${esc(m.title)} 메모"><button class="btn" data-memo="${esc(x.ticketId)}">저장</button><button class="btn danger" data-del="${esc(x.ticketId)}">삭제</button></div><button class="btn" data-review-ticket="${esc(x.movieId)}" style="min-height:0;padding:8px;font-size:11px">${myReviews().some(r => r.movieId === x.movieId) ? '내 리뷰 수정' : '이 영화 리뷰 쓰기'}</button><p class="tmsg" id="mm-${esc(x.ticketId)}"></p></div>`; }).join('')}</div>`
  : `<div class="empty-box"><strong>아직 발권한 티켓이 없어요</strong>룰렛을 돌려 첫 티켓을 만들어보세요.</div>`);
  } else {
- body = b.length ? `<div class="tlist">${b.map(m => `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div><div class="n">${m.title}${foodBadge(m)}</div><div class="s">${m.year} · ${m.genre} · ${m.runtime}분</div></div></div><div class="memo"><button class="btn primary" data-pick="${m.id}" style="flex:1">이 영화로 확정</button><button class="btn" data-unbm="${m.id}">보관 해제</button></div></div>`).join('')}</div>`
- : `<div class="empty-box"><strong>보관한 영화가 없어요</strong>추천 결과에서 ‘보관’을 눌러 모아보세요.</div>`;
+ body = b.length ? `<div class="tlist">${b.map(m => `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div><div class="n">${m.title}${foodBadge(m)}</div><div class="s">${m.year} · ${m.genre} · ${m.runtime}분</div></div></div><div class="memo"><button class="btn primary" data-pick="${m.id}" style="flex:1">이 영화로 확정</button><button class="btn" data-unbm="${m.id}">찜 해제</button></div></div>`).join('')}</div>`
+ : `<div class="empty-box"><strong>찜한 영화가 없어요</strong>영화 상세에서 ‘찜’을 눌러 모아보세요.</div>`;
  }
- workspace.innerHTML = header(6,'내 티켓북','발권한 티켓과 보관한 영화를 한곳에서 관리해요.', `Lv.${L.lv} ${L.name}`) +
- `<div class="content"><div class="tabs" role="tablist"><button role="tab" data-tab="tickets" aria-selected="${state.tab === 'tickets'}">티켓북 ${t.length}</button><button role="tab" data-tab="bookmarks" aria-selected="${state.tab === 'bookmarks'}">보관 ${b.length}</button></div>${body}<div class="actions"><button class="btn primary" id="startAgain">영화 추천받기 →</button></div></div>`;
+ workspace.innerHTML = header(6,'내 티켓북','발권한 티켓과 찜한 영화를 한곳에서 관리해요.', `Lv.${L.lv} ${L.name}`) +
+ `<div class="content"><div class="tabs" role="tablist"><button role="tab" data-tab="tickets" aria-selected="${state.tab === 'tickets'}">티켓북 ${t.length}</button><button role="tab" data-tab="bookmarks" aria-selected="${state.tab === 'bookmarks'}">찜 ${b.length}</button></div>${body}<div class="actions"><button class="btn primary" id="startAgain">영화 추천받기 →</button></div></div>`;
  workspace.querySelectorAll('[data-tab]').forEach(x => x.addEventListener('click', () => { state.tab = x.dataset.tab; state.delId = null; renderTicketbook(); }));
  workspace.querySelectorAll('[data-memo]').forEach(x => x.addEventListener('click', () => {
  const id = x.dataset.memo, all = tickets(), tk = all.find(y => y.ticketId === id), inp = document.getElementById('memo-' + id), msg = document.getElementById('mm-' + id);
@@ -1995,6 +2065,34 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
    const title=r.title||r.original_title||'제목 정보 없음';
    return {id:'api_'+r.id,title,en:(r.original_title||title).toUpperCase(),year:Number((r.release_date||'').slice(0,4))||'',runtime:null,genre:(r.genre_ids||[]).map(id=>genreMap[id]).filter(Boolean).join(' · ')||'영화',moods:['심심한','센치한'],food:'팝콘',overview:r.overview||'줄거리 정보가 없습니다.',poster:r.poster_path?TMDB_IMAGE+r.poster_path:'',source:'A',tmdbId:r.id};
  }
+ function enableHomeRailDrag(track){
+   if(!track || track.dataset.dragReady==='1')return;
+   track.dataset.dragReady='1';
+   let down=false,startX=0,startScroll=0,moved=false;
+   track.addEventListener('pointerdown',e=>{
+     if(e.pointerType==='touch'||e.button!==0)return;
+           down=true;moved=false;startX=e.clientX;startScroll=track.scrollLeft;
+   });
+   window.addEventListener('pointermove',e=>{
+     if(!down)return;
+     const dx=e.clientX-startX;
+           if(Math.abs(dx)>4&&!moved){moved=true;track.classList.add('is-dragging');}
+      if(moved)track.scrollLeft=startScroll-dx;
+   });
+   const finish=()=>{
+     if(!down)return;
+           down=false;track.classList.remove('is-dragging');
+     if(moved){
+       track.dataset.suppressClick='1';
+       setTimeout(()=>{track.dataset.suppressClick='0';},0);
+     }
+   };
+   window.addEventListener('pointerup',finish);
+   window.addEventListener('pointercancel',finish);
+   track.addEventListener('click',e=>{
+     if(track.dataset.suppressClick==='1'){e.preventDefault();e.stopPropagation();track.dataset.suppressClick='0';}
+   },true);
+ }
  function bindHomeMovieCards(root){
    root.querySelectorAll('[data-home-movie]').forEach(card=>{
      const open=()=>openMovieDetail(card.dataset.homeMovie);
@@ -2009,6 +2107,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
    const rankPool=shuffleMovies(localMovies).slice(0,10);
    rankBox.innerHTML=rankPool.map((m,i)=>`<button class="home-rank-card" type="button" data-home-movie="${esc(m.id)}" aria-label="${i+1}위 ${esc(m.title)} 영화 상세 보기"><div class="home-rank-poster">${posterHTML(m)}<span class="home-rank-number">${i+1}</span></div><div class="home-rank-title">${esc(m.title)}</div><p class="home-rank-meta">${esc(m.year||'연도 정보 없음')} · ${esc(m.genre||'영화')}</p></button>`).join('');
    bindHomeMovieCards(rankBox);
+   enableHomeRailDrag(rankBox);
    try{
      const url=new URL('https://api.themoviedb.org/3/movie/now_playing');
      url.searchParams.set('api_key',TMDB_API_KEY);
@@ -2022,6 +2121,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
      recent.forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
      recentBox.innerHTML=recent.length?recent.map(m=>`<button class="home-release-card" type="button" data-home-movie="${esc(m.id)}" aria-label="${esc(m.title)} 영화 상세 보기"><div class="home-release-poster">${posterHTML(m)}<span class="home-release-badge">NEW</span></div><div class="home-release-title">${esc(m.title)}</div><p class="home-release-meta">${esc(m.year||'개봉 연도')} · ${esc(m.genre)}</p></button>`).join(''):'<div class="home-collection-loading">최근 개봉작 정보가 없어요.</div>';
      bindHomeMovieCards(recentBox);
+     enableHomeRailDrag(recentBox);
    }catch(err){
      recentBox.innerHTML='<div class="home-collection-loading">최근 개봉작을 불러오지 못했어요. 잠시 후 다시 이용해 주세요.</div>';
      console.warn('TMDB recent releases load failed',err);
@@ -2051,29 +2151,26 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
     <div class="today-ticket-perforation"><span>ADMIT ONE</span><span class="ticket-perf-line"></span><span>CINEPICK</span></div>
     <div class="today-ticket-footer"><span>YOUR NEXT MOVIE MOMENT</span><button class="btn primary" id="todayMoviePick">이 영화 선택하기 <span aria-hidden="true">→</span></button></div>
   </article>
- <section class="home-collection" aria-label="오늘 많이 본 영화">
-   <div class="home-collection-head"><div><div class="home-section-title">오늘 많이 본 영화</div><p class="home-collection-note">실제 조회 데이터가 없어 임시로 랜덤 순서로 보여드려요.</p></div><span class="home-collection-more">TOP 10</span></div>
-   <div class="home-rank-row" id="homeRankedMovies"><div class="home-collection-loading">영화를 불러오는 중이에요.</div></div>
- </section>
- <section class="home-collection" aria-label="최근 개봉작">
-   <div class="home-collection-head"><div><div class="home-section-title">최근 개봉작</div><p class="home-collection-note">국내 최신 개봉작 10편</p></div><span class="home-collection-more">NEW 10</span></div>
-   <div class="home-release-row" id="homeRecentMovies"><div class="home-collection-loading">최신 영화를 불러오는 중이에요.</div></div>
- </section>
- <div class="home-section-title">나의 시네마</div>
- <div class="home-shortcuts">
- <button class="home-shortcut" id="homeTickets"><span class="shortcut-icon">${ICON.ticket}</span><strong>나의 티켓북</strong><small>발권한 영화 ${t.length}편</small></button>
- <button class="home-shortcut" id="homeSaved"><span class="shortcut-icon">${ICON.bookmark}</span><strong>보관한 영화</strong><small>저장한 영화 ${b.length}편</small></button>
- </div>
+
+  <section class="home-collection-section">
+    <div class="home-collection-heading"><div><h3>오늘 많이 본 영화</h3><p>실제 조회 데이터가 없어 임시로 랜덤 순서로 보여드려요.</p></div></div>
+    <div class="home-collection-track" id="homeRankedMovies"></div>
+  </section>
+  <section class="home-collection-section">
+    <div class="home-collection-heading"><div><h3>최근 개봉작</h3><p>국내 최신 개봉작 10편</p></div></div>
+    <div class="home-collection-track" id="homeRecentMovies"></div>
+  </section>
+
  </div>`;
  const hq = $('#homeQ');
  hq.addEventListener('input', () => { state.q = hq.value; renderMovieResults($('#homeResults'), norm(state.q)); });
  workspace.querySelector('[data-clear]').addEventListener('click', () => { state.q = ''; hq.value = ''; hq.focus(); renderMovieResults($('#homeResults'), ''); });
  renderMovieResults($('#homeResults'), norm(state.q || ''));
+ renderHomeCollections();
  $('#homeStart').addEventListener('click', () => { state.activeTab='recommend'; state.mood=null; state.movie=null; setStep(1); });
  $('#todayMoviePick').addEventListener('click', () => { state.movie=dailyMovie; state.mood=dailyMovie.moods[0]; state.lastMovieId=dailyMovie.id; setStep(4); });
- $('#homeTickets').addEventListener('click', () => { state.tab='tickets'; state.activeTab='recommend'; state.step=6; render(); });
- $('#homeSaved').addEventListener('click', () => { state.tab='bookmarks'; state.activeTab='recommend'; state.step=6; render(); });
- renderHomeCollections();
+ $('#homeTickets')?.addEventListener('click', () => { state.tab='tickets'; state.activeTab='recommend'; state.step=6; render(); });
+ $('#homeSaved')?.addEventListener('click', () => { state.tab='bookmarks'; state.activeTab='recommend'; state.step=6; render(); });
  }
  /* 내 리뷰: myReviews에 저장. 영화당 리뷰 1개(다시 쓰면 수정) */
  mem.reviews = [];
@@ -2088,98 +2185,185 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  // TMDB 인물 검색 결과의 출연작을 현재 API 목록과 대조합니다.
  const actorSearchCache=new Map();
  let actorSearchTimer=null,actorSearchSeq=0,actorMatchedIds=new Set(),actorPending=false;
- async function searchActorMovieIds(query){
-   if(actorSearchCache.has(query))return actorSearchCache.get(query);
-   const u=new URL('https://api.themoviedb.org/3/search/person');
-   u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('query',query);u.searchParams.set('language','ko-KR');u.searchParams.set('include_adult','false');
-   const r=await fetch(u);if(!r.ok)throw new Error('인물 검색 실패');
-   const data=await r.json(),people=(data.results||[]).filter(p=>p.known_for_department==='Acting').slice(0,5);
-   const ids=new Set();
-   await Promise.all(people.map(async person=>{
-     const u=new URL(`https://api.themoviedb.org/3/person/${person.id}/movie_credits`);
-     u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('language','ko-KR');
-     try{const r=await fetch(u);if(!r.ok)return;const d=await r.json();(d.cast||[]).forEach(m=>ids.add(Number(m.id)));}catch(_){}
-   }));
-   actorSearchCache.set(query,ids);return ids;
- }
- function scheduleActorSearch(q){
-   clearTimeout(actorSearchTimer);const seq=++actorSearchSeq;
-   actorMatchedIds=new Set();actorPending=!!q;
-   if(!q)return;
-   actorSearchTimer=setTimeout(async()=>{
-     try{const ids=await searchActorMovieIds(q);if(seq!==actorSearchSeq)return;actorMatchedIds=ids;}
-     catch(_){if(seq!==actorSearchSeq)return;actorMatchedIds=new Set();}
-     actorPending=false;if(state.activeTab==='browse')updateBrowse();
-   },350);
- }
+ let actorMovieCards=[];
+async function searchActorMovieIds(query){
+  if(actorSearchCache.has(query))return actorSearchCache.get(query);
+  const u=new URL('https://api.themoviedb.org/3/search/person');
+  u.searchParams.set('api_key',TMDB_API_KEY);u.searchParams.set('query',query);u.searchParams.set('language','ko-KR');u.searchParams.set('include_adult','false');
+  const r=await fetch(u);if(!r.ok)throw new Error('인물 검색 실패');
+  const data=await r.json();
+  const all=data.results||[];
+  const actors=all.filter(p=>p.known_for_department==='Acting');
+  const people=(actors.length?actors:all).slice(0,3);
+  const byTmdb=new Map();
+  await Promise.all(people.map(async person=>{
+    const cu=new URL(`https://api.themoviedb.org/3/person/${person.id}/movie_credits`);
+    cu.searchParams.set('api_key',TMDB_API_KEY);cu.searchParams.set('language','ko-KR');
+    try{
+      const cr=await fetch(cu);if(!cr.ok)return;const d=await cr.json();
+      (d.cast||[]).filter(m=>m&&m.id&&(m.title||m.original_title)).sort((x,y)=>(y.popularity||0)-(x.popularity||0)).slice(0,40)
+        .forEach(m=>{if(!byTmdb.has(m.id))byTmdb.set(m.id,tmdbMovieToCard(m));});
+    }catch(_){}
+  }));
+  const cards=[...byTmdb.values()].slice(0,80);
+  actorSearchCache.set(query,cards);return cards;
+}
+function scheduleActorSearch(q){
+  clearTimeout(actorSearchTimer);const seq=++actorSearchSeq;
+  actorMatchedIds=new Set();actorMovieCards=[];actorPending=!!q;
+  if(!q)return;
+  actorSearchTimer=setTimeout(async()=>{
+    try{
+      const cards=await searchActorMovieIds(q);if(seq!==actorSearchSeq)return;
+      cards.forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
+      actorMovieCards=cards;actorMatchedIds=new Set(cards.map(m=>Number(m.tmdbId)));
+    }catch(_){if(seq!==actorSearchSeq)return;actorMatchedIds=new Set();actorMovieCards=[];}
+    actorPending=false;if(state.activeTab==='browse')updateBrowse();
+  },150);
+}
 
- const stars = n => Array.from({length:5}, (_, i) => i < Math.round(n) ? ICON.starOn : ICON.star).join('');
+const stars = n => Array.from({length:5}, (_, i) => i < Math.round(n) ? ICON.starOn : ICON.star).join('');
 
  function renderMovieResults(box, q){
  if(!box) return;
- if(!q){box.innerHTML='<div class="search-hint">검색어를 입력하면 TMDB API에서 영화를 찾아요.</div>';return;}
+ if(!q){box.innerHTML='<div class="search-hint">검색어를 입력하면 내장 영화(J)와 TMDB 영화(A)에서 함께 찾아요.</div>';return;}
  const token=++apiSearchToken;clearTimeout(apiSearchTimer);
- box.innerHTML='<div class="empty-box"><strong>TMDB API 검색 중…</strong></div>';
- apiSearchTimer=setTimeout(async()=>{try{
-   const results=await searchMovieAPI(q);if(token!==apiSearchToken||!box.isConnected)return;
+ const localHit=localMovies.filter(m=>matchMovie(m,q));
+ box.innerHTML='<div class="empty-box"><strong>검색 중…</strong></div>';
+ apiSearchTimer=setTimeout(async()=>{
+   let results=[],failed=false;
+   try{results=await searchMovieAPI(q);}catch(e){failed=true;}
+   if(token!==apiSearchToken||!box.isConnected)return;
    results.forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
-   const mineNow=myReviews(), apiFound=results.slice(0,12);
-   box.innerHTML=apiFound.length?`<div class="home-section-title">API 검색 결과 ${apiFound.length}편</div><div class="tlist" style="margin-top:0">${apiFound.map(m=>{const has=mineNow.some(r=>r.movieId===m.id);return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div style="min-width:0"><div class="n">${esc(m.title)}${sourceBadge(m)}</div><div class="s">${m.year} · ${esc(m.genre)} · ${m.runtime||'정보 없음'}분</div></div></div><div class="memo"><button class="btn primary" data-write="${m.id}" style="flex:1">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${m.id}">${bmLabel(m)}</button></div></div>`;}).join('')}</div>`:'<div class="empty-box"><strong>검색 결과가 없어요</strong></div>';
-   box.querySelectorAll('.browse-movie-card').forEach(card=>{
-   card.tabIndex=0; card.setAttribute('role','button');
-   card.addEventListener('click',e=>{if(e.target.closest('button'))return;openMovieDetail(card.querySelector('[data-write]')?.dataset.write);});
-   card.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('button')){e.preventDefault();openMovieDetail(card.querySelector('[data-write]')?.dataset.write);}});
- });
- box.querySelectorAll('[data-write]').forEach(b=>b.addEventListener('click',()=>openReviewEditor(b.dataset.write)));
+   const mKey=m=>norm(m.title||'')+'|'+(parseInt(m.year,10)||'');
+   const lk=new Set(localHit.map(mKey));
+   const found=[...localHit.slice(0,20),...results.filter(m=>!lk.has(mKey(m))).slice(0,12)];
+   const mineNow=myReviews();
+   const nJ=found.filter(m=>m.source==='J').length,nA=found.length-nJ;
+   box.innerHTML=found.length?`<div class="home-section-title">검색 결과 ${found.length}편 (JSON ${nJ} · API ${nA})</div>${failed?'<div class="search-hint">TMDB 연결에 실패해 내장 영화만 보여드려요.</div>':''}<div class="tlist" style="margin-top:0">${found.map(m=>{const has=mineNow.some(r=>r.movieId===m.id);return `<div class="tcard"><div class="h"><div class="g">${posterHTML(m)}</div><div style="min-width:0"><div class="n">${esc(m.title)}${sourceBadge(m)}</div><div class="s">${m.year||'연도 정보 없음'} · ${esc(m.genre||'영화')} · ${m.runtime?m.runtime+'분':'상영시간 정보 없음'}</div></div></div><div class="memo"><button class="btn primary" data-write="${esc(m.id)}" style="flex:1">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${esc(m.id)}">${bmLabel(m)}</button></div></div>`;}).join('')}</div>`:`<div class="empty-box"><strong>검색 결과가 없어요</strong>${failed?'TMDB 연결도 실패했어요.':''}</div>`;
+   box.querySelectorAll('[data-write]').forEach(b=>b.addEventListener('click',()=>openReviewEditor(b.dataset.write)));
    box.querySelectorAll('[data-bm-search]').forEach(b=>b.addEventListener('click',e=>toggleBm(byId(b.dataset.bmSearch),e.currentTarget)));
- }catch(e){if(token===apiSearchToken)box.innerHTML='<div class="empty-box"><strong>API 검색 실패</strong>네트워크 또는 TMDB 설정을 확인해 주세요.</div>'; }},300);
+ },300);
 }
- const searchBox = id => `<div class="search-box"><span aria-hidden="true">${ICON.search}</span><input type="search" id="${id}" placeholder="영화 검색하고 리뷰 남기기 (제목·장르·기분)" value="${esc(state.q || '')}" aria-label="영화 검색" autocomplete="off"><button class="search-clear" data-clear="${id}" aria-label="검색어 지우기">${ICON.close}</button></div>`;
+const searchBox = id => `<div class="search-box"><span aria-hidden="true">${ICON.search}</span><input type="search" id="${id}" placeholder="영화 검색하고 리뷰 남기기 (제목·장르·기분)" value="${esc(state.q || '')}" aria-label="영화 검색" autocomplete="off"><button class="search-clear" data-clear="${id}" aria-label="검색어 지우기">${ICON.close}</button></div>`;
  function refreshSearch(){ if(state.activeTab === 'browse') updateBrowse(); else if(state.activeTab === 'home') renderMovieResults($('#homeResults'), norm(state.q || '')); }
  function renderReviewTab(){
- const list=allReviews().filter(r=>byId(r.movieId));
- workspace.innerHTML=`<div class="browse-screen"><div class="browse-heading"><div><h2>리뷰</h2></div><span class="status-pill">${list.length}개</span></div><p class="browse-subtitle">다른 사람들의 감상과 내가 남긴 리뷰를 모아봤어요.</p><div class="review-list" id="reviewTabList"></div><p class="review-disclaimer">영화 상세에서 리뷰를 작성하거나 수정할 수 있어요.</p></div>`;
- const el=$('#reviewTabList');
- el.innerHTML=list.length?list.map(r=>{const m=byId(r.movieId);return `<button class="review-card${r.mine?' mine':''}" data-review-id="${esc(r.id)}"><div class="review-poster">${posterHTML(m)}</div><div><h3>${esc(m.title||'제목 정보 없음')} ${sourceBadge(m)}</h3><div class="review-meta">${r.mine?'<span class="mine-badge">나</span>':esc(r.user)+' · '}${esc(r.date)}</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)}</span></div><p class="review-excerpt">${esc(r.title?r.title+' — ':'')}${esc(r.review)}</p><div class="review-open-hint">감상평 전체 보기 →</div></div></button>`;}).join(''):'<div class="empty-box"><strong>아직 리뷰가 없어요</strong><p>둘러보기에서 영화를 선택해 첫 리뷰를 남겨보세요.</p></div>';
- el.querySelectorAll('[data-review-id]').forEach(btn=>btn.addEventListener('click',()=>openReviewDetail(btn.dataset.reviewId)));
- }
- function renderBrowse(){
- workspace.innerHTML = `<div class="browse-screen">
- <div class="browse-heading"><div><h2>영화 찾고<br>리뷰 남기기</h2></div><span class="status-pill" id="reviewCount"></span></div>
- <p class="browse-subtitle">TMDB API 영화 150편에서 제목·배우 이름을 검색하거나 조건을 조합해 찾아보세요.</p>
- ${searchBox('browseQ')}
- <div class="browse-filters">
- <select id="browseGenre" aria-label="장르 필터"><option value="">전체 장르</option></select>
- <select id="browseYear" aria-label="개봉 연도 필터"><option value="">전체 연도</option></select>
- <select id="browseRuntime" aria-label="러닝타임 필터"><option value="">전체 러닝타임</option><option value="short">90분 이하</option><option value="mid">91~120분</option><option value="long">121분 이상</option><option value="unknown">정보 없음</option></select>
+ const all=communityReviews.map(r=>({...r,seeded:true}));
+ const likesKey='cinepickReviewLikes';
+ const getLikes=()=>{try{return JSON.parse(localStorage.getItem(likesKey)||'{}')}catch(_){return {}}};
+ const modeOptions=[['recent','최근 리뷰'],['popular','인기 리뷰'],['movie','영화 별 리뷰']];
+ workspace.innerHTML=`<div class="browse-screen">
+ <div class="browse-heading"><div><h2>리뷰</h2></div></div>
+ <p class="browse-subtitle" id="reviewCategoryDesc">가장 최근에 등록된 감상을 먼저 만나보세요.</p>
+ <div class="review-filter-row">
+   <label class="review-filter-wrap"><span class="sr-only">리뷰 정렬</span><select id="reviewMode" aria-label="리뷰 필터">${modeOptions.map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select><span class="review-filter-arrow">⌄</span></label>
+   <div id="reviewMovieSearchWrap" class="review-movie-search" hidden><input id="reviewMovieSearch" type="search" placeholder="영화 제목 검색" aria-label="영화 제목 검색"></div>
  </div>
- <p class="source-legend"><b class="a">A</b> TMDB API 영화</p>
- <div class="section-row" style="margin:0 0 8px"><span id="filterSummary">조건을 선택해 영화를 찾아보세요.</span><button class="text-button" id="resetBrowseFilters" type="button">필터 초기화</button></div>
- <div id="movieResults"></div>
- <div class="home-section-title" id="reviewHeading">감상평</div>
- <div class="review-list" id="reviewList"></div>
- <p class="review-disclaimer">※ ‘나’ 표시가 없는 리뷰는 화면 확인용 예시입니다. 내가 쓴 리뷰는 이 브라우저에만 저장돼요.</p>
+ <div class="review-list" id="reviewTabList"></div>
+ <p class="review-disclaimer">영화에 대한 감상을 나누고, 마음에 드는 리뷰에 좋아요를 남겨보세요.</p>
  </div>`;
- const input = $('#browseQ');
- input.addEventListener('input', () => { state.q = input.value; scheduleActorSearch(norm(state.q)); updateBrowse(); });
- workspace.querySelector('[data-clear]').addEventListener('click', () => { state.q = ''; input.value = ''; input.focus(); scheduleActorSearch(''); updateBrowse(); });
- ['browseGenre','browseYear','browseRuntime'].forEach(id=>$('#'+id).addEventListener('change',updateBrowse));
- $('#resetBrowseFilters').addEventListener('click',()=>{state.q='';input.value='';scheduleActorSearch('');['browseGenre','browseYear','browseRuntime'].forEach(id=>$('#'+id).value='');updateBrowse();});
- updateBrowse();
+ const listEl=$('#reviewTabList'), modeEl=$('#reviewMode'), searchWrap=$('#reviewMovieSearchWrap'), searchEl=$('#reviewMovieSearch'), descEl=$('#reviewCategoryDesc');
+ function card(r,currentLikes){
+   const movieTitle=r.movieTitle||'미지정 영화', n=Number(currentLikes[r.id]??r.likes??0);
+   return `<article class="review-card review-editorial-card"><div class="review-editorial-copy">
+     <h3>${esc(r.title)}</h3><p class="review-excerpt">${esc(r.review)}</p>
+     <div class="review-editorial-movie">${esc(movieTitle)}</div>
+     <div class="review-meta">${esc(r.date)} · ${esc(r.user)}</div>
+     <div class="review-card-actions"><button class="review-like ${currentLikes[r.id+'_on']?'liked':''}" data-like="${r.id}" type="button" aria-label="좋아요">${currentLikes[r.id+'_on']?'♥':'♡'} <span>${n}</span></button><button class="review-open-hint" data-review-id="${r.id}" type="button">리뷰 자세히 보기 →</button></div>
+   </div></article>`;
  }
- function openMovieDetail(movieId){
+ function paint(){
+   const mode=modeEl.value, currentLikes=getLikes();
+   searchWrap.hidden=mode!=='movie';
+   let rows=[];
+   if(mode==='popular'){
+     descEl.textContent='좋아요를 가장 많이 받은 리뷰부터 보여드립니다.';
+     rows=all.filter(r=>Number(currentLikes[r.id]??r.likes??0)>=50)
+       .sort((a,b)=>Number(currentLikes[b.id]??b.likes??0)-Number(currentLikes[a.id]??a.likes??0));
+     listEl.innerHTML=rows.length?rows.map(r=>card(r,currentLikes)).join(''):'<div class="empty-box"><strong>아직 인기 리뷰가 없어요</strong></div>';
+   }else if(mode==='movie'){
+     descEl.textContent='영화 제목을 검색하거나 영화별로 모아볼 수 있습니다.';
+     const q=norm(searchEl.value||'');
+     rows=all.filter(r=>!q||norm(r.movieTitle||'').includes(q))
+       .sort((a,b)=>(a.movieTitle||'').localeCompare(b.movieTitle||'','ko'));
+     const groups=new Map();
+     rows.forEach(r=>{const name=r.movieTitle||'영화 제목 미등록';if(!groups.has(name))groups.set(name,[]);groups.get(name).push(r);});
+     listEl.innerHTML=groups.size?[...groups.entries()].map(([name,reviews])=>`<section class="movie-review-group"><h3 class="movie-review-group-title">${esc(name)} <span>${reviews.length}개</span></h3>${reviews.map(r=>card(r,currentLikes)).join('')}</section>`).join(''):'<div class="empty-box"><strong>검색 결과가 없어요</strong><p>다른 영화 제목으로 검색해 보세요.</p></div>';
+   }else{
+     descEl.textContent='가장 최근에 등록된 감상을 먼저 만나보세요.';
+     rows=all.slice(0,11);
+     listEl.innerHTML=rows.map(r=>card(r,currentLikes)).join('');
+   }
+   listEl.querySelectorAll('[data-like]').forEach(btn=>btn.addEventListener('click',()=>{
+     const id=btn.dataset.like, current=getLikes(), row=all.find(r=>r.id===id);
+     const wasOn=!!current[id+'_on'];
+     current[id]=Math.max(0,Number(current[id]??row?.likes??0)+(wasOn?-1:1));
+     current[id+'_on']=!wasOn;
+     try{localStorage.setItem(likesKey,JSON.stringify(current))}catch(_){}
+     paint();
+   }));
+   listEl.querySelectorAll('[data-review-id]').forEach(btn=>btn.addEventListener('click',()=>{
+     const r=all.find(x=>x.id===btn.dataset.reviewId);if(!r)return;
+     const movieTitle=r.movieTitle||'영화 제목 미등록',root=$('#modalRoot');
+     root.innerHTML=`<div class="modal-backdrop" id="seedReviewBackdrop"><div class="modal" role="dialog" aria-modal="true"><button class="detail-x" id="closeSeedReview">×</button><div class="review-meta">${esc(movieTitle)}</div><h3>${esc(r.title)}</h3><div class="review-quote">${esc(r.review)}</div><p class="review-meta">${esc(r.date)} · ${esc(r.user)}</p><div class="modal-actions"><button class="btn primary" id="closeSeedReview2">닫기</button></div></div></div>`;
+     const close=()=>root.innerHTML='';$('#closeSeedReview').onclick=close;$('#closeSeedReview2').onclick=close;$('#seedReviewBackdrop').addEventListener('click',e=>{if(e.target.id==='seedReviewBackdrop')close()});
+   }));
+ }
+ modeEl.addEventListener('change',()=>{if(modeEl.value!=='movie')searchEl.value='';paint()});
+ searchEl.addEventListener('input',paint);paint();
+ }
+ let browseApplied={q:'',genre:'',year:'',runtime:''};
+function renderBrowse(){
+  browseApplied={q:state.q||'',genre:'',year:'',runtime:''};
+  workspace.innerHTML = `<div class="browse-screen">
+  <div class="browse-heading"><div><h2>영화 탐색</h2></div></div>
+  <div class="browse-filter-panel">
+    <div class="browse-filter-heading"><strong>영화 필터</strong><button class="text-button" id="resetBrowseFilters" type="button">초기화</button></div>
+    <div class="browse-filters">
+      <select id="browseGenre" aria-label="장르 필터"><option value="">전체 장르</option></select>
+      <select id="browseYear" aria-label="개봉 연도 필터"><option value="">전체 연도</option></select>
+      <select id="browseRuntime" aria-label="러닝타임 필터"><option value="">전체 러닝타임</option><option value="short">90분 이하</option><option value="mid">91~120분</option><option value="long">121분 이상</option><option value="unknown">정보 없음</option></select>
+    </div>
+    <div class="browse-filter-summary" id="filterSummary">장르, 개봉 연도, 러닝타임을 고른 뒤 ‘검색’을 눌러 주세요.</div>
+  </div>
+  <div class="browse-search-row">${searchBox('browseQ')}<button class="browse-search-btn" id="browseSearchBtn" type="button">검색</button></div>
+  <p class="source-legend"><b class="a">A</b> TMDB API 영화 150편 · <b class="a" style="background:#555">J</b> 내장 JSON 영화 150편 (검색·필터는 둘 다에서 찾아요)</p>
+  <div id="movieResults"><div class="empty-box"><strong>영화 150편을 불러오는 중…</strong><p>불러오기가 끝나면 전체 영화가 먼저 표시됩니다.</p></div></div>
+  <div class="home-section-title" id="reviewHeading">사용자 리뷰</div>
+  <div class="review-list" id="reviewList"></div>
+  <p class="review-disclaimer">※ ‘나’ 표시가 없는 리뷰는 화면 확인용 예시입니다. 내가 쓴 리뷰는 이 브라우저에만 저장돼요.</p>
+  </div>`;
+  const input = $('#browseQ'); input.placeholder='영화 제목·배우·장르 검색';
+  const applyBrowse = () => {
+    browseApplied = {q:input.value.trim(), genre:$('#browseGenre').value, year:$('#browseYear').value, runtime:$('#browseRuntime').value};
+    state.q = browseApplied.q;
+    scheduleActorSearch(norm(browseApplied.q));
+    updateBrowse();
+  };
+  const markPending = () => { const sum=$('#filterSummary'); if(sum) sum.textContent='조건이 바뀌었어요. ‘검색’을 눌러 적용해 주세요.'; };
+  $('#browseSearchBtn').addEventListener('click', applyBrowse);
+  input.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); applyBrowse(); } });
+  input.addEventListener('input', markPending);
+  workspace.querySelector('[data-clear]').addEventListener('click', () => { input.value=''; input.focus(); applyBrowse(); });
+  ['browseGenre','browseYear','browseRuntime'].forEach(id=>$('#'+id).addEventListener('change',markPending));
+  $('#resetBrowseFilters').addEventListener('click',()=>{ input.value=''; ['browseGenre','browseYear','browseRuntime'].forEach(id=>$('#'+id).value=''); applyBrowse(); });
+  updateBrowse();
+}
+function openMovieDetail(movieId){
  const m=byId(movieId); if(!m) return;
  const root=$('#modalRoot');
  const title=esc(m.title||'제목 정보 없음');
  const year=m.year!=null&&m.year!==''?esc(m.year):'연도 정보 없음', genre=esc(m.genre||'장르 정보 없음');
  const runtime=m.runtime!=null&&m.runtime!==''?`${esc(m.runtime)}분`:'상영시간 정보 없음';
  const overview=esc(m.overview||m.description||'줄거리 정보가 없습니다.');
- root.innerHTML=`<div class="modal-backdrop" data-detail-close><section class="movie-detail-modal" role="dialog" aria-modal="true" aria-label="${title} 영화 정보"><button class="detail-x" id="detailClose" aria-label="닫기">×</button><div class="movie-detail-head"><div class="movie-detail-poster">${posterHTML(m)}</div><div><h2 class="movie-detail-title">${title} ${sourceBadge(m)}</h2><div class="movie-detail-meta">${year}<br>${genre}<br>${runtime}</div></div></div><div class="movie-detail-overview">${overview}</div><div class="movie-detail-actions"><button class="btn" id="detailOTT">감상 서비스 보기</button><button class="btn" id="detailWriteReview">✎ 리뷰 쓰기</button><button class="btn primary" id="detailConfirm">${ICON.check} 이 영화로 확정</button></div></section></div>`;
+ root.innerHTML=`<div class="modal-backdrop" data-detail-close><section class="movie-detail-modal" role="dialog" aria-modal="true" aria-label="${title} 영화 정보"><button class="detail-x" id="detailClose" aria-label="닫기">×</button><div class="movie-detail-head"><div class="movie-detail-poster">${posterHTML(m)}</div><div><h2 class="movie-detail-title">${title} ${sourceBadge(m)}</h2><div class="movie-detail-meta">${year}<br>${genre}<br>${runtime}</div></div></div><div class="movie-detail-overview">${overview}</div><div class="movie-detail-actions"><button class="btn" id="detailOTT">보러가기 · 감상 서비스</button><button class="btn" id="detailBm" type="button">${bmLabel(m)}</button><button class="btn" id="detailWriteReview">✎ 리뷰 남기기</button><button class="btn primary" id="detailConfirm">${ICON.check} 이 영화로 확정</button></div></section></div>`;
  const panel=root.querySelector('.movie-detail-modal');
  panel.addEventListener('click',e=>e.stopPropagation());
  root.querySelector('[data-detail-close]').addEventListener('click',e=>{if(e.target===e.currentTarget)root.innerHTML='';});
  root.querySelector('#detailClose').addEventListener('click',()=>root.innerHTML='');
  root.querySelector('#detailOTT').addEventListener('click',()=>openWatchModal(m));
+ root.querySelector('#detailBm').addEventListener('click',e=>toggleBm(m,e.currentTarget));
+root.querySelector('#detailWriteReview').addEventListener('click',()=>openReviewEditor(m.id));
  root.querySelector('#detailConfirm').addEventListener('click',()=>{root.innerHTML='';state.mood=state.mood||(Array.isArray(m.moods)&&m.moods[0])||'기분 전환';confirmMovie(m);});
  }
  function renderBrowseMovies(items, heading){
@@ -2191,7 +2375,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
    const title=esc(m.title||'제목 정보 없음'), year=m.year!=null&&m.year!==''?esc(m.year):'연도 정보 없음', genre=esc(m.genre||'장르 정보 없음');
    const runtime=m.runtime!=null && m.runtime!=='' ? `${esc(m.runtime)}분` : '상영시간 정보 없음';
    const overview=esc(m.overview||m.description||'줄거리 정보가 없습니다.');
-   return `<article class="browse-movie-card"><div class="browse-movie-poster">${posterHTML(m)}</div><div class="browse-movie-content"><h3>${title} ${sourceBadge(m)}</h3><div class="browse-movie-meta">${year} · ${genre} · ${runtime}</div><p class="browse-movie-overview">${overview}</p><div class="browse-movie-actions"><button class="btn primary" data-write="${esc(m.id)}">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${esc(m.id)}">${bmLabel(m)}</button></div></div></article>`;
+   return `<article class="browse-movie-card" aria-label="${title} 상세 정보 보기"><div class="browse-movie-poster">${posterHTML(m)}</div><div class="browse-movie-content"><h3>${title} ${sourceBadge(m)}</h3><div class="browse-movie-meta">${year} · ${genre} · ${runtime}</div><p class="browse-movie-overview">${overview}</p><div class="browse-movie-actions"><button class="btn primary" data-write="${esc(m.id)}">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${esc(m.id)}">${bmLabel(m)}</button></div></div></article>`;
  }).join('')}</div>`;
  box.querySelectorAll('.browse-movie-card').forEach(card=>{
    card.tabIndex=0; card.setAttribute('role','button');
@@ -2202,42 +2386,64 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  box.querySelectorAll('[data-bm-search]').forEach(b=>b.addEventListener('click',e=>toggleBm(byId(b.dataset.bmSearch),e.currentTarget)));
  }
  function updateBrowse(){
- const q=norm(state.q||'');
- const allMovies=apiMovies;
- const genreSel=$('#browseGenre'),yearSel=$('#browseYear');
- if(genreSel){
-   const old=genreSel.value, genres=[...new Set(allMovies.flatMap(m=>String(m.genre||'').split(/[·,]/).map(x=>x.trim()).filter(x=>x&&x!=='영화')))].sort();
-   genreSel.innerHTML='<option value="">전체 장르</option>'+genres.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
-   if(genres.includes(old))genreSel.value=old;
- }
- if(yearSel){
-   const old=yearSel.value, years=[...new Set(allMovies.map(m=>Number(m.year)).filter(y=>y>1800&&y<2100))].sort((a,b)=>b-a);
-   yearSel.innerHTML='<option value="">전체 연도</option>'+years.map(y=>`<option value="${y}">${y}년</option>`).join('');
-   if(years.includes(Number(old)))yearSel.value=old;
- }
- const genre=genreSel?.value||'',year=yearSel?.value||'',runtime=$('#browseRuntime')?.value||'';
- const found=allMovies.filter(m=>{
-   if(q&&!matchMovie(m,q)&&!actorMatchedIds.has(Number(m.tmdbId)))return false;
-   if(genre&&!String(m.genre||'').split(/[·,]/).map(x=>x.trim()).includes(genre))return false;
-   if(year&&String(m.year)!==year)return false;
-   const n=Number(m.runtime);
-   if(runtime==='short'&&!(n>0&&n<=90))return false;
-   if(runtime==='mid'&&!(n>=91&&n<=120))return false;
-   if(runtime==='long'&&!(n>=121))return false;
-   if(runtime==='unknown'&&n>0)return false;
-   return true;
- });
- if(!allMovies.length){
-   $('#movieResults').innerHTML='<div class="empty-box"><strong>영화를 불러오는 중…</strong><p>잠시만 기다려 주세요.</p></div>';
- }else renderBrowseMovies(found,'검색 결과');
- const sum=$('#filterSummary');if(sum)sum.textContent=actorPending?`${found.length}편 일치 · 배우 출연작 검색 중…`:`${found.length}편의 영화가 조건에 맞아요.`;
- const list=allReviews().filter(r=>{const m=byId(r.movieId);return m&&(!q||matchMovie(m,q));});
- $('#reviewCount').textContent=list.length+'개 리뷰';
- $('#reviewHeading').textContent=q?`‘${state.q}’ 감상평 ${list.length}개`:'최근 감상평 (J · JSON 예시 리뷰 포함)';
- $('#reviewList').innerHTML=list.length?list.map(r=>{const m=byId(r.movieId);return `<button class="review-card${r.mine?' mine':''}" data-review-id="${esc(r.id)}" aria-label="${esc(m.title)} 감상평 자세히 보기"><div class="review-poster">${posterHTML(m)}</div><div><h3>${esc(m.title||'제목 정보 없음')}${sourceBadge(m)}${foodBadge(m)}</h3><div class="review-meta">${r.mine?'<span class="mine-badge">나</span>':esc(r.user)+' · '}${esc(r.date)}</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)}</span></div><p class="review-excerpt">${esc(r.title?r.title+' — ':'')}${esc(r.review)}</p><div class="review-open-hint">감상평 전체 보기 →</div></div></button>`;}).join(''):'<div class="empty-box" style="margin-top:0"><strong>아직 감상평이 없어요</strong>첫 리뷰를 남겨보세요.</div>';
- workspace.querySelectorAll('[data-review-id]').forEach(btn=>btn.addEventListener('click',()=>openReviewDetail(btn.dataset.reviewId)));
- }
- function openReviewEditor(movieId, after){
+  if(!$('#movieResults')) return;
+  const q=norm(browseApplied.q||'');
+  const usingApi=apiMovies.length>0;
+  const basePool=usingApi?apiMovies:localMovies;   // 기본 목록: API 150편 (API가 안 불러와지면 JSON 150편)
+  const hasFilter=!!(q||browseApplied.genre||browseApplied.year||browseApplied.runtime);
+  // 검색·필터: JSON(J) + API(A) + 배우 출연작을 합치고, 같은 영화(제목+연도)는 한 번만 표시
+  const mKey=m=>norm(m.title||'')+'|'+(parseInt(m.year,10)||'');
+  const seenKeys=new Set(),mergedPool=[];
+  [...localMovies,...apiMovies,...(q?actorMovieCards:[])].forEach(m=>{const k=mKey(m);if(seenKeys.has(k))return;seenKeys.add(k);mergedPool.push(m);});
+  const allMovies=hasFilter?mergedPool:basePool;
+  const genreSel=$('#browseGenre'),yearSel=$('#browseYear');
+  const genreOptions=['액션','모험','애니메이션','코미디','범죄','다큐멘터리','드라마','가족','판타지','역사','공포','음악','미스터리','로맨스','SF','TV 영화','스릴러','전쟁','서부'];
+  if(genreSel && genreSel.dataset.optionsReady!=='1'){
+    const old=genreSel.value;
+    genreSel.innerHTML='<option value="">전체 장르</option>'+genreOptions.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+    genreSel.value=old;genreSel.dataset.optionsReady='1';
+  }
+  if(yearSel){
+    const old=yearSel.value;
+    const years=[...new Set(mergedPool.map(m=>parseInt(m.year,10)).filter(y=>Number.isFinite(y)&&y>1800&&y<2100))].sort((a,b)=>b-a);
+    const fallbackYears=Array.from({length:80},(_,i)=>new Date().getFullYear()-i);
+    const choices=years.length?years:fallbackYears;
+    const signature=choices.join(',');
+    if(yearSel.dataset.yearSignature!==signature){
+      yearSel.innerHTML='<option value="">전체 연도</option>'+choices.map(y=>`<option value="${y}">${y}년</option>`).join('');
+      yearSel.dataset.yearSignature=signature;
+      yearSel.value=choices.includes(parseInt(old,10))?String(parseInt(old,10)):'';
+    }
+  }
+  const {genre,year,runtime}=browseApplied;
+  // 검색어: 제목·영문제목·장르 (JSON 영화는 분위기도). API 영화의 공통 문구(분위기/톤)는 제외해 엉뚱한 전체 일치를 막습니다.
+  const textMatch=m=>!q||[m.title,m.en,m.genre,...(m.source==='J'&&Array.isArray(m.moods)?m.moods:[])].some(v=>v!=null&&norm(v).includes(q));
+  const found=allMovies.filter(m=>{
+    if(q&&!textMatch(m)&&!(m.tmdbId&&actorMatchedIds.has(Number(m.tmdbId))))return false;
+    if(genre&&!String(m.genre||'').split(/[·,]/).map(x=>x.trim()).includes(genre))return false;
+    if(year&&parseInt(m.year,10)!==parseInt(year,10))return false;
+    const n=Number(m.runtime);
+    if(runtime==='short'&&!(n>0&&n<=90))return false;
+    if(runtime==='mid'&&!(n>=91&&n<=120))return false;
+    if(runtime==='long'&&!(n>=121))return false;
+    if(runtime==='unknown'&&n>0)return false;
+    return true;
+  });
+  renderBrowseMovies(found,hasFilter?'검색 결과 (J·A)':(usingApi?'전체 API 영화':'전체 영화'));
+  const sum=$('#filterSummary');
+  const runtimePending=runtime&&allMovies.some(m=>m.source==='A'&&m.runtime==null);
+  if(sum)sum.textContent=runtimePending?'러닝타임 정보를 아직 불러오는 중이에요. 잠시 후 다시 ‘검색’을 눌러 주세요.'
+    :actorPending?`${found.length}편 일치 · 배우 출연작 검색 중…`
+    :hasFilter?`${found.length}편의 영화가 조건에 맞아요. (JSON ${found.filter(m=>m.source==='J').length} · API ${found.filter(m=>m.source==='A').length})`
+    :usingApi?`전체 API 영화 ${allMovies.length}편을 표시하고 있어요.`
+    :`API를 불러오는 중이거나 연결되지 않아 JSON 영화 ${allMovies.length}편을 표시하고 있어요.`;
+  const list=allReviews().filter(r=>{const m=byId(r.movieId);return m&&(!q||matchMovie(m,q));});
+  const rc=$('#reviewCount'); if(rc) rc.textContent=list.length+'개 리뷰';
+  const rh=$('#reviewHeading'); if(rh) rh.textContent=q?`‘${browseApplied.q}’ 감상평 ${list.length}개`:'최근 감상평 (J · JSON 예시 리뷰 포함)';
+  $('#reviewList').innerHTML=list.length?list.map(r=>{const m=byId(r.movieId);return `<button class="review-card${r.mine?' mine':''}" data-review-id="${esc(r.id)}" aria-label="${esc(m.title)} 감상평 자세히 보기"><div class="review-poster">${posterHTML(m)}</div><div><h3>${esc(m.title||'제목 정보 없음')}${sourceBadge(m)}${foodBadge(m)}</h3><div class="review-meta">${r.mine?'<span class="mine-badge">나</span>':esc(r.user)+' · '}${esc(r.date)}</div><div class="review-stars">${stars(r.rating)} <span style="color:#aaa">${Number(r.rating).toFixed(1)}</span></div><p class="review-excerpt">${esc(r.title?r.title+' — ':'')}${esc(r.review)}</p><div class="review-open-hint">감상평 전체 보기 →</div></div></button>`;}).join(''):'<div class="empty-box" style="margin-top:0"><strong>아직 감상평이 없어요</strong>첫 리뷰를 남겨보세요.</div>';
+  workspace.querySelectorAll('[data-review-id]').forEach(btn=>btn.addEventListener('click',()=>openReviewDetail(btn.dataset.reviewId)));
+}
+function openReviewEditor(movieId, after){
  const m = byId(movieId); if(!m) return;
  const old = myReviews().find(r => r.movieId === movieId);
  let rating = old ? old.rating : 0;
@@ -2289,9 +2495,7 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
  <div class="profile-summary"><div class="profile-avatar">${ICON.user}</div><div><h4>나의 영화 생활</h4><p>오늘도 영화 한 편, 가볍게 골라봐요.</p></div></div>
  <div class="home-section-title">시네마 기록</div>
  <div class="lvbox"><div class="lvhead"><strong><span class="lvbadge">Lv.${L.lv}</span>${L.name}</strong><span>${L.cur} / 10</span></div><div class="cinema-progress" role="progressbar" aria-label="다음 레벨 영화 기록" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${L.cur}">${Array.from({length:10},(_,i)=>`<span class="cinema-progress-segment ${i<L.cur?'filled':''}"></span>`).join('')}</div><p class="lvnote">영화 한 편을 기록할 때마다 한 칸씩 채워져요 · 다음 레벨까지 ${L.next}개</p></div>
- <div class="profile-row"><span>발권한 영화</span><strong>${t.length}편</strong></div>
- <div class="profile-row"><span>보관한 영화</span><strong>${b.length}편</strong></div>
- <div class="home-section-title">나의 영화</div><div class="home-shortcuts"><button class="home-shortcut" id="myTickets"><strong>나의 티켓북</strong><small>발권한 영화 ${t.length}편 보기 →</small></button><button class="home-shortcut" id="mySaved"><strong>보관한 영화</strong><small>저장한 영화 ${b.length}편 보기 →</small></button></div>
+ <div class="home-section-title">나의 영화</div><div class="home-shortcuts"><button class="home-shortcut" id="myTickets"><strong>나의 티켓북</strong><small>발권한 영화 ${t.length}편 보기 →</small></button><button class="home-shortcut" id="mySaved"><strong>찜한 영화</strong><small>저장한 영화 ${b.length}편 보기 →</small></button></div>
  <div class="profile-row"><span>서비스 안내</span><span>시네픽 프로토타입</span></div>
  <div class="profile-row"><span>저장 방식</span><span>이 브라우저에 저장</span></div>
  <button class="btn full" id="profileReset" style="margin-top:20px">영화 추천 처음부터 시작</button>
