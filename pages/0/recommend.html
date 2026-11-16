@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>영화 추천 · 시네픽</title>
+<link rel="icon" type="image/svg+xml" href="../asset/favicon.svg">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="시네픽 홈으로">
+      <img class="brand-mark" src="../asset/logo.svg" alt="" width="36" height="36">
+      <div><small>CINEPICK · MOVIE CURATION</small><p class="brand-title"><span class="name">시네픽</span> <span class="sub">| 오늘의 영화를 가볍게</span></p></div>
+    </a>
+  </header>
+  <section class="hero">
+    <div class="kicker">YOUR MOOD, ONE MOVIE</div>
+    <h1 style="font-size:29px;letter-spacing:-.065em;margin:6px 0 8px;line-height:1.08">고민은 짧게, 감상은 길게.</h1>
+    <p>지금의 기분만 고르면, 오늘 밤 볼 영화 후보를 모아드려요.</p>
+  </section>
+  <main class="shell">
+    <section class="workspace" id="workspace" aria-live="polite">
+    <noscript><p class="nojs">이 페이지는 JavaScript가 필요해요. 브라우저에서 JavaScript를 켜주세요.</p></noscript>
+    </section>
+  </main>
+  <nav class="app-tabbar" aria-label="하단 메뉴">
+    <a class="app-tab" href="../index.html"><img src="../asset/icons/home.svg" alt="" width="24" height="24"><span>홈</span></a>
+    <a class="app-tab" href="browse.html"><img src="../asset/icons/star.svg" alt="" width="24" height="24"><span>둘러보기</span></a>
+    <a class="app-tab" href="movies.html"><img src="../asset/icons/ticket.svg" alt="" width="24" height="24"><span>나의영화</span></a>
+    <a class="app-tab" href="mypage.html"><img src="../asset/icons/user.svg" alt="" width="24" height="24"><span>마이페이지</span></a>
+  </nav>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<div id="modalRoot"></div>
+<script src="../data/config.js"></script>
+<script src="../data/movies.js"></script>
+<script src="../data/reviews.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/recommend.js"></script>
+</body>
+</html>
