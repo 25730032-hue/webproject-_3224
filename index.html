@@ -1930,6 +1930,18 @@ body{background:linear-gradient(135deg,#c9c9e8 0%,#eee8f3 48%,#e9dfe9 100%)!impo
 .topbar #headerBrowseSearch:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 
 </style>
+
+<style id="cinepick-browse-search-single-border">
+/* PRD 0.7: 탐색 검색 입력창은 바깥 검색 컨테이너 테두리만 표시 */
+.browse-search-row .search-box input,
+.browse-search-row .search-box input:focus{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:none!important;
+}
+</style>
 </head>
 <body>
 <noscript><p style="padding:16px">시네픽을 이용하려면 브라우저에서 JavaScript를 활성화해 주세요.</p></noscript>
