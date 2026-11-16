@@ -1516,6 +1516,25 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 /* 리뷰 탭 드롭다운 화살표: 글자(⌄) 대신 SVG로 정중앙 배치 */
 .review-filter-wrap select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23777' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 14px center;background-size:14px 14px;padding-right:38px!important}
 .review-filter-arrow{display:none!important}
+
+
+/* Browse refinements: grouped heading/filter and compact movie actions */
+.browse-screen .browse-filter-panel{padding:15px;margin:0 0 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.browse-screen .browse-filter-panel .browse-heading{margin:0 0 15px;align-items:center}
+.browse-screen .browse-filter-panel .browse-heading h2{font-size:24px}
+.browse-screen .browse-filter-heading{margin-bottom:10px}
+.browse-screen .browse-filter-panel .browse-search-row{margin:14px 0 0;padding-top:13px;border-top:1px solid var(--line)}
+.filter-reset-icon{width:34px;height:34px;flex:none;display:grid;place-items:center;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--ink);padding:0;cursor:pointer}
+.filter-reset-icon .ic{width:16px;height:16px}
+.browse-movie-card{position:relative;padding-right:42px;padding-bottom:48px}
+.browse-movie-content{padding-right:0}
+.browse-movie-content h3{padding-right:4px}
+.browse-movie-actions{position:absolute;right:10px;bottom:10px;margin:0;justify-content:flex-end}
+.browse-movie-actions .btn{min-height:32px;padding:7px 11px}
+.browse-heart{position:absolute;right:9px;top:9px;z-index:2;width:30px;height:30px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--muted);font-size:19px;line-height:1;display:grid;place-items:center;padding:0}
+.browse-heart.on{color:#d34b60;border-color:#e7b7bf;background:#fff7f8}
+@media(max-width:380px){.browse-movie-card{padding-right:38px;padding-bottom:46px}.browse-movie-actions{right:8px;bottom:8px}.browse-movie-actions .btn{font-size:10px;padding:6px 8px}}
+
 </style>
 </head>
 <body>
@@ -1532,9 +1551,9 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 
  <nav class="app-tabbar" aria-label="하단 메뉴">
  <button class="app-tab active" data-app-tab="home"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7"/><path d="M6 10v9h12v-9"/></svg></span><span>홈</span></button>
- <button class="app-tab" data-app-tab="browse" aria-label="다른 사용자 감상평 둘러보기"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></span><span>둘러보기</span></button>
+ <button class="app-tab" data-app-tab="browse" aria-label="다른 사용자 감상평 둘러보기"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></span><span>탐색</span></button>
  <button class="app-tab" data-app-tab="review"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H5l1.8-3A7.5 7.5 0 1 1 20 11.5Z"/><path d="m12.5 7.5.8 1.7 1.7.3-1.3 1.2.3 1.8-1.5-.9-1.5.9.3-1.8L10 9.5l1.7-.3z"/></svg></span><span>리뷰</span></button>
- <button class="app-tab" data-app-tab="mypage"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.7-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></span><span>마이페이지</span></button>
+ <button class="app-tab" data-app-tab="mypage"><span class="tab-icon"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.7-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></span><span>마이</span></button>
  </nav>
 
 <div class="toast" id="toast" role="status"></div><div id="datasetStatus" style="position:fixed;right:12px;bottom:84px;z-index:20;pointer-events:none;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--muted);box-shadow:0 2px 10px #0002">JSON 150 + API 150 준비 중</div>
@@ -2338,18 +2357,18 @@ const searchBox = id => `<div class="search-box"><span aria-hidden="true">${ICON
 function renderBrowse(){
   browseApplied={q:state.q||'',genre:'',year:'',runtime:''};
   workspace.innerHTML = `<div class="browse-screen">
-  <div class="browse-heading"><div><h2>영화 탐색</h2></div></div>
   <div class="browse-filter-panel">
-    <div class="browse-filter-heading"><strong>영화 필터</strong><button class="text-button" id="resetBrowseFilters" type="button">초기화</button></div>
+    <div class="browse-heading"><div><h2>영화 탐색</h2></div></div>
+    <div class="browse-filter-heading"><strong>영화 필터</strong><button class="filter-reset-icon" id="resetBrowseFilters" type="button" aria-label="필터 초기화" title="필터 초기화"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg></button></div>
     <div class="browse-filters">
       <select id="browseGenre" aria-label="장르 필터"><option value="">전체 장르</option></select>
       <select id="browseYear" aria-label="개봉 연도 필터"><option value="">전체 연도</option></select>
       <select id="browseRuntime" aria-label="러닝타임 필터"><option value="">전체 러닝타임</option><option value="short">90분 이하</option><option value="mid">91~120분</option><option value="long">121분 이상</option><option value="unknown">정보 없음</option></select>
     </div>
     <div class="browse-filter-summary" id="filterSummary">장르, 개봉 연도, 러닝타임을 고른 뒤 ‘검색’을 눌러 주세요.</div>
+    <div class="browse-search-row">${searchBox('browseQ')}<button class="browse-search-btn" id="browseSearchBtn" type="button">검색</button></div>
   </div>
-  <div class="browse-search-row">${searchBox('browseQ')}<button class="browse-search-btn" id="browseSearchBtn" type="button">검색</button></div>
-    <div id="movieResults"><div class="empty-box"><strong>영화 150편을 불러오는 중…</strong><p>불러오기가 끝나면 전체 영화가 먼저 표시됩니다.</p></div></div>
+  <div id="movieResults"><div class="empty-box"><strong>영화 150편을 불러오는 중…</strong><p>불러오기가 끝나면 전체 영화가 먼저 표시됩니다.</p></div></div>
   <div class="home-section-title" id="reviewHeading">사용자 리뷰</div>
   <div class="review-list" id="reviewList"></div>
   <p class="review-disclaimer">※ ‘나’ 표시가 없는 리뷰는 화면 확인용 예시입니다. 내가 쓴 리뷰는 이 브라우저에만 저장돼요.</p>
@@ -2396,7 +2415,7 @@ root.querySelector('#detailWriteReview').addEventListener('click',()=>openReview
    const title=esc(m.title||'제목 정보 없음'), year=m.year!=null&&m.year!==''?esc(m.year):'연도 정보 없음', genre=esc(m.genre||'장르 정보 없음');
    const runtime=m.runtime!=null && m.runtime!=='' ? `${esc(m.runtime)}분` : '상영시간 정보 없음';
    const overview=esc(m.overview||m.description||'줄거리 정보가 없습니다.');
-   return `<article class="browse-movie-card" aria-label="${title} 상세 정보 보기"><div class="browse-movie-poster">${posterHTML(m)}</div><div class="browse-movie-content"><h3>${title} ${sourceBadge(m)}</h3><div class="browse-movie-meta">${year} · ${genre} · ${runtime}</div><p class="browse-movie-overview">${overview}</p><div class="browse-movie-actions"><button class="btn primary" data-write="${esc(m.id)}">${has?'내 리뷰 수정':'리뷰 쓰기'}</button><button class="btn" data-bm-search="${esc(m.id)}">${bmLabel(m)}</button></div></div></article>`;
+   return `<article class="browse-movie-card" aria-label="${title} 상세 정보 보기"><button class="browse-heart${bookmarks().includes(m.id)?' on':''}" data-bm-search="${esc(m.id)}" type="button" aria-label="${bookmarks().includes(m.id)?'찜 해제':'찜하기'}" title="${bookmarks().includes(m.id)?'찜 해제':'찜하기'}">${bookmarks().includes(m.id)?'♥':'♡'}</button><div class="browse-movie-poster">${posterHTML(m)}</div><div class="browse-movie-content"><h3>${title} ${sourceBadge(m)}</h3><div class="browse-movie-meta">${year} · ${genre} · ${runtime}</div><p class="browse-movie-overview">${overview}</p><div class="browse-movie-actions"><button class="btn primary" data-write="${esc(m.id)}">${has?'내 리뷰 수정':'리뷰 쓰기'}</button></div></div></article>`;
  }).join('')}</div>`;
  box.querySelectorAll('.browse-movie-card').forEach(card=>{
    card.tabIndex=0; card.setAttribute('role','button');
@@ -2450,13 +2469,13 @@ root.querySelector('#detailWriteReview').addEventListener('click',()=>openReview
     if(runtime==='unknown'&&n>0)return false;
     return true;
   });
-  renderBrowseMovies(found,hasFilter?'검색 결과':(usingApi?'전체 API 영화':'전체 영화'));
+  renderBrowseMovies(found,hasFilter?'검색 결과':'전체 영화');
   const sum=$('#filterSummary');
   const runtimePending=runtime&&allMovies.some(m=>m.source==='A'&&m.runtime==null);
   if(sum)sum.textContent=runtimePending?'러닝타임 정보를 아직 불러오는 중이에요. 잠시 후 다시 ‘검색’을 눌러 주세요.'
     :actorPending?`${found.length}편 일치 · 배우 출연작 검색 중…`
     :hasFilter?`${found.length}편의 영화가 조건에 맞아요.`
-    :usingApi?`전체 API 영화 ${allMovies.length}편을 표시하고 있어요.`
+    :usingApi?`전체 영화 ${allMovies.length}편을 표시하고 있어요.`
     :`API를 불러오는 중이거나 연결되지 않아 JSON 영화 ${allMovies.length}편을 표시하고 있어요.`;
   const list=allReviews().filter(r=>{const m=byId(r.movieId);return m&&(!q||matchMovie(m,q));});
   const rc=$('#reviewCount'); if(rc) rc.textContent=list.length+'개 리뷰';
@@ -2555,7 +2574,7 @@ function openReviewEditor(movieId, after){
    updateAppTabs();
    window.scrollTo(0,0);
  });
- document.getElementById('headerSearch').addEventListener('click', () => { if(state.activeTab !== 'home'){ state.activeTab='home'; render(); } const panel=document.getElementById('homeSearchPanel'); if(panel){ const open=panel.style.display !== 'none'; panel.style.display=open?'none':'block'; if(!open) document.getElementById('homeQ').focus(); } });
+ document.getElementById('headerSearch').addEventListener('click', () => { state.activeTab='browse'; render(); const browseInput=document.getElementById('browseQ'); if(browseInput) browseInput.focus(); });
  // 하단 탭은 항상 공통 render() 경로를 통해 화면 전체를 전환합니다.
  // 둘러보기를 누르면 커뮤니티 리뷰 목록을 즉시 렌더링합니다.
  document.querySelectorAll('[data-app-tab]').forEach(b=>b.addEventListener('click',()=>{
