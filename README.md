@@ -1,54 +1,297 @@
-# Cinepick Backend API
+# Cinepick (시네픽)
 
-Node.js + Express + PostgreSQL backend for the existing Cinepick HTML/CSS/JavaScript app.
+> **현재 버전: PRD 0.5**  
+> 영화 선택부터 감상 기록까지 이어지는 모바일 중심 영화 큐레이션 웹앱입니다.
 
-## Included
-- Email/password registration and login (bcrypt password hashing, JWT sessions)
-- Authenticated profile endpoint
-- Public review list and authenticated create/edit/delete
-- Review likes
-- Per-account movie bookmarks
-- Per-account ticketbook records
-- PostgreSQL schema in `database/schema.sql`
+## 1. 버전 및 변경 이력
 
-## Requirements
-- Node.js 20+
-- PostgreSQL 14+
-- A PostgreSQL database reachable from the backend host
+## 버전 관리
 
-## Local setup
-1. Create a PostgreSQL database named `cinepick`.
-2. Run `database/schema.sql` in that database.
-3. Copy `.env.example` to `.env`.
-4. Set `DATABASE_URL`, `JWT_SECRET` (32+ random characters), and `CLIENT_ORIGIN`.
-5. Run:
+버전은 `PRD major.minor` 형식으로 관리합니다. 기능 또는 화면 구조가 변경되면 아래 표에 버전, 변경 내용, 비고를 추가합니다.
 
-```bash
-npm install
-npm run dev
+| **버전** | **기록일** | **변경 내용** | **비고** |
+|---|---|---|---|
+| **PRD 0.5** | 2026-11-16 |홈 화면의 오늘의 추천 영화를 카드형 슬라이드로 개편하고, 좌우 이동 버튼·페이지 표시 점·3초 간격 자동 전환 기능 적용. 홈 화면에 기분 기반 영화 추천 배너, 오늘 많이 본 영화 및 최근 개봉작 컬렉션 추가. TMDB API를 연동해 인기 영화와 현재 상영작 정보를 제공하고, 영화 포스터 및 상세 정보 확인 기능 개선. 영화 탐색 화면에 제목·영문 제목·장르·배우 검색과 장르·개봉 연도·러닝타임 필터 적용. 리뷰 탭의 영화별 감상평 조회, 정렬 및 리뷰 상세 보기 기능 정리. 로그인·회원가입 화면과 마이페이지 연동. 상단 검색 아이콘 제거 및 전체 화면의 색상, 카드, 버튼, 그림자 등 UI 디자인을 보라색 계열의 시네마틱 스타일로 개선.| 홈 화면 및 주요 탭 UI 개선, 영화 탐색·리뷰 기능 확장 |
+| **PRD 0.4** | 2026-11-16 | 메인 HTML과 CSS·JavaScript·데이터 파일 분리 구조 반영. 홈, 탐색, 리뷰, 마이 탭과 기분 기반 추천, 룰렛, 티켓북, 영화 검색·필터, 상세 정보, 찜 및 리뷰 기능 정리. README 프로젝트 문서화. | 이전 기준 버전 |
+| **PRD 0.3** | 2026-11-02 | 서비스 화면 구성 및 주요 기능 구체화. 홈·탐색·리뷰·마이페이지 구조와 영화 검색, 상세 정보, 찜 및 리뷰 기능 정리. | 서비스 구조 확장 |
+| **PRD 0.2** | 2026-10-19 | 기분 기반 영화 추천 과정을 구체화하고 영화 후보 목록, 룰렛, 영화 선택 및 추천 결과, 감상 티켓북 기능 정리. | 추천 기능 구체화 |
+| **PRD 0.1** | 2026-10-12 | 시네픽의 초기 서비스 콘셉트 및 기분 기반 영화 추천 아이디어 정의. | 초기 기획 |
+
+### 변경 이력 작성 규칙
+
+- **기능 추가:** 새 기능과 사용자가 할 수 있게 된 일을 기록합니다.
+- **기능 수정:** 변경한 동작과 화면을 구체적으로 기록합니다.
+- **오류 수정:** 발생한 문제와 해결 내용을 기록합니다.
+- **구조 변경:** 파일 이동, 폴더 분리, 데이터 구조 변경 등을 기록합니다.
+
+변경 이력은 최신 버전이 위에 오도록 관리합니다.
+
+## 2. 프로젝트 개요
+
+시네픽은 사용자의 기분과 취향에 맞춰 영화를 추천하고, 영화를 선택한 뒤 티켓과 감상평을 기록할 수 있도록 돕는 웹앱입니다.
+
+### 핵심 목표
+
+- 사용자가 복잡하게 검색하지 않고도 볼 영화를 고를 수 있도록 돕습니다.
+- 기분 기반 추천과 영화 탐색을 함께 제공합니다.
+- 찜한 영화, 티켓북, 리뷰를 통해 개인의 영화 감상 기록을 관리합니다.
+
+## 3. 주요 기능
+
+| 구분 | 기능 | 설명 |
+|---|---|---|
+| 홈 | 오늘의 추천 영화 | 로컬 영화 데이터를 기반으로 추천 영화 제공 |
+| 홈 | 주요 기능 바로가기 | 영화 탐색 및 추천 기능으로 이동 |
+| 영화 추천 | 기분 기반 추천 | 기분을 선택해 영화 후보 확인 |
+| 영화 추천 | 룰렛 및 결정 타이머 | 후보 중 영화를 선택하고 결정 지원 |
+| 영화 기록 | 티켓 발권 및 티켓북 | 선택한 영화를 티켓으로 기록하고 모아보기 |
+| 탐색 | 영화 목록 및 검색 | 영화 제목, 배우, 장르 등을 기준으로 탐색 |
+| 탐색 | 영화 필터 | 장르, 개봉 연도, 러닝타임 기준 필터링 |
+| 영화 상세 | 상세 정보 | 포스터, 개봉 연도, 장르, 러닝타임, 줄거리 확인 |
+| 찜 | 찜한 영화 | 관심 영화를 저장하고 마이페이지에서 확인 |
+| 리뷰 | 리뷰 작성 및 조회 | 영화별 감상평과 별점 작성 및 확인 |
+| 마이페이지 | 개인 기록 | 티켓북, 찜한 영화, 시네마 기록 확인 |
+
+## 4. 기능 우선순위
+
+기능의 중요도와 핵심 사용 목적에 따라 우선순위를 구분합니다.
+
+| 우선순위 | 기능 | 목적 |
+|---|---|---|
+| P0 | 영화 목록 및 검색 | 사용자가 영화를 찾을 수 있도록 지원 |
+| P0 | 영화 상세 정보 | 영화 선택에 필요한 정보 제공 |
+| P0 | 장르·연도·러닝타임 필터 | 원하는 조건의 영화 탐색 |
+| P0 | 찜 기능 | 관심 영화 저장 |
+| P0 | 리뷰 작성 및 조회 | 영화 감상 기록 관리 |
+| P1 | 기분 기반 영화 추천 | 기분에 맞는 영화 발견 |
+| P1 | 티켓 발권 및 티켓북 | 감상 기록 시각화 |
+| P1 | 마이페이지 | 개인 영화 기록 통합 관리 |
+| P2 | 룰렛 및 결정 타이머 | 영화 선택 과정의 재미와 편의성 강화 |
+
+- **P0:** 핵심 서비스 운영에 필요한 기능
+- **P1:** 사용자 경험을 확장하는 주요 기능
+- **P2:** 서비스의 재미와 편의성을 높이는 추가 기능
+
+## 5. MVP (Minimum Viable Product)
+
+MVP는 시네픽의 핵심 가치를 검증하기 위해 우선 제공해야 하는 최소 기능 제품을 의미합니다.
+
+### MVP 필수 기능
+
+1. 영화 목록 확인
+2. 영화 제목 검색
+3. 장르, 개봉 연도, 러닝타임 필터
+4. 영화 상세 정보 확인
+5. 영화 찜 및 찜 목록 확인
+6. 영화 리뷰 작성 및 조회
+7. 마이페이지에서 개인 기록 확인
+
+### MVP 이후 확장 기능
+
+- 기분 기반 영화 추천
+- 영화 추천 룰렛
+- 결정 타이머
+- 티켓 발권 및 티켓북
+- 개인화 추천 기능 고도화
+- 계정 기반 데이터 동기화
+
+> MVP 필수 기능과 확장 기능의 구분은 개발 계획상의 우선순위입니다. 실제 구현 및 배포 상태는 별도로 확인합니다.
+
+## 6. 사이트맵 (Sitemap)
+
+시네픽의 주요 화면과 화면 간 구조입니다.
+
+```text
+Cinepick
+│
+├── 홈 (Home)
+│   ├── 오늘의 추천 영화
+│   ├── 영화 추천 바로가기
+│   └── 탐색 바로가기
+│
+├── 탐색 (Browse)
+│   ├── 영화 검색
+│   ├── 영화 목록
+│   ├── 영화 필터
+│   │   ├── 장르
+│   │   ├── 개봉 연도
+│   │   └── 러닝타임
+│   └── 영화 상세
+│       ├── 포스터
+│       ├── 영화 정보
+│       ├── 찜하기
+│       └── 리뷰 쓰기
+│
+├── 리뷰 (Review)
+│   ├── 리뷰 목록
+│   ├── 리뷰 상세
+│   └── 리뷰 작성 및 수정
+│
+└── 마이페이지 (My)
+    ├── 찜한 영화
+    ├── 티켓북
+    └── 시네마 기록
 ```
 
-Health check: `GET http://localhost:3000/api/health`
+## 7. 사용자 흐름 (User Flow)
 
-## API
-- `POST /api/auth/register` `{ email, nickname, password }`
-- `POST /api/auth/login` `{ email, password }`
-- `GET /api/auth/me` (Bearer token)
-- `GET /api/reviews?movieId=mov_001`
-- `POST /api/reviews` (Bearer) `{ movieId, rating, title, content }`
-- `PATCH /api/reviews/:id` (Bearer) `{ rating, title, content }`
-- `DELETE /api/reviews/:id` (Bearer)
-- `PUT /api/reviews/:id/like` / `DELETE /api/reviews/:id/like` (Bearer)
-- `GET /api/bookmarks` (Bearer)
-- `PUT /api/bookmarks/:movieId` / `DELETE /api/bookmarks/:movieId` (Bearer)
-- `GET /api/tickets` (Bearer)
-- `POST /api/tickets` (Bearer) `{ movieId, watchedOn, memo }`
-- `DELETE /api/tickets/:id` (Bearer)
+### 7.1 영화 탐색 및 선택
 
-## Important integration notes
-- The current frontend still uses browser `localStorage` for demo accounts and user records. This API is a backend foundation; the UI is not switched to API calls yet.
-- Frontend must store the returned JWT carefully and send `Authorization: Bearer <token>` for protected routes. Do not store passwords.
-- Movie records remain in the existing frontend/TMDB catalog. User-generated records refer to the current movie IDs as text.
-- Configure CORS `CLIENT_ORIGIN` to the exact deployed frontend origin(s), comma-separated.
-- Do not expose `.env`, database credentials, JWT secret, or TMDB secret keys in GitHub.
-- Before public launch, add email verification, password reset, rate limiting, request logging, backups, and HTTPS. This starter does not claim production-hardening is complete.
+```text
+홈 진입
+  ↓
+탐색 탭 이동
+  ↓
+영화 검색 또는 필터 적용
+  ↓
+영화 목록 확인
+  ↓
+영화 상세 정보 확인
+  ↓
+영화 선택
+  ↓
+찜하기 또는 리뷰 작성
+```
+
+### 7.2 기분 기반 영화 추천
+
+```text
+홈 진입
+  ↓
+영화 추천 기능 선택
+  ↓
+현재 기분 선택
+  ↓
+추천 영화 후보 확인
+  ↓
+영화 선택 또는 룰렛 이용
+  ↓
+영화 상세 정보 확인
+```
+
+### 7.3 영화 감상 기록
+
+```text
+영화 선택
+  ↓
+감상 후 리뷰 작성
+  ↓
+별점 및 감상평 입력
+  ↓
+리뷰 저장
+  ↓
+마이페이지 이동
+  ↓
+티켓북 및 개인 기록 확인
+```
+
+## 8. 기술 및 개발 환경
+
+- **Frontend:** HTML, CSS, JavaScript
+- **영화 데이터:** `data/movies.js`의 로컬 영화 데이터 150편
+- **외부 API:** TMDB API
+- **브라우저 저장:** localStorage
+- **배포:** 로컬 서버 또는 GitHub Pages
+
+## 9. 데이터 관리 (JSON 및 API)
+
+### 9.1 로컬 영화 데이터
+
+`data/movies.js`에 포함된 로컬 영화 데이터 150편을 사용합니다.
+
+영화 데이터는 JSON 형식의 객체 구조를 기반으로 관리할 수 있습니다.
+
+예시 데이터 구조:
+
+```json
+{
+  "id": 1,
+  "title": "영화 제목",
+  "year": 2024,
+  "genre": ["드라마", "로맨스"],
+  "runtime": 120,
+  "overview": "영화 줄거리",
+  "poster": "poster-image-path",
+  "source": "local"
+}
+```
+
+위 구조는 데이터 관리 형식을 설명하기 위한 예시이며 실제 `movies.js`의 필드명과 일치하는지는 별도 확인이 필요합니다.
+
+### 9.2 TMDB API 연동
+
+TMDB API를 통해 외부 영화 정보를 가져옵니다.
+
+| 데이터 | 활용 내용 |
+|---|---|
+| 영화 목록 | 외부 영화 목록 조회 |
+| 영화 검색 | 영화 제목 등을 기준으로 검색 |
+| 포스터 | 영화 포스터 이미지 제공 |
+| 상세 정보 | 영화 관련 외부 정보 조회 |
+
+API 연동 시 영화 ID를 기준으로 로컬 데이터와 외부 데이터를 구분하고, 중복 영화가 표시되지 않도록 관리합니다.
+
+### 9.3 사용자 데이터 관리
+
+사용자가 생성한 기록은 브라우저의 `localStorage`에 저장합니다.
+
+| 데이터 | 저장 내용 |
+|---|---|
+| 찜 | 사용자가 저장한 영화 정보 또는 영화 ID |
+| 리뷰 | 영화 ID, 별점, 감상평 등 |
+| 티켓 | 선택한 영화 및 감상 기록 |
+
+> 현재 사용자 기록은 브라우저에 저장되며 다른 기기나 브라우저와 자동 동기화되지 않습니다.
+
+## 10. 생성형 도구 활용
+
+프로젝트 기획 및 개발 과정에서 생성형 도구를 활용합니다.
+
+| 구분 | 도구 | 활용 내용 |
+|---|---|---|
+| 기획 및 문서화 | ChatGPT | PRD 구성, 기능 우선순위 정리, README 작성 |
+| 개발 보조 | ChatGPT | HTML, CSS, JavaScript 코드 작성 및 수정 지원 |
+| 오류 검토 | ChatGPT | 코드 구조 검토 및 JavaScript 문법 점검 |
+| 디자인 및 시각 자료 | 사용한 도구 별도 기재 | 화면 시안 및 이미지 제작에 사용한 도구 기록 |
+
+생성형 도구는 개발과 문서화의 보조 수단으로 활용하며, 최종 코드와 기능 동작은 실제 프로젝트에서 확인합니다.
+
+## 11. 폴더 구조
+
+```text
+cinepick/
+├── index.html                 # 메인 진입 HTML
+├── README.md                  # 프로젝트 설명 및 변경 이력
+├── asset/
+│   └── README.md              # 정적 리소스 폴더 안내
+├── css/
+│   └── style.css              # 전체 화면 및 반응형 스타일
+├── data/
+│   └── movies.js              # 로컬 영화 데이터 150편
+├── js/
+│   └── app.js                 # 화면 렌더링 및 주요 기능
+└── pages/
+    ├── browse.html
+    ├── help.html
+    ├── movies.html
+    ├── mypage.html
+    ├── recommend.html
+    └── ...                    # 작업 과정에서 보관한 페이지 및 시안
+```
+
+## 12. 실행 방법
+
+1. 저장소를 내려받거나 GitHub에서 프로젝트를 클론합니다.
+2. 프로젝트 최상위 폴더에서 로컬 서버를 실행하거나 `index.html`을 엽니다.
+3. TMDB API 연동 기능을 사용하려면 프로젝트에 설정된 API 키가 유효해야 합니다.
+4. 배포 시에는 프로젝트의 폴더 구조와 파일 경로를 유지합니다.
+
+`index.html`은 `data/movies.js`를 먼저 불러온 뒤 `js/app.js`를 실행하도록 구성되어 있습니다. CSS는 `css/style.css`에서 불러옵니다.
+
+## 13. 참고 및 유의 사항
+
+- 영화 데이터와 포스터 등 일부 정보는 TMDB API를 통해 제공됩니다.
+- `pages/` 폴더에는 작업 과정에서 보관한 개별 페이지 및 시안 파일이 포함될 수 있습니다.
+- 사용자 기록은 현재 브라우저의 `localStorage`에 저장됩니다.
+- API 키 관리 및 외부 API 이용 정책을 준수해야 합니다.
+- 실제 구현 상태와 개발 계획은 구분하여 관리합니다.
