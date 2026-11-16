@@ -1948,9 +1948,7 @@ body{background:linear-gradient(135deg,#c9c9e8 0%,#eee8f3 48%,#e9dfe9 100%)!impo
 <div id="app">
  <header class="topbar">
  <button class="brand" id="homeLogo" type="button" aria-label="시네픽 홈으로 이동" style="border:0;background:transparent;color:inherit;text-align:left;padding:0;cursor:pointer"><span class="brand-mark">SP</span><span><small>CINEPICK · MOVIE CURATION</small><h1><span>시네픽</span></h1></span></button>
- <button class="header-search" id="headerBrowseSearch" type="button" aria-label="영화 탐색으로 이동" title="영화 탐색">
-  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.2 4.2"/></svg>
- </button>
+ <button class="header-login" id="headerLoginButton" type="button" aria-label="로그인하기">로그인하기</button>
  </header>
  <div class="shell">
  <main class="main"><section class="workspace" id="workspace" aria-live="polite"></section></main>
@@ -3167,7 +3165,7 @@ function renderMyPage(){
  if(state.activeTab==='home') renderHome();
  else if(state.activeTab==='browse') renderBrowse();
  else if(state.activeTab==='review') renderReviewTab();
- else if(state.activeTab==='mypage') renderMyPage();
+ else if(state.activeTab==='mypage') { state.tab='tickets'; renderTicketbook(); }
  else ({1:renderMood,2:renderDuration,3:renderWheel,4:renderResult,5:renderConfirmed,6:renderTicketbook,7:() => renderRecovery('all')})[state.step]();
  updateAppTabs();
  window.scrollTo(0, 0);
@@ -3182,12 +3180,11 @@ function renderMyPage(){
    updateAppTabs();
    window.scrollTo(0,0);
  });
- document.getElementById('headerBrowseSearch').addEventListener('click',()=>{
-   state.activeTab='browse';
-   render();
+ document.getElementById('headerLoginButton').addEventListener('click',()=>{
+   openCineLoginModal();
  });
 
- // 하단 탭은 항상 공통 render() 경로를 통해 화면 전체를 전환합니다.
+ // 하단 탭은 공통 render() 경로를 통해 화면 전체를 전환합니다.
  // 둘러보기를 누르면 커뮤니티 리뷰 목록을 즉시 렌더링합니다.
  document.querySelectorAll('[data-app-tab]').forEach(b=>b.addEventListener('click',()=>{
  const tab=b.dataset.appTab;
@@ -3713,4 +3710,8 @@ body { background:#fff!important; }
 @media(prefers-reduced-motion:reduce){
   .upcoming-poster-card.is-current,#upcomingSelected{animation:none!important;will-change:auto!important}
 }
+
+/* 마이페이지는 티켓북 화면으로 바로 진입, 상단은 로그인 버튼 */
+.topbar #headerLoginButton{display:inline-flex;align-items:center;justify-content:center;margin-left:auto;min-height:36px;padding:0 15px;border:1px solid #e3dbea;border-radius:999px;background:#fff;color:#302b3a;font-size:12px;font-weight:800;white-space:nowrap}
+.topbar #headerLoginButton:active{background:#f4f0f8}
 </style>
