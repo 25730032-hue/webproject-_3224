@@ -321,6 +321,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .home-shortcut small { color:var(--muted); font-size:10px; }
 .home-shortcut .shortcut-icon { font-size:22px; }
 .profile-summary { border:1px solid var(--line); border-radius:14px; background:var(--paper); padding:18px; display:flex; align-items:center; gap:12px; }
+.profile-identity{position:relative;min-width:0}
+.profile-nickname-toggle{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;padding:0;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.profile-nickname-toggle span{font-size:15px;color:var(--muted)}
+.profile-logout-menu{position:absolute;z-index:30;top:calc(100% + 9px);left:0;min-width:132px;padding:5px;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.profile-logout-menu[hidden]{display:none}
+.profile-logout-menu button{width:100%;border:0;border-radius:7px;background:transparent;padding:9px 11px;text-align:left;font:inherit;font-size:12px;color:var(--ink);cursor:pointer}
+.profile-logout-menu button:hover{background:var(--soft, #f4f1f7)}
+
 .profile-avatar { width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--dark);color:var(--dark-text);font-size:25px; }
 .profile-summary h4 { margin:0 0 3px;font-size:16px; }
 .profile-summary p { margin:0;color:var(--muted);font-size:11px; }
@@ -992,6 +1000,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outlin
 .home-shortcut small { color:var(--muted); font-size:10px; }
 .home-shortcut .shortcut-icon { font-size:22px; }
 .profile-summary { border:1px solid var(--line); border-radius:14px; background:var(--paper); padding:18px; display:flex; align-items:center; gap:12px; }
+.profile-identity{position:relative;min-width:0}
+.profile-nickname-toggle{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;padding:0;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+.profile-nickname-toggle span{font-size:15px;color:var(--muted)}
+.profile-logout-menu{position:absolute;z-index:30;top:calc(100% + 9px);left:0;min-width:132px;padding:5px;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14)}
+.profile-logout-menu[hidden]{display:none}
+.profile-logout-menu button{width:100%;border:0;border-radius:7px;background:transparent;padding:9px 11px;text-align:left;font:inherit;font-size:12px;color:var(--ink);cursor:pointer}
+.profile-logout-menu button:hover{background:var(--soft, #f4f1f7)}
+
 .profile-avatar { width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--dark);color:var(--dark-text);font-size:25px; }
 .profile-summary h4 { margin:0 0 3px;font-size:16px; }
 .profile-summary p { margin:0;color:var(--muted);font-size:11px; }
@@ -1929,6 +1945,11 @@ body{background:linear-gradient(135deg,#c9c9e8 0%,#eee8f3 48%,#e9dfe9 100%)!impo
 .topbar #headerLoginButton .ic{width:20px;height:20px;display:block}
 .topbar #headerLoginButton:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 
+
+/* 탐색 화면에서는 예시/최근 감상평 영역을 노출하지 않습니다. */
+.browse-screen #reviewHeading,
+.browse-screen #reviewList,
+.browse-screen .review-disclaimer { display: none !important; }
 </style>
 </head>
 <body>
@@ -2070,6 +2091,63 @@ body{background:linear-gradient(135deg,#c9c9e8 0%,#eee8f3 48%,#e9dfe9 100%)!impo
    return apiCatalogPromise;
  }
 
+ // 연도 필터 전용 TMDB 탐색: 기본 인기영화 150편에 없는 작품도 해당 연도에서 직접 가져옵니다.
+ const apiYearLoads=new Map();
+ const apiYearLoaded=new Set();
+ async function loadBrowseYear(year){
+   const y=String(year);
+   if(apiYearLoaded.has(y)) return apiMovies;
+   if(apiYearLoads.has(y)) return apiYearLoads.get(y);
+   const task=(async()=>{
+     const cacheKey='cinepick_tmdb_year_'+y+'_v1';
+     let cached=[];
+     try{cached=JSON.parse(localStorage.getItem(cacheKey)||'[]');}catch(_){}
+     if(Array.isArray(cached)&&cached.length){
+       cached.forEach(m=>{if(m&&m.tmdbId&&!apiMovies.some(x=>String(x.tmdbId)===String(m.tmdbId)))apiMovies.push(m);});
+       cached.forEach(m=>{if(m&&!movies.some(x=>x.id===m.id))movies.push(m);});
+       apiYearLoaded.add(y);
+       if(state.activeTab==='browse')updateBrowse();
+       return apiMovies;
+     }
+     const fetchPage=async page=>{
+       const u=new URL('https://api.themoviedb.org/3/discover/movie');
+       u.searchParams.set('api_key',TMDB_API_KEY);
+       u.searchParams.set('language','ko-KR');
+       u.searchParams.set('sort_by','popularity.desc');
+       u.searchParams.set('include_adult','false');
+       u.searchParams.set('primary_release_year',y);
+       u.searchParams.set('page',String(page));
+       const res=await fetch(u.toString());
+       if(!res.ok)throw new Error('TMDB '+res.status);
+       return res.json();
+     };
+     // 첫 페이지에서 실제 페이지 수를 확인하고 최대 10페이지(최대 200편)까지 조회합니다.
+     const first=await fetchPage(1);
+     const pageCount=Math.min(10,Math.max(1,Number(first.total_pages)||1));
+     const pages=await Promise.all(Array.from({length:pageCount-1},(_,i)=>fetchPage(i+2)));
+     const rows=[...(first.results||[]),...pages.flatMap(x=>x.results||[])];
+     const seen=new Set();
+     const fresh=rows.filter(r=>r&&r.id&&!seen.has(r.id)&&seen.add(r.id))
+       .filter(r=>String((r.release_date||'').slice(0,4))===y)
+       .map(tmdbMovieToCard);
+     fresh.forEach(m=>{if(!apiMovies.some(x=>String(x.tmdbId)===String(m.tmdbId)))apiMovies.push(m);});
+     fresh.forEach(m=>{if(!movies.some(x=>x.id===m.id))movies.push(m);});
+     try{localStorage.setItem(cacheKey,JSON.stringify(fresh));}catch(_){}
+     apiYearLoaded.add(y);
+     const status=document.getElementById('datasetStatus');
+     if(status)status.textContent=`총 ${localMovies.length+apiMovies.length}편 · J ${localMovies.length} / A ${apiMovies.length}`;
+     if(state.activeTab==='browse')updateBrowse();
+     return apiMovies;
+   })().catch(err=>{
+     console.warn('TMDB year catalog load failed',y,err);
+     const sum=document.getElementById('filterSummary');
+     if(sum&&String(browseApplied.year)===y)sum.textContent=`${y}년 영화 정보를 불러오지 못했어요. 잠시 후 다시 검색해 주세요.`;
+     throw err;
+   }).finally(()=>apiYearLoads.delete(y));
+   apiYearLoads.set(y,task);
+   return task;
+ }
+
  let apiSearchTimer=null, apiSearchToken=0;
  /* ===== 포스터: 이미지가 있으면 이미지, 없거나 실패하면 회색 자리표시자 ===== */
  const TMDB_API_KEY = "b58ad2e4deeca12db6c96c4cc95dfc62";
@@ -2186,10 +2264,25 @@ body{background:linear-gradient(135deg,#c9c9e8 0%,#eee8f3 48%,#e9dfe9 100%)!impo
  const workspace = $('#workspace');
  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
- /* 저장소: 티켓(savedTickets)과 보관(bookmarkedIds). 저장이 막혀도 창을 닫기 전까지는 메모리로 유지 */
- const mem = {tickets:[], bm:[]};
- function rd(key, fb){ try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : mem[fb]; } catch(e){ return mem[fb]; } }
- function wr(key, fb, val){ mem[fb] = val; try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch(e){ return false; } }
+ /* 개인 기록 저장소: 로그인 사용자는 계정별 영구 저장, 비로그인 사용자는 메모리에만 보관 */
+ const mem = {tickets:[], bm:[], reviews:[]};
+ function personalStorageKey(key){
+   const user = typeof cineCurrent === 'function' ? cineCurrent() : null;
+   return user && user.email ? `cinepick_user_${encodeURIComponent(user.email.toLowerCase())}_${key}` : null;
+ }
+ function rd(key, fb){
+   const scopedKey = personalStorageKey(key);
+   if(!scopedKey) return mem[fb] ?? [];
+   try { const v = localStorage.getItem(scopedKey); return v ? JSON.parse(v) : (mem[fb] ?? []); }
+   catch(e){ return mem[fb] ?? []; }
+ }
+ function wr(key, fb, val){
+   mem[fb] = val;
+   const scopedKey = personalStorageKey(key);
+   if(!scopedKey) return true; // 비로그인 기록은 이번 페이지가 열린 동안에만 유지
+   try { localStorage.setItem(scopedKey, JSON.stringify(val)); return true; }
+   catch(e){ return false; }
+ }
  const tickets = () => rd('savedTickets', 'tickets');
  const bookmarks = () => rd('bookmarkedIds', 'bm');
  const saveTickets = v => wr('savedTickets', 'tickets', v);
@@ -2945,9 +3038,9 @@ root.querySelector('#detailWriteReview').addEventListener('click',()=>openReview
   }
   if(yearSel){
     const old=yearSel.value;
-    const years=[...new Set(mergedPool.map(m=>parseInt(m.year,10)).filter(y=>Number.isFinite(y)&&y>1800&&y<2100))].sort((a,b)=>b-a);
-    const fallbackYears=Array.from({length:80},(_,i)=>new Date().getFullYear()-i);
-    const choices=years.length?years:fallbackYears;
+    // 현재 인기 목록에 포함된 연도만 보여주지 않고, 1900년부터 올해까지 모든 연도를 선택 가능하게 합니다.
+    const currentYear=new Date().getFullYear();
+    const choices=Array.from({length:currentYear-1899},(_,i)=>currentYear-i);
     const signature=choices.join(',');
     if(yearSel.dataset.yearSignature!==signature){
       yearSel.innerHTML='<option value="">전체 연도</option>'+choices.map(y=>`<option value="${y}">${y}년</option>`).join('');
@@ -2956,6 +3049,11 @@ root.querySelector('#detailWriteReview').addEventListener('click',()=>openReview
     }
   }
   const {genre,year,runtime}=browseApplied;
+  if(year&&!apiYearLoaded.has(String(year))&&!apiYearLoads.has(String(year))){
+    const sum=$('#filterSummary');
+    if(sum)sum.textContent=`${year}년 영화를 TMDB에서 더 불러오는 중이에요…`;
+    loadBrowseYear(year).catch(()=>{});
+  }
   // 검색어: 제목·영문제목·장르 (JSON 영화는 분위기도). API 영화의 공통 문구(분위기/톤)는 제외해 엉뚱한 전체 일치를 막습니다.
   const textMatch=m=>!q||[m.title,m.en,m.genre,...(m.source==='J'&&Array.isArray(m.moods)?m.moods:[])].some(v=>v!=null&&norm(v).includes(q));
   const found=allMovies.filter(m=>{
@@ -2972,7 +3070,7 @@ root.querySelector('#detailWriteReview').addEventListener('click',()=>openReview
   renderBrowseMovies(found,hasFilter?'검색 결과':(usingApi?'전체 영화':'전체 영화'));
   const sum=$('#filterSummary');
   const runtimePending=runtime&&allMovies.some(m=>m.source==='A'&&m.runtime==null);
-  if(sum)sum.textContent=runtimePending?'러닝타임 정보를 아직 불러오는 중이에요. 잠시 후 다시 ‘검색’을 눌러 주세요.'
+  if(sum)sum.textContent=(year&&!apiYearLoaded.has(String(year)))?'해당 연도의 영화를 더 불러오고 있어요…':runtimePending?'러닝타임 정보를 아직 불러오는 중이에요. 잠시 후 다시 ‘검색’을 눌러 주세요.'
     :actorPending?`${found.length}편 일치 · 배우 출연작 검색 중…`
     :hasFilter?`${found.length}편의 영화가 조건에 맞아요.`
     :usingApi?`전체 영화 ${allMovies.length}편을 표시하고 있어요.`
@@ -3032,6 +3130,7 @@ function openReviewEditor(movieId, after){
  const CINE_AUTH_USERS='cinepick_local_users_v2';
  const CINE_AUTH_CURRENT='cinepick_local_current_v2';
  function cineUsers(){try{return JSON.parse(localStorage.getItem(CINE_AUTH_USERS)||'[]')}catch(e){return []}}
+ // 로그인 상태는 현재 브라우저 탭 세션에서만 유지합니다. 새로 접속하면 로그아웃 상태로 시작합니다.
  function cineCurrent(){try{return JSON.parse(localStorage.getItem(CINE_AUTH_CURRENT)||'null')}catch(e){return null}}
  function cineSafe(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
  async function cineHash(password,salt){
@@ -3046,7 +3145,32 @@ function openReviewEditor(movieId, after){
  }
  function syncMyProfile(){
    const u=cineCurrent(), h=document.getElementById('myProfileHeading'), sub=document.getElementById('myProfileSub');
-   if(h&&sub){h.textContent=u?(u.nickname||'나의 영화 생활'):'로그인하기';sub.textContent=u?u.email+' · 반가워요!':'로그인하고 나만의 영화 기록을 관리해 보세요.';}
+   if(h&&sub){
+     if(u){
+       h.innerHTML=`<button type="button" class="profile-nickname-toggle" id="profileNicknameToggle" aria-expanded="false">${cineSafe(u.nickname||'나의 영화 생활')} <span aria-hidden="true">⌄</span></button>`;
+       sub.textContent=u.email+' · 반가워요!';
+       const toggle=document.getElementById('profileNicknameToggle');
+       if(toggle) toggle.addEventListener('click',()=>{
+         const menu=document.getElementById('profileLogoutMenu');
+         if(menu){menu.hidden=!menu.hidden;toggle.setAttribute('aria-expanded',String(!menu.hidden));}
+       });
+     }else{
+       h.textContent='로그인하기';
+       sub.textContent='로그인하고 나만의 영화 기록을 관리해 보세요.';
+     }
+   }
+   const header=document.getElementById('headerLoginButton');
+   if(header){header.setAttribute('aria-label',u?'마이페이지 열기':'로그인 화면 열기');header.title=u?'마이페이지':'로그인';}
+ }
+ function cineLogout(){
+   localStorage.removeItem(CINE_AUTH_CURRENT);
+   // 로그아웃 후에는 계정 기록이 비로그인 임시 화면에 노출되지 않도록 초기화합니다.
+   mem.tickets=[];mem.bm=[];mem.reviews=[];
+   const menu=document.getElementById('profileLogoutMenu');
+   if(menu) menu.hidden=true;
+   showToast('로그아웃되었습니다.');
+   renderMyPage();
+   syncMyProfile();
  }
  function openCineLoginModal(){
    const root=document.getElementById('modalRoot');
@@ -3113,6 +3237,8 @@ function openReviewEditor(movieId, after){
          if(await cineHash(password,user.salt)!==user.passwordHash){error.textContent='아이디 또는 비밀번호를 확인해 주세요.';return;}
          localStorage.setItem(CINE_AUTH_CURRENT,JSON.stringify({email:user.email,nickname:user.nickname}));
        }
+       // 계정 전환 시 비로그인 임시 기록이 다른 계정에 섞이지 않도록 비웁니다.
+       mem.tickets=[];mem.bm=[];mem.reviews=[];
        root.innerHTML='';syncMyProfile();
      }catch(err){error.textContent='로그인 처리 중 오류가 발생했습니다.';}
      finally{submit.disabled=false;submit.textContent=mode==='signup'?'가입하기':'로그인';}
@@ -3125,7 +3251,7 @@ function renderMyPage(){
  syncMyProfile();
  workspace.innerHTML = `<div class="content">
  <h3 style="font-size:25px;letter-spacing:-.05em;margin:5px 0 18px">마이페이지</h3>
- <button type="button" class="profile-summary cine-login-entry" id="openCineLogin"><div class="profile-avatar">${ICON.user}</div><div><h4 id="myProfileHeading">로그인하기</h4><p id="myProfileSub">로그인하고 나만의 영화 기록을 관리해 보세요.</p></div><span class="cine-login-arrow">→</span></button>
+ <${cineCurrent() ? 'div' : 'button'} ${cineCurrent() ? '' : 'type="button"'} class="profile-summary ${cineCurrent() ? 'cine-login-entry cine-logged-in' : 'cine-login-entry'}" id="openCineLogin"><div class="profile-avatar">${ICON.user}</div><div class="profile-identity"><h4 id="myProfileHeading">로그인하기</h4><p id="myProfileSub">로그인하고 나만의 영화 기록을 관리해 보세요.</p>${cineCurrent() ? '<div class="profile-logout-menu" id="profileLogoutMenu" hidden><button type="button" id="profileLogoutButton">로그아웃하기</button></div>' : ''}</div>${cineCurrent() ? '' : '<span class="cine-login-arrow">→</span>'}</${cineCurrent() ? 'div' : 'button'}>
  <div class="home-section-title">시네마 기록</div>
  <div class="lvbox"><div class="lvhead"><strong><span class="lvbadge">Lv.${L.lv}</span>${L.name}</strong><span>${L.cur} / 10</span></div><div class="cinema-progress" role="progressbar" aria-label="다음 레벨 영화 기록" aria-valuemin="0" aria-valuemax="10" aria-valuenow="${L.cur}">${Array.from({length:10},(_,i)=>`<span class="cinema-progress-segment ${i<L.cur?'filled':''}"></span>`).join('')}</div><p class="lvnote">영화 한 편을 기록할 때마다 한 칸씩 채워져요 · 다음 레벨까지 ${L.next}개</p></div>
  <div class="home-section-title">나의 영화</div><div class="home-shortcuts"><button class="home-shortcut" id="myTickets"><strong>나의 티켓북</strong><small>발권한 영화 ${t.length}편 보기 →</small></button><button class="home-shortcut" id="mySaved"><strong>찜한 영화</strong><small>저장한 영화 ${b.length}편 보기 →</small></button></div>
@@ -3134,7 +3260,8 @@ function renderMyPage(){
  <button class="btn full" id="profileReset" style="margin-top:20px">영화 추천 처음부터 시작</button>
  </div>`;
  syncMyProfile();
- $('#openCineLogin').addEventListener('click', openCineLoginModal);
+ if(!cineCurrent()) $('#openCineLogin').addEventListener('click', openCineLoginModal);
+ else $('#profileLogoutButton')?.addEventListener('click', cineLogout);
  $('#profileReset').addEventListener('click', () => { state.mood=null; state.movie=null; state.activeTab='recommend'; setStep(1); });
  $('#myTickets').addEventListener('click', () => { state.activeTab='recommend'; state.step=6; state.tab='tickets'; render(); });
  $('#mySaved').addEventListener('click', () => { state.activeTab='recommend'; state.step=6; state.tab='bookmarks'; render(); });
@@ -3171,7 +3298,10 @@ function renderMyPage(){
    window.scrollTo(0,0);
  });
  document.getElementById('headerLoginButton').addEventListener('click',()=>{
-   openCineLoginModal();
+   if(cineCurrent()){
+     state.activeTab='mypage';
+     render();
+   }else openCineLoginModal();
  });
 
  // 하단 탭은 항상 공통 render() 경로를 통해 화면 전체를 전환합니다.
@@ -3463,6 +3593,12 @@ body{min-height:100dvh}
  .upcoming-poster-card.is-current,#upcomingSelected{animation:none!important}
  .upcoming-poster-card{transition:none!important}
 }
+</style>
+
+
+<style id="cinepick-toast-always-front">
+/* 저장/찜/로그인 알림은 블러 배경이나 모달 뒤로 숨지 않고 항상 최상단에 표시 */
+#toast { z-index: 2001 !important; position: fixed !important; }
 </style>
 
 </body>
